@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flexible/board/empty_task_tile.dart';
 import 'package:flexible/board/single_time_task_tile.dart';
+import 'package:flexible/board/task_tile.dart';
 import 'package:flexible/utils/image_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
@@ -37,28 +38,7 @@ class _BoardState extends State<Board> {
   @override
   Widget build(BuildContext context) {
     return buildWrapperwithShiftedBackground(
-        child: buildScrollViewWithLine(children: [
-      ...tasks
-      // SingleTimeTaskTile(
-      //   time: DateTime.fromMillisecondsSinceEpoch(1621843243052),
-      // ),
-      // SingleTimeTaskTile(
-      //   time: DateTime.fromMillisecondsSinceEpoch(1621843353052),
-      // ),
-      // PeriodicTaskTile(
-      //   timeStart: DateTime.fromMillisecondsSinceEpoch(1621811573052),
-      //   timeEnd: DateTime.fromMillisecondsSinceEpoch(1621859573052),
-      //   name: 'Task to 15',
-      // ),
-      // SingleTimeTaskTile(
-      //   time: DateTime.fromMillisecondsSinceEpoch(1621843463052),
-      // ),
-      // PeriodicTaskTile(
-      //   timeStart: DateTime.fromMillisecondsSinceEpoch(1621821573052),
-      //   timeEnd: DateTime.fromMillisecondsSinceEpoch(1621873573052),
-      //   name: 'Task to 19',
-      // ),
-    ]));
+        child: buildScrollViewWithLine(children: [...tasks]));
   }
 
   // Glassmorphic background shifted to right
@@ -69,12 +49,6 @@ class _BoardState extends State<Board> {
             color: Colors.red.withOpacity(0.0),
             child: Stack(
               children: [
-                // Container(
-                //   margin: EdgeInsets.only(left: 40),
-                //   decoration: BoxDecoration(
-                //       gradient: boardBackGradient,
-                //       borderRadius: BorderRadius.circular(30)),
-                // ),
                 imageFilter(
                   hue: 0.1,
                   brightness: 0.9,
@@ -135,9 +109,10 @@ class _BoardState extends State<Board> {
             child: Column(
               children: [
                 ...children,
-                // SizedBox(
-                //   height: 32,
-                // ),
+                // TaskTile(),
+                // TaskTile(),
+                // TaskTile(),
+                // TaskTile(),
                 buildAddingSection()
               ],
             ),
