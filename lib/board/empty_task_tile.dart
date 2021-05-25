@@ -85,12 +85,12 @@ class _EmptyTaskTileState extends State<EmptyTaskTile> {
                       height: 4,
                     ),
                     Text(
-                      'The Task ',
+                      'Clean task',
                       style: TextStyle(
                           color: Color(0xff545353),
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.lineThrough),
+                          decoration: TextDecoration.none),
                     ),
                     Text(
                       'Nice sunny day',

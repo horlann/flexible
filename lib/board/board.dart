@@ -199,7 +199,7 @@ class _BoardState extends State<Board> {
   Widget buildAddingSection() {
     return Column(
       children: [
-        EmptyTaskTile(),
+        // EmptyTaskTile(),
         Stack(
           children: [
             //
