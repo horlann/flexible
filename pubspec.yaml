@@ -22,9 +22,9 @@ environment:
 
 dependencies:
   flutter_bloc: ^7.0.0
-  shared_preferences: ^2.0.5
   sqflite: ^2.0.0+3
   glassmorphism: ^2.0.1
+  equatable: ^2.0.2
   intl: ^0.17.0
   uuid: ^3.0.4
   # glass_kit: ^2.0.0

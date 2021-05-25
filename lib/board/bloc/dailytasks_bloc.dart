@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/repository/sqflire_tasks_repo.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'dailytasks_event.dart';
 part 'dailytasks_state.dart';
@@ -12,7 +11,10 @@ part 'dailytasks_state.dart';
 class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
   DailytasksBloc() : super(DailytasksInitial()) {
     add(DailytasksUpdate());
+    sqfliteTasksRepo = SqfliteTasksRepo();
   }
+
+  late SqfliteTasksRepo sqfliteTasksRepo;
 
   @override
   Stream<DailytasksState> mapEventToState(
@@ -20,50 +22,35 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
   ) async* {
     if (event is DailytasksUpdate) {
       // Load from storage
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      List tasks = prefs.getStringList('tasks') ?? [];
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<Task> sqTasks = await sqfliteTasksRepo.tasks();
 
-      // Add first task if empty
-      if (tasks.isEmpty) {
-        prefs.setStringList('tasks', [
-          Task(
-                  isDone: false,
-                  title: 'This u first task',
-                  subtitle: 'Very nice day, youre welcome',
-                  timeStart: DateTime.now(),
-                  timeEnd: DateTime.now())
-              .toJson()
-        ]);
-        tasks = prefs.getStringList('tasks') ?? [];
+      // Add demo taks on first run
+      if (sqTasks.isEmpty) {
+        await sqfliteTasksRepo.addTask(Task(
+            isDone: false,
+            title: 'This you first task',
+            subtitle: 'Very nice day, youre welcome',
+            timeStart: DateTime.now(),
+            timeEnd: DateTime.now()));
+
+        sqTasks = await sqfliteTasksRepo.tasks();
       }
 
-      // Parse
-      List<Task> taskParsed = tasks.map((e) => Task.fromJson(e)).toList();
-      print(tasks);
-      yield DailytasksCommon(tasks: taskParsed);
+      yield DailytasksCommon(tasks: sqTasks);
     }
 
     if (event is DailytasksAddTask) {
-      // Add task to storage
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      List tasks = prefs.getStringList('tasks') ?? [];
-      prefs.setStringList('tasks', [...tasks, event.task.toJson()]);
+      // add to db
+      sqfliteTasksRepo.addTask(event.task);
 
       // Update
       this.add(DailytasksUpdate());
     }
 
-    if (event is DailytasksUpdateTaskData) {
-      print(event.task.toMap());
-      // Add task to storage
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<String> tasks = prefs.getStringList('tasks') ?? [];
-
-      tasks[tasks.indexWhere(
-              (element) => json.decode(element)['uuid'] == event.task.uuid)] =
-          event.task.toJson();
-
-      prefs.setStringList('tasks', tasks);
+    if (event is DailytasksUpdateTaskDone) {
+      // update in db
+      sqfliteTasksRepo.updateTaskDone(event.task);
 
       // Update
       this.add(DailytasksUpdate());

@@ -65,4 +65,9 @@ class Task {
       isDone: isDone ?? this.isDone,
     );
   }
+
+  @override
+  String toString() {
+    return 'Task(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, timeEnd: $timeEnd, isDone: $isDone)';
+  }
 }

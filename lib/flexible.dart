@@ -20,14 +20,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late DailytasksBloc _dailyTasksbloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _dailyTasksbloc = DailytasksBloc();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

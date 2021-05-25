@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/task.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +24,7 @@ class _TaskTileState extends State<TaskTile> {
     setState(() {
       completed = !completed;
     });
-    BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdateTaskData(
+    BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdateTaskDone(
         task: widget.task.copyWith(isDone: completed)));
   }
 
