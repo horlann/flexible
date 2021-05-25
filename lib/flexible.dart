@@ -3,6 +3,7 @@ import 'package:flexible/board/board.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class FlexibleApp extends StatelessWidget {
   @override
@@ -66,7 +67,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget buildDateBottomBar() {
-    String currentDate() => DateTime.now().toString().substring(0, 10);
+    String currentDate() => DateFormat('yyyy-LLLL-dd').format(DateTime.now());
 
     return SizedBox(
       width: 380,
