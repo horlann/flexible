@@ -1,9 +1,10 @@
 import 'dart:ui';
+import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/empty_task_tile.dart';
-import 'package:flexible/board/single_time_task_tile.dart';
+import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/task_tile.dart';
-import 'package:flexible/utils/image_filter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 
 class Board extends StatefulWidget {
@@ -19,20 +20,26 @@ class _BoardState extends State<Board> {
   @override
   void initState() {
     super.initState();
-    addNewTask();
   }
 
   // Add new task to list and update ui
-  void addNewTask() {
-    setState(() {
-      tasks.add(
-        SingleTimeTaskTile(
-          name: 'The Task ${++taskCount}',
-          timeStart: DateTime.now(),
-          timeEnd: DateTime.now().add(Duration(minutes: 4)),
-        ),
-      );
-    });
+  void addNewTask(BuildContext context) {
+    // setState(() {
+    //   tasks.add(
+    //     TaskTile(
+    //       name: 'The Task ${++taskCount}',
+    //       timeStart: DateTime.now(),
+    //       timeEnd: DateTime.now().add(Duration(minutes: 4)),
+    // });
+    var newtask = Task(
+        title: 'TheTask ${++taskCount}',
+        subtitle: 'Nice ${taskCount}day',
+        timeStart: DateTime.now(),
+        timeEnd: DateTime.now().add(Duration(minutes: 4)));
+
+    BlocProvider.of<DailytasksBloc>(context)
+        .add(DailytasksAddTask(task: newtask));
+    print(newtask);
   }
 
   @override
@@ -49,41 +56,92 @@ class _BoardState extends State<Board> {
             color: Colors.red.withOpacity(0.0),
             child: Stack(
               children: [
-                imageFilter(
-                  hue: 0.1,
-                  brightness: 0.9,
-                  saturation: 0.0,
-                  child: GlassmorphicContainer(
-                    margin: EdgeInsets.only(left: 40),
-                    width: double.maxFinite,
-                    height: double.maxFinite,
-                    borderRadius: 30,
-                    blur: 20,
-                    border: 2,
-                    linearGradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [
-                          Color(0xFFffffff).withOpacity(0.4),
-                          Color(0xA7A2A2).withOpacity(0.18),
-                          Color(0xffDBD0D0).withOpacity(0.49),
-                        ],
-                        stops: [
-                          0,
-                          0.2,
-                          1,
-                        ]),
-                    borderGradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                // imageFilter(
+                //   hue: 0.1,
+                //   brightness: 3.0,
+                //   saturation: 0.0,
+                //   child: GlassmorphicContainer(
+                //     margin: EdgeInsets.only(left: 40),
+                //     width: double.maxFinite,
+                //     height: double.maxFinite,
+                //     borderRadius: 30,
+                //     blur: 20,
+                //     border: 2,
+                //     linearGradient: LinearGradient(
+                //         begin: Alignment.topRight,
+                //         end: Alignment.bottomLeft,
+                //         colors: [
+                //           Color(0xFFffffff).withOpacity(0.4),
+                //           Color(0xA7A2A2).withOpacity(0.18),
+                //           Color(0xffDBD0D0).withOpacity(0.49),
+                //         ],
+                //         stops: [
+                //           0,
+                //           0.2,
+                //           1,
+                //         ]),
+                //     borderGradient: LinearGradient(
+                //       begin: Alignment.topLeft,
+                //       end: Alignment.bottomRight,
+                //       colors: [
+                //         Color(0xFFffffff).withOpacity(0.15),
+                //         Color(0xFFffffff).withOpacity(0.15),
+                //         Color(0xFFFFFFFF).withOpacity(0.15),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+
+                GlassmorphicContainer(
+                  margin: EdgeInsets.only(left: 44),
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                  borderRadius: 30,
+                  blur: 5,
+                  border: 2,
+                  linearGradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
                       colors: [
-                        Color(0xFFffffff).withOpacity(0.15),
-                        Color(0xFFffffff).withOpacity(0.15),
-                        Color(0xFFFFFFFF).withOpacity(0.15),
+                        Color(0xFFffffff).withOpacity(0.6),
+                        Color(0xfff4f3f3).withOpacity(0.2),
+                        Color(0xFFffffff).withOpacity(0.6),
                       ],
-                    ),
+                      stops: [
+                        0,
+                        0.2,
+                        1,
+                      ]),
+                  borderGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFffffff).withOpacity(0.15),
+                      Color(0xFFffffff).withOpacity(0.15),
+                      Color(0xFFFFFFFF).withOpacity(0.15),
+                    ],
                   ),
                 ),
+
+                // GlassContainer.frostedGlass(
+                //     borderRadius: BorderRadius.circular(30),
+                //     gradient: LinearGradient(
+                //         begin: Alignment.topRight,
+                //         end: Alignment.bottomLeft,
+                //         colors: [
+                //           Color(0xFFffffff).withOpacity(0.6),
+                //           Color(0xfff4f3f3).withOpacity(0.4),
+                //           Color(0xfff4f1f1).withOpacity(0.6),
+                //         ],
+                //         stops: [
+                //           0,
+                //           0.2,
+                //           0.8,
+                //         ]),
+                //     margin: EdgeInsets.only(left: 40),
+                //     borderColor: Colors.white.withOpacity(0.15),
+                //     height: double.infinity,
+                //     width: double.maxFinite),
 
                 // Children here
                 child,
@@ -96,24 +154,38 @@ class _BoardState extends State<Board> {
   SingleChildScrollView buildScrollViewWithLine(
       {required List<Widget> children}) {
     return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
       child: Stack(
         children: [
           Positioned.fill(
               child: Padding(
-            padding: const EdgeInsets.only(left: 82, top: 20, bottom: 120),
+            padding: const EdgeInsets.only(left: 82, top: 20, bottom: 140),
             child: Align(
                 alignment: Alignment.centerLeft,
-                child: Container(width: 3, color: Color(0xffEE7579))),
+                child: Container(width: 3, color: Color(0xff707070))),
           )),
           Container(
             child: Column(
               children: [
-                ...children,
-                // TaskTile(),
-                // TaskTile(),
-                // TaskTile(),
-                // TaskTile(),
-                buildAddingSection()
+                // ...children,
+
+                BlocBuilder<DailytasksBloc, DailytasksState>(
+                  builder: (context, state) {
+                    print(state);
+                    if (state is DailytasksCommon) {
+                      print('object');
+                      return Column(
+                          children: state.tasks
+                              .map((e) => TaskTile(
+                                  name: e.title,
+                                  timeStart: e.timeStart,
+                                  timeEnd: e.timeEnd))
+                              .toList());
+                    }
+                    return Container();
+                  },
+                ),
+                buildAddingSection(),
               ],
             ),
           ),
@@ -124,73 +196,74 @@ class _BoardState extends State<Board> {
 
   // Show empty tile with text and button underneeth
   Widget buildAddingSection() {
-    return GestureDetector(
-      onTap: () => addNewTask(),
-      child: Column(
-        children: [
-          EmptyTaskTile(),
-          Stack(
-            children: [
-              //
-              // Red line
-              //
-              Positioned(
-                left: 82,
-                child: Container(
-                  height: 60,
-                  width: 3,
-                  color: Color(0xffEE7579),
-                ),
+    return Column(
+      children: [
+        EmptyTaskTile(),
+        Stack(
+          children: [
+            //
+            // Red line
+            //
+            Positioned(
+              left: 82,
+              child: Container(
+                height: 40,
+                width: 3,
+                color: Color(0xff707070),
               ),
-              Positioned(
-                left: 82,
-                top: 60,
-                child: Container(
-                  height: 3,
-                  width: 30,
-                  color: Color(0xffEE7579),
-                ),
+            ),
+            Positioned(
+              left: 82,
+              top: 40,
+              child: Container(
+                height: 3,
+                width: 30,
+                color: Color(0xff707070),
               ),
-              Positioned(
-                left: 80,
-                top: 58,
-                child: Container(
-                  height: 8,
-                  width: 8,
-                  decoration: BoxDecoration(
-                      color: Color(0xffEE7579),
-                      borderRadius: BorderRadius.circular(4)),
-                ),
+            ),
+            Positioned(
+              left: 80,
+              top: 38,
+              child: Container(
+                height: 8,
+                width: 8,
+                decoration: BoxDecoration(
+                    color: Color(0xffEE7579),
+                    borderRadius: BorderRadius.circular(4)),
               ),
-              //
-              // line
-              //
-              Positioned(
-                left: 115,
-                top: 52,
-                child: Text(
-                  'What else you have to do?',
-                  style: TextStyle(color: Color(0xff545353), fontSize: 16),
-                ),
+            ),
+            //
+            // line
+            //
+            Positioned(
+              left: 115,
+              top: 30,
+              child: Text(
+                'What else you have to do?',
+                style: TextStyle(color: Color(0xff545353), fontSize: 18),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 50, left: 32),
-                clipBehavior: Clip.none,
-                height: 120,
-                width: double.maxFinite,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Container(
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 50, left: 32),
+              clipBehavior: Clip.none,
+              height: 120,
+              width: double.maxFinite,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                    onTap: () => addNewTask(context),
+                    child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                              color: Color(0xff707070).withOpacity(0.5),
-                              blurRadius: 10)
+                              color: Color(0xffEE7579).withOpacity(0.75),
+                              blurRadius: 20,
+                              offset: Offset(-10, 10))
                         ],
                       ),
                       child: Image.asset(
@@ -198,13 +271,13 @@ class _BoardState extends State<Board> {
                         scale: 1.4,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

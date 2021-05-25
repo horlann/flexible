@@ -1,6 +1,8 @@
+import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/board.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FlexibleApp extends StatelessWidget {
   @override
@@ -11,29 +13,51 @@ class FlexibleApp extends StatelessWidget {
   }
 }
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  late DailytasksBloc _dailyTasksbloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _dailyTasksbloc = DailytasksBloc();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffE9E9E9),
       body: SafeArea(
         child: SizedBox.expand(
-          child: Container(
-            decoration: BoxDecoration(gradient: mainBackgroundGradient),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 16,
-                ),
-                Expanded(child: Board()),
-                SizedBox(
-                  height: 16,
-                ),
-                buildDateBottomBar(),
-                SizedBox(
-                  height: 16,
-                ),
-              ],
+          child: BlocProvider(
+            create: (context) => DailytasksBloc(),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: mainBackgroundGradient,
+                // image: DecorationImage(
+                //   image: AssetImage('src/testbg.jpg'),
+                //   fit: BoxFit.cover,
+                // ),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Expanded(child: Board()),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  buildDateBottomBar(),
+                  SizedBox(
+                    height: 16,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -41,8 +65,9 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  // static fake bar
   Widget buildDateBottomBar() {
+    String currentDate() => DateTime.now().toString().substring(0, 10);
+
     return SizedBox(
       width: 380,
       child: Padding(
@@ -56,7 +81,7 @@ class MainPage extends StatelessWidget {
               fit: BoxFit.fitWidth,
             ),
             Text(
-              '22 April 2021',
+              currentDate(),
               style: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 28,
