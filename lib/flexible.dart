@@ -1,5 +1,6 @@
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/board.dart';
+import 'package:flexible/board/repository/sqflire_tasks_repo.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +28,7 @@ class _MainPageState extends State<MainPage> {
       body: SafeArea(
         child: SizedBox.expand(
           child: BlocProvider(
-            create: (context) => DailytasksBloc(),
+            create: (context) => DailytasksBloc(tasksRepo: SqfliteTasksRepo()),
             child: Container(
               decoration: BoxDecoration(
                 gradient: mainBackgroundGradient,

@@ -9,10 +9,11 @@ class DailytasksInitial extends DailytasksState {
 }
 
 class DailytasksCommon extends DailytasksState {
+  final DateTime showDay;
   final List<Task> tasks;
-  DailytasksCommon({required this.tasks});
+  DailytasksCommon({required this.tasks, required this.showDay});
   @override
-  List<Object?> get props => [tasks.length];
+  List<Object?> get props => [tasks.length, showDay.toString()];
 }
 
 class DailytasksFailure extends DailytasksState {

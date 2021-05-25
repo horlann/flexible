@@ -24,8 +24,8 @@ class _TaskTileState extends State<TaskTile> {
     setState(() {
       completed = !completed;
     });
-    BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdateTaskDone(
-        task: widget.task.copyWith(isDone: completed)));
+    BlocProvider.of<DailytasksBloc>(context).add(
+        DailytasksUpdateTask(task: widget.task.copyWith(isDone: completed)));
   }
 
   String geTimeString(DateTime date) => date.toString().substring(11, 16);

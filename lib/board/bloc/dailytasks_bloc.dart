@@ -2,19 +2,28 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flexible/board/models/task.dart';
-import 'package:flexible/board/repository/sqflire_tasks_repo.dart';
+import 'package:flexible/board/repository/tasts_repo_interface.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 part 'dailytasks_event.dart';
 part 'dailytasks_state.dart';
 
 class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
-  DailytasksBloc() : super(DailytasksInitial()) {
+  DailytasksBloc({required this.tasksRepo}) : super(DailytasksInitial()) {
     add(DailytasksUpdate());
-    sqfliteTasksRepo = SqfliteTasksRepo();
   }
+  // db
+  late ITasksRepo tasksRepo;
 
-  late SqfliteTasksRepo sqfliteTasksRepo;
+  // determine what the day to show
+  DateTime showDay = DateTime.now();
+
+  // Round date funcs
+  // uses for select period
+  DateTime startOfaDay(DateTime date) => DateUtils.dateOnly(date);
+  DateTime endOfaDay(DateTime date) =>
+      DateUtils.dateOnly(date).add(Duration(days: 1));
 
   @override
   Stream<DailytasksState> mapEventToState(
@@ -23,34 +32,35 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
     if (event is DailytasksUpdate) {
       // Load from storage
       // SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<Task> sqTasks = await sqfliteTasksRepo.tasks();
+      List<Task> sqTasks = await tasksRepo.tasksByPeriod(
+          from: startOfaDay(showDay), to: endOfaDay(showDay));
 
       // Add demo taks on first run
       if (sqTasks.isEmpty) {
-        await sqfliteTasksRepo.addTask(Task(
+        await tasksRepo.addTask(Task(
             isDone: false,
             title: 'This you first task',
             subtitle: 'Very nice day, youre welcome',
             timeStart: DateTime.now(),
             timeEnd: DateTime.now()));
 
-        sqTasks = await sqfliteTasksRepo.tasks();
+        sqTasks = await tasksRepo.allTasks();
       }
 
-      yield DailytasksCommon(tasks: sqTasks);
+      yield DailytasksCommon(tasks: sqTasks, showDay: showDay);
     }
 
     if (event is DailytasksAddTask) {
       // add to db
-      sqfliteTasksRepo.addTask(event.task);
+      tasksRepo.addTask(event.task);
 
       // Update
       this.add(DailytasksUpdate());
     }
 
-    if (event is DailytasksUpdateTaskDone) {
+    if (event is DailytasksUpdateTask) {
       // update in db
-      sqfliteTasksRepo.updateTaskDone(event.task);
+      tasksRepo.updateTask(event.task);
 
       // Update
       this.add(DailytasksUpdate());

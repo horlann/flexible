@@ -19,9 +19,9 @@ class DailytasksAddTask extends DailytasksEvent {
   List<Object?> get props => [task.toString()];
 }
 
-class DailytasksUpdateTaskDone extends DailytasksEvent {
+class DailytasksUpdateTask extends DailytasksEvent {
   final Task task;
-  DailytasksUpdateTaskDone({
+  DailytasksUpdateTask({
     required this.task,
   });
 
