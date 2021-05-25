@@ -10,6 +10,13 @@ class DailytasksAddTask extends DailytasksEvent {
   });
 }
 
+class DailytasksUpdateTaskData extends DailytasksEvent {
+  final Task task;
+  DailytasksUpdateTaskData({
+    required this.task,
+  });
+}
+
 class DailytasksUpdate extends DailytasksEvent {
   DailytasksUpdate();
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:flexible/board/models/task.dart';
@@ -26,8 +27,9 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
       if (tasks.isEmpty) {
         prefs.setStringList('tasks', [
           Task(
-                  title: 'First task',
-                  subtitle: 'Very nice day',
+                  isDone: false,
+                  title: 'This u first task',
+                  subtitle: 'Very nice day, youre welcome',
                   timeStart: DateTime.now(),
                   timeEnd: DateTime.now())
               .toJson()
@@ -37,7 +39,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
 
       // Parse
       List<Task> taskParsed = tasks.map((e) => Task.fromJson(e)).toList();
-
+      print(tasks);
       yield DailytasksCommon(tasks: taskParsed);
     }
 
@@ -46,6 +48,22 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       List tasks = prefs.getStringList('tasks') ?? [];
       prefs.setStringList('tasks', [...tasks, event.task.toJson()]);
+
+      // Update
+      this.add(DailytasksUpdate());
+    }
+
+    if (event is DailytasksUpdateTaskData) {
+      print(event.task.toMap());
+      // Add task to storage
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String> tasks = prefs.getStringList('tasks') ?? [];
+
+      tasks[tasks.indexWhere(
+              (element) => json.decode(element)['uuid'] == event.task.uuid)] =
+          event.task.toJson();
+
+      prefs.setStringList('tasks', tasks);
 
       // Update
       this.add(DailytasksUpdate());

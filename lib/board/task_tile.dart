@@ -1,44 +1,33 @@
 import 'dart:async';
 
+import 'package:flexible/board/bloc/dailytasks_bloc.dart';
+import 'package:flexible/board/models/task.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TaskTile extends StatefulWidget {
-  final bool completed;
-  final String name;
-  final DateTime timeStart;
-  final DateTime timeEnd;
-  TaskTile(
-      {this.completed = false,
-      this.name = 'Taskname',
-      required this.timeStart,
-      required this.timeEnd});
+  final Task task;
+  TaskTile({required this.task});
   @override
   _TaskTileState createState() => _TaskTileState();
 }
 
 class _TaskTileState extends State<TaskTile> {
-  DateTime currentTime = DateTime.now();
+  // DateTime currentTime = DateTime.now();
   late bool completed;
 
   @override
   void initState() {
     super.initState();
-    completed = widget.completed;
+    completed = widget.task.isDone;
   }
 
   onCheckClicked(BuildContext context) {
     setState(() {
       completed = !completed;
     });
-  }
-
-  void updateCurrentTime() {
-    if (this.mounted) {
-      Timer(Duration(seconds: 30), () => updateCurrentTime());
-      setState(() {
-        currentTime = DateTime.now();
-      });
-    }
+    BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdateTaskData(
+        task: widget.task.copyWith(isDone: completed)));
   }
 
   String geTimeString(DateTime date) => date.toString().substring(11, 16);
@@ -51,14 +40,14 @@ class _TaskTileState extends State<TaskTile> {
         children: [
           Positioned(
               top: 2,
-              child: Text(geTimeString(widget.timeStart),
+              child: Text(geTimeString(widget.task.timeStart),
                   style: TextStyle(
                       color: Color(0xff545353),
                       fontSize: 13,
                       fontWeight: FontWeight.w400))),
           Positioned(
               top: 32,
-              child: Text(geTimeString(widget.timeEnd),
+              child: Text(geTimeString(widget.task.timeEnd),
                   style: TextStyle(
                       color: Color(0xff545353),
                       fontSize: 13,
@@ -115,7 +104,7 @@ class _TaskTileState extends State<TaskTile> {
           height: 4,
         ),
         Text(
-          '${geTimeString(widget.timeStart)} - ${geTimeString(widget.timeEnd)}',
+          '${geTimeString(widget.task.timeStart)} - ${geTimeString(widget.task.timeEnd)}',
           style: TextStyle(
               color: Color(0xff545353),
               fontSize: 18,
@@ -125,7 +114,7 @@ class _TaskTileState extends State<TaskTile> {
           height: 4,
         ),
         Text(
-          widget.name,
+          widget.task.title,
           style: TextStyle(
               color: Color(0xff545353),
               fontSize: 18,
@@ -134,7 +123,7 @@ class _TaskTileState extends State<TaskTile> {
                   completed ? TextDecoration.lineThrough : TextDecoration.none),
         ),
         Text(
-          'Nice sunny day',
+          widget.task.subtitle,
           style: TextStyle(
               color: Color(0xff545353),
               fontSize: 14,

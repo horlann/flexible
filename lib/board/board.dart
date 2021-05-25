@@ -32,6 +32,8 @@ class _BoardState extends State<Board> {
     //       timeEnd: DateTime.now().add(Duration(minutes: 4)),
     // });
     var newtask = Task(
+        uuid: null,
+        isDone: false,
         title: 'TheTask ${++taskCount}',
         subtitle: 'Nice ${taskCount}day',
         timeStart: DateTime.now(),
@@ -177,9 +179,8 @@ class _BoardState extends State<Board> {
                       return Column(
                           children: state.tasks
                               .map((e) => TaskTile(
-                                  name: e.title,
-                                  timeStart: e.timeStart,
-                                  timeEnd: e.timeEnd))
+                                    task: e,
+                                  ))
                               .toList());
                     }
                     return Container();
