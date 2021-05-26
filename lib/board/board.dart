@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
-import 'package:flexible/board/empty_task_tile.dart';
+import 'package:flexible/board/widgets/empty_task_tile.dart';
 import 'package:flexible/board/models/task.dart';
-import 'package:flexible/board/task_tile.dart';
+import 'package:flexible/board/widgets/task_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism/glassmorphism.dart';
@@ -24,24 +24,17 @@ class _BoardState extends State<Board> {
 
   // Add new task to list and update ui
   void addNewTask(BuildContext context) {
-    // setState(() {
-    //   tasks.add(
-    //     TaskTile(
-    //       name: 'The Task ${++taskCount}',
-    //       timeStart: DateTime.now(),
-    //       timeEnd: DateTime.now().add(Duration(minutes: 4)),
-    // });
+    DateTime dayForAdd = BlocProvider.of<DailytasksBloc>(context).state.showDay;
     var newtask = Task(
         uuid: null,
         isDone: false,
         title: 'TheTask ${++taskCount}',
         subtitle: 'Nice ${taskCount}day',
-        timeStart: DateTime.now(),
+        timeStart: dayForAdd,
         timeEnd: DateTime.now().add(Duration(minutes: 4)));
 
     BlocProvider.of<DailytasksBloc>(context)
         .add(DailytasksAddTask(task: newtask));
-    print(newtask);
   }
 
   @override
@@ -175,7 +168,6 @@ class _BoardState extends State<Board> {
                   builder: (context, state) {
                     print(state);
                     if (state is DailytasksCommon) {
-                      print('object');
                       return Column(
                           children: state.tasks
                               .map((e) => TaskTile(
@@ -197,88 +189,101 @@ class _BoardState extends State<Board> {
 
   // Show empty tile with text and button underneeth
   Widget buildAddingSection() {
-    return Column(
-      children: [
-        // EmptyTaskTile(),
-        Stack(
+    return BlocBuilder<DailytasksBloc, DailytasksState>(
+      builder: (context, state) {
+        Widget showEmpty() {
+          if (state is DailytasksCommon) {
+            if (state.tasks.isEmpty) {
+              return EmptyTaskTile();
+            }
+          }
+          return SizedBox();
+        }
+
+        return Column(
           children: [
-            //
-            // Red line
-            //
-            Positioned(
-              left: 82,
-              child: Container(
-                height: 40,
-                width: 3,
-                color: Color(0xff707070),
-              ),
-            ),
-            Positioned(
-              left: 82,
-              top: 40,
-              child: Container(
-                height: 3,
-                width: 30,
-                color: Color(0xff707070),
-              ),
-            ),
-            Positioned(
-              left: 80,
-              top: 38,
-              child: Container(
-                height: 8,
-                width: 8,
-                decoration: BoxDecoration(
-                    color: Color(0xffEE7579),
-                    borderRadius: BorderRadius.circular(4)),
-              ),
-            ),
-            //
-            // line
-            //
-            Positioned(
-              left: 115,
-              top: 30,
-              child: Text(
-                'What else you have to do?',
-                style: TextStyle(color: Color(0xff545353), fontSize: 18),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 50, left: 32),
-              clipBehavior: Clip.none,
-              height: 120,
-              width: double.maxFinite,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 30,
+            showEmpty(),
+            Stack(
+              children: [
+                //
+                // Red line
+                //
+                Positioned(
+                  left: 82,
+                  child: Container(
+                    height: 40,
+                    width: 3,
+                    color: Color(0xff707070),
                   ),
-                  GestureDetector(
-                    onTap: () => addNewTask(context),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Color(0xffEE7579).withOpacity(0.75),
-                              blurRadius: 20,
-                              offset: Offset(-10, 10))
-                        ],
-                      ),
-                      child: Image.asset(
-                        'src/icons/plus_btn.png',
-                        scale: 1.4,
-                      ),
-                    ),
+                ),
+                Positioned(
+                  left: 82,
+                  top: 40,
+                  child: Container(
+                    height: 3,
+                    width: 30,
+                    color: Color(0xff707070),
                   ),
-                ],
-              ),
+                ),
+                Positioned(
+                  left: 80,
+                  top: 38,
+                  child: Container(
+                    height: 8,
+                    width: 8,
+                    decoration: BoxDecoration(
+                        color: Color(0xffEE7579),
+                        borderRadius: BorderRadius.circular(4)),
+                  ),
+                ),
+                //
+                // line
+                //
+                Positioned(
+                  left: 115,
+                  top: 30,
+                  child: Text(
+                    'What else you have to do?',
+                    style: TextStyle(color: Color(0xff545353), fontSize: 18),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 50, left: 32),
+                  clipBehavior: Clip.none,
+                  height: 120,
+                  width: double.maxFinite,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 30,
+                      ),
+                      GestureDetector(
+                        onTap: () => addNewTask(context),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color(0xffEE7579).withOpacity(0.75),
+                                  blurRadius: 20,
+                                  offset: Offset(-10, 10))
+                            ],
+                          ),
+                          child: Image.asset(
+                            'src/icons/plus_btn.png',
+                            scale: 1.4,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }

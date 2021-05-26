@@ -10,7 +10,8 @@ part 'dailytasks_event.dart';
 part 'dailytasks_state.dart';
 
 class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
-  DailytasksBloc({required this.tasksRepo}) : super(DailytasksInitial()) {
+  DailytasksBloc({required this.tasksRepo})
+      : super(DailytasksInitial(showDay: DateTime.now())) {
     add(DailytasksUpdate());
   }
   // db
@@ -30,21 +31,25 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
     DailytasksEvent event,
   ) async* {
     if (event is DailytasksUpdate) {
-      // Load from storage
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // Load from sqlite
+
+      // List<Task> sqTasks = await tasksRepo.allTasks();
+
       List<Task> sqTasks = await tasksRepo.tasksByPeriod(
           from: startOfaDay(showDay), to: endOfaDay(showDay));
 
       // Add demo taks on first run
       if (sqTasks.isEmpty) {
-        await tasksRepo.addTask(Task(
-            isDone: false,
-            title: 'This you first task',
-            subtitle: 'Very nice day, youre welcome',
-            timeStart: DateTime.now(),
-            timeEnd: DateTime.now()));
+        if ((await tasksRepo.allTasks()).isEmpty) {
+          await tasksRepo.addTask(Task(
+              isDone: false,
+              title: 'This you first task',
+              subtitle: 'Very nice day, youre welcome',
+              timeStart: DateTime.now(),
+              timeEnd: DateTime.now()));
 
-        sqTasks = await tasksRepo.allTasks();
+          sqTasks = await tasksRepo.allTasks();
+        }
       }
 
       yield DailytasksCommon(tasks: sqTasks, showDay: showDay);
@@ -62,6 +67,13 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
       // update in db
       tasksRepo.updateTask(event.task);
 
+      // Update
+      this.add(DailytasksUpdate());
+    }
+
+    if (event is DailytasksSetDay) {
+      // Set day
+      showDay = event.day;
       // Update
       this.add(DailytasksUpdate());
     }

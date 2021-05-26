@@ -27,6 +27,7 @@ dependencies:
   equatable: ^2.0.2
   intl: ^0.17.0
   uuid: ^3.0.4
+  table_calendar: ^3.0.0
   # glass_kit: ^2.0.0
   flutter:
     sdk: flutter

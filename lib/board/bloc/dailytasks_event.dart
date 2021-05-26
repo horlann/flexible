@@ -9,6 +9,16 @@ class DailytasksUpdate extends DailytasksEvent {
   List<Object?> get props => [];
 }
 
+class DailytasksSetDay extends DailytasksEvent {
+  final DateTime day;
+  DailytasksSetDay({
+    required this.day,
+  });
+
+  @override
+  List<Object?> get props => [this.day.millisecondsSinceEpoch];
+}
+
 class DailytasksAddTask extends DailytasksEvent {
   final Task task;
   DailytasksAddTask({
