@@ -40,16 +40,25 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
 
       // Add demo taks on first run
       if (sqTasks.isEmpty) {
-        if ((await tasksRepo.allTasks()).isEmpty) {
-          await tasksRepo.addTask(Task(
-              isDone: false,
-              title: 'This you first task',
-              subtitle: 'Very nice day, youre welcome',
-              timeStart: DateTime.now(),
-              timeEnd: DateTime.now()));
-
-          sqTasks = await tasksRepo.allTasks();
-        }
+        // Add Good morning task
+        await tasksRepo.addTask(Task(
+            isDone: false,
+            title: 'Good Morning',
+            subtitle: 'Have a nice day',
+            timeStart: startOfaDay(showDay).add(Duration(hours: 8)),
+            timeEnd: startOfaDay(showDay).add(Duration(hours: 8)),
+            isDonable: true));
+        // Add undonable good night task
+        await tasksRepo.addTask(Task(
+            isDone: false,
+            title: 'Good night',
+            subtitle: 'Sleep well',
+            timeStart: startOfaDay(showDay).add(Duration(hours: 23)),
+            timeEnd: startOfaDay(showDay).add(Duration(hours: 23)),
+            isDonable: false));
+        // Reload
+        sqTasks = await tasksRepo.tasksByPeriod(
+            from: startOfaDay(showDay), to: endOfaDay(showDay));
       }
 
       yield DailytasksCommon(tasks: sqTasks, showDay: showDay);
@@ -66,6 +75,14 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
     if (event is DailytasksUpdateTask) {
       // update in db
       tasksRepo.updateTask(event.task);
+
+      // Update
+      this.add(DailytasksUpdate());
+    }
+
+    if (event is DailytasksDeleteTask) {
+      // update in db
+      tasksRepo.deleteTask(event.task);
 
       // Update
       this.add(DailytasksUpdate());

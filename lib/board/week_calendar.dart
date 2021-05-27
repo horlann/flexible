@@ -99,7 +99,12 @@ class WeekCalendar extends StatelessWidget {
                         lastDay: DateTime.utc(2030, 3, 14),
                         focusedDay: state.showDay,
                         eventLoader: (day) {
-                          return getEventByDay(day);
+                          // Mask good morning and good night
+                          List events = getEventByDay(day);
+                          return events.length > 2
+                              ? List.generate(
+                                  events.length - 2, (index) => null)
+                              : [];
                         },
                       );
                     }),

@@ -38,3 +38,13 @@ class DailytasksUpdateTask extends DailytasksEvent {
   @override
   List<Object?> get props => [task.toString()];
 }
+
+class DailytasksDeleteTask extends DailytasksEvent {
+  final Task task;
+  DailytasksDeleteTask({
+    required this.task,
+  });
+
+  @override
+  List<Object?> get props => [task.toString()];
+}

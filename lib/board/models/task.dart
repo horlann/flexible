@@ -9,6 +9,7 @@ class Task {
   final DateTime timeStart;
   final DateTime timeEnd;
   final bool isDone;
+  final bool isDonable;
   Task({
     this.uuid,
     required this.title,
@@ -16,6 +17,7 @@ class Task {
     required this.timeStart,
     required this.timeEnd,
     required this.isDone,
+    required this.isDonable,
   }) {
     if (uuid == null) {
       this.uuid = Uuid().v1();
@@ -30,6 +32,7 @@ class Task {
       'timeStart': timeStart.millisecondsSinceEpoch,
       'timeEnd': timeEnd.millisecondsSinceEpoch,
       'isDone': isDone,
+      'isDonable': isDonable,
     };
   }
 
@@ -41,6 +44,7 @@ class Task {
       timeStart: DateTime.fromMillisecondsSinceEpoch(map['timeStart']),
       timeEnd: DateTime.fromMillisecondsSinceEpoch(map['timeEnd']),
       isDone: map['isDone'],
+      isDonable: map['isDonable'],
     );
   }
 
@@ -55,6 +59,7 @@ class Task {
     DateTime? timeStart,
     DateTime? timeEnd,
     bool? isDone,
+    bool? isDonable,
   }) {
     return Task(
       uuid: uuid ?? this.uuid,
@@ -63,11 +68,37 @@ class Task {
       timeStart: timeStart ?? this.timeStart,
       timeEnd: timeEnd ?? this.timeEnd,
       isDone: isDone ?? this.isDone,
+      isDonable: isDonable ?? this.isDonable,
     );
   }
 
   @override
   String toString() {
-    return 'Task(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, timeEnd: $timeEnd, isDone: $isDone)';
+    return 'Task(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, timeEnd: $timeEnd, isDone: $isDone, isDonable: $isDonable)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Task &&
+        other.uuid == uuid &&
+        other.title == title &&
+        other.subtitle == subtitle &&
+        other.timeStart == timeStart &&
+        other.timeEnd == timeEnd &&
+        other.isDone == isDone &&
+        other.isDonable == isDonable;
+  }
+
+  @override
+  int get hashCode {
+    return uuid.hashCode ^
+        title.hashCode ^
+        subtitle.hashCode ^
+        timeStart.hashCode ^
+        timeEnd.hashCode ^
+        isDone.hashCode ^
+        isDonable.hashCode;
   }
 }

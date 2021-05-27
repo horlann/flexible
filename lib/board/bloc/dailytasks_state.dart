@@ -18,7 +18,7 @@ class DailytasksCommon extends DailytasksState {
   DailytasksCommon({required this.tasks, required showDay})
       : super(showDay: showDay);
   @override
-  List<Object?> get props => [tasks.length, showDay.toString()];
+  List<Object?> get props => [...tasks, showDay.toString()];
 }
 
 class DailytasksFailure extends DailytasksState {

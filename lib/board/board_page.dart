@@ -6,6 +6,7 @@ import 'package:flexible/board/week_calendar.dart';
 import 'package:flexible/board/widgets/mini_red_button.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -19,6 +20,12 @@ class _BoardPageState extends State<BoardPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Lock portreit mode
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return Scaffold(
       backgroundColor: Color(0xffE9E9E9),
       body: SafeArea(
