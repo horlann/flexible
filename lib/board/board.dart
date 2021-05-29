@@ -31,9 +31,7 @@ class _BoardState extends State<Board> {
       title: 'TheTask ${++taskCount}',
       subtitle: 'Nice ${taskCount}day',
       timeStart: dayForAdd,
-      timeEnd: dayForAdd.add(
-        Duration(minutes: 4),
-      ),
+      period: Duration(minutes: 5),
       isDonable: true,
     );
 

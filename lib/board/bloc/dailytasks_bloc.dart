@@ -46,7 +46,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
             title: 'Good Morning',
             subtitle: 'Have a nice day',
             timeStart: startOfaDay(showDay).add(Duration(hours: 8)),
-            timeEnd: startOfaDay(showDay).add(Duration(hours: 8)),
+            period: Duration(minutes: 5),
             isDonable: true));
         // Add undonable good night task
         await tasksRepo.addTask(Task(
@@ -54,7 +54,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
             title: 'Good night',
             subtitle: 'Sleep well',
             timeStart: startOfaDay(showDay).add(Duration(hours: 23)),
-            timeEnd: startOfaDay(showDay).add(Duration(hours: 23)),
+            period: Duration(minutes: 5),
             isDonable: false));
         // Reload
         sqTasks = await tasksRepo.tasksByPeriod(

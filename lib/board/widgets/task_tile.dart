@@ -69,7 +69,8 @@ class _TaskTileState extends State<TaskTile> {
                         fontWeight: FontWeight.w400))),
             Positioned(
                 top: 32,
-                child: Text(geTimeString(widget.task.timeEnd),
+                child: Text(
+                    geTimeString(widget.task.timeStart.add(widget.task.period)),
                     style: TextStyle(
                         color: Color(0xff545353),
                         fontSize: 13,
@@ -127,7 +128,7 @@ class _TaskTileState extends State<TaskTile> {
           height: 4,
         ),
         Text(
-          '${geTimeString(widget.task.timeStart)} - ${geTimeString(widget.task.timeEnd)}',
+          '${geTimeString(widget.task.timeStart)} - ${geTimeString(widget.task.timeStart.add(widget.task.period))}',
           style: TextStyle(
               color: Color(0xff545353),
               fontSize: 18,

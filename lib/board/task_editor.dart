@@ -1,18 +1,17 @@
-import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 
+import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/task.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 
+// This widget aссузе Task instanse then copy and edit copy
+// On edit done is send edited task to tasks bloc
 class TaskEditor extends StatefulWidget {
   final Task task;
-  const TaskEditor({
-    Key? key,
-    required this.task,
-  }) : super(key: key);
+  const TaskEditor({required this.task});
 
   @override
   _TaskEditorState createState() => _TaskEditorState();
@@ -39,155 +38,170 @@ class _TaskEditorState extends State<TaskEditor> {
           decoration: BoxDecoration(
             gradient: mainBackgroundGradient,
           ),
-          child: Column(
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(28),
-                child: Stack(
-                  children: [
-                    Positioned.fill(child: buildGlassmorphicLayer()),
-                    Column(
-                      children: [
-                        buildCloseButton(),
-                        Text(
-                          'Edit Task',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffE24F4F),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(28),
+                  // Stack uses for make layer of glass
+                  child: Stack(
+                    children: [
+                      // the glass layer
+                      // fill uses for adopt is size
+                      Positioned.fill(child: buildGlassmorphicLayer()),
+                      Column(
+                        children: [
+                          buildCloseButton(),
+                          Text(
+                            'Edit Task',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xffE24F4F),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        buildTitleInputSection(),
-                        SizedBox(
-                          height: 24,
-                        ),
-                        Text(
-                          'When do you want to do it...',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        buildTimePicker(),
-                        Text(
-                          '...once on ${editableTask.timeStart.toString().substring(0, 10)}',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w400),
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Text(
-                          '...and how long it will take',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w400),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        TimeSlider(
-                          startTime: editableTask.timeStart,
-                          endTime: editableTask.timeEnd,
-                          callback: (DateTime endTime) {
-                            setState(() {
-                              editableTask =
-                                  editableTask.copyWith(timeEnd: endTime);
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          height: 32,
-                        ),
-                        Text(
-                          'What color shoulz you task be?',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        buildColorPicker(),
-                        SizedBox(
-                          height: 16,
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              GestureDetector(
-                onTap: () {
-                  BlocProvider.of<DailytasksBloc>(context)
-                      .add(DailytasksUpdateTask(task: editableTask));
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  height: 40,
-                  width: double.maxFinite,
-                  margin: EdgeInsets.symmetric(horizontal: 40),
-                  decoration: BoxDecoration(
-                      color: Color(0xffE24F4F),
-                      borderRadius: BorderRadius.circular(30)),
-                  child: Center(
-                    child: Text(
-                      'Update Task',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700),
-                    ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          buildTitleInputSection(),
+                          SizedBox(
+                            height: 24,
+                          ),
+                          Text(
+                            'When do you want to do it...',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          buildTimePicker(),
+                          Text(
+                            '...once on ${editableTask.timeStart.toString().substring(0, 10)}',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          Text(
+                            '...and how long it will take',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          TimeSlider(
+                            period: editableTask.period,
+                            callback: (Duration newPeriod) {
+                              setState(() {
+                                editableTask =
+                                    editableTask.copyWith(period: newPeriod);
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            height: 32,
+                          ),
+                          Text(
+                            'What color shoulz you task be?',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          buildColorPicker(),
+                          SizedBox(
+                            height: 16,
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              GestureDetector(
-                onTap: () {
-                  BlocProvider.of<DailytasksBloc>(context)
-                      .add(DailytasksDeleteTask(task: editableTask));
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  height: 40,
-                  width: double.maxFinite,
-                  margin: EdgeInsets.symmetric(horizontal: 40),
-                  child: Center(
-                    child: Text(
-                      'Delete Task',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                ),
-              ),
-              // SizedBox(
-              //   height: 16,
-              // ),
-            ],
+                buildUpdateDeleteButtons()
+              ],
+            ),
           ),
         ),
       )),
     );
   }
 
-  Padding buildColorPicker() {
+  // Sends edited task to bloc
+  Widget buildUpdateDeleteButtons() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 16,
+        ),
+        GestureDetector(
+          onTap: () {
+            BlocProvider.of<DailytasksBloc>(context)
+                .add(DailytasksUpdateTask(task: editableTask));
+            Navigator.pop(context);
+          },
+          child: Container(
+            height: 40,
+            width: double.maxFinite,
+            margin: EdgeInsets.symmetric(horizontal: 40),
+            decoration: BoxDecoration(
+                color: Color(0xffE24F4F),
+                borderRadius: BorderRadius.circular(30)),
+            child: Center(
+              child: Text(
+                'Update Task',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        GestureDetector(
+          onTap: () {
+            BlocProvider.of<DailytasksBloc>(context)
+                .add(DailytasksDeleteTask(task: editableTask));
+            Navigator.pop(context);
+          },
+          child: Container(
+            height: 40,
+            width: double.maxFinite,
+            margin: EdgeInsets.symmetric(horizontal: 40),
+            child: Center(
+              child: Text(
+                'Delete Task',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 16,
+        ),
+      ],
+    );
+  }
+
+  Widget buildColorPicker() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Text('day',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+          Spacer(
+            flex: 2,
+          ),
+          Text('day',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+          Spacer(
+            flex: 1,
           ),
           Container(
             width: 20,
@@ -196,10 +210,13 @@ class _TaskEditorState extends State<TaskEditor> {
                 color: Color(0xffE24F4F),
                 borderRadius: BorderRadius.circular(10)),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Text('night',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+          Spacer(
+            flex: 2,
+          ),
+          Text('night',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+          Spacer(
+            flex: 1,
           ),
           Container(
             width: 20,
@@ -208,10 +225,13 @@ class _TaskEditorState extends State<TaskEditor> {
                 color: Color(0xff1260C5).withOpacity(0.5),
                 borderRadius: BorderRadius.circular(10)),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Text('classic',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+          Spacer(
+            flex: 2,
+          ),
+          Text('classic',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+          Spacer(
+            flex: 1,
           ),
           Container(
             width: 20,
@@ -220,17 +240,24 @@ class _TaskEditorState extends State<TaskEditor> {
                 color: Color(0xff373535).withOpacity(0.5),
                 borderRadius: BorderRadius.circular(10)),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Text('custom',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+          Spacer(
+            flex: 2,
+          ),
+          Text('custom',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+          Spacer(
+            flex: 1,
           ),
           Container(
             width: 20,
             height: 20,
             decoration: BoxDecoration(
-                color: Colors.red, borderRadius: BorderRadius.circular(10)),
-          )
+                color: Colors.blueGrey[100],
+                borderRadius: BorderRadius.circular(10)),
+          ),
+          Spacer(
+            flex: 2,
+          ),
         ],
       ),
     );
@@ -244,17 +271,11 @@ class _TaskEditorState extends State<TaskEditor> {
                 .difference(DateUtils.dateOnly(editableTask.timeStart)),
             mode: CupertinoTimerPickerMode.hm,
             onTimerDurationChanged: (v) {
-              Duration perioddif =
-                  editableTask.timeEnd.difference(editableTask.timeStart);
-
               DateTime timeStart =
                   DateUtils.dateOnly(editableTask.timeStart).add(v);
 
-              DateTime timeEnd = timeStart.add(perioddif);
-
               setState(() {
-                editableTask = editableTask.copyWith(
-                    timeStart: timeStart, timeEnd: timeEnd);
+                editableTask = editableTask.copyWith(timeStart: timeStart);
               });
             }));
   }
@@ -361,16 +382,10 @@ class _TaskEditorState extends State<TaskEditor> {
 }
 
 class TimeSlider extends StatelessWidget {
-  final DateTime startTime;
-  final DateTime endTime;
-  final Function(DateTime) callback;
+  final Duration period;
+  final Function(Duration) callback;
 
-  const TimeSlider({
-    Key? key,
-    required this.startTime,
-    required this.endTime,
-    required this.callback,
-  }) : super(key: key);
+  const TimeSlider({required this.period, required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -382,7 +397,7 @@ class TimeSlider extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${endTime.difference(startTime).inHours.toString()} hours',
+                '${period.inHours.toString()} hours',
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
               ),
               Text('Edit',
@@ -414,11 +429,11 @@ class TimeSlider extends StatelessWidget {
           child: Slider(
             max: 8,
             min: 0,
-            value: endTime.difference(startTime).inHours.toDouble(),
+            value: period.inHours.toDouble(),
             // activeColor: Colors.grey,
             // inactiveColor: Colors.grey,
             onChanged: (v) => callback(
-              startTime.add(Duration(hours: v.toInt())),
+              Duration(hours: v.toInt()),
             ),
           ),
         ),
