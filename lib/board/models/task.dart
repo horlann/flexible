@@ -7,7 +7,7 @@ class Task {
   final String title;
   final String subtitle;
   final DateTime timeStart;
-  final DateTime timeEnd;
+  final Duration period;
   final bool isDone;
   final bool isDonable;
   Task({
@@ -15,7 +15,7 @@ class Task {
     required this.title,
     required this.subtitle,
     required this.timeStart,
-    required this.timeEnd,
+    required this.period,
     required this.isDone,
     required this.isDonable,
   }) {
@@ -30,9 +30,21 @@ class Task {
       'title': title,
       'subtitle': subtitle,
       'timeStart': timeStart.millisecondsSinceEpoch,
-      'timeEnd': timeEnd.millisecondsSinceEpoch,
+      'period': period.inMilliseconds,
       'isDone': isDone,
       'isDonable': isDonable,
+    };
+  }
+
+  Map<String, dynamic> toSqfMap() {
+    return {
+      'uuid': uuid,
+      'title': title,
+      'subtitle': subtitle,
+      'timeStart': timeStart.millisecondsSinceEpoch,
+      'period': period.inMilliseconds,
+      'isDone': isDone ? 1 : 0,
+      'isDonable': isDonable ? 1 : 0,
     };
   }
 
@@ -42,9 +54,21 @@ class Task {
       title: map['title'],
       subtitle: map['subtitle'],
       timeStart: DateTime.fromMillisecondsSinceEpoch(map['timeStart']),
-      timeEnd: DateTime.fromMillisecondsSinceEpoch(map['timeEnd']),
+      period: Duration(milliseconds: map['period']),
       isDone: map['isDone'],
       isDonable: map['isDonable'],
+    );
+  }
+
+  factory Task.fromSqfMap(Map<String, dynamic> map) {
+    return Task(
+      uuid: map['uuid'],
+      title: map['title'],
+      subtitle: map['subtitle'],
+      timeStart: DateTime.fromMillisecondsSinceEpoch(map['timeStart']),
+      period: Duration(milliseconds: map['period']),
+      isDone: map['isDone'] == 1 ? true : false,
+      isDonable: map['isDonable'] == 1 ? true : false,
     );
   }
 
@@ -57,7 +81,7 @@ class Task {
     String? title,
     String? subtitle,
     DateTime? timeStart,
-    DateTime? timeEnd,
+    Duration? period,
     bool? isDone,
     bool? isDonable,
   }) {
@@ -66,7 +90,7 @@ class Task {
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
       timeStart: timeStart ?? this.timeStart,
-      timeEnd: timeEnd ?? this.timeEnd,
+      period: period ?? this.period,
       isDone: isDone ?? this.isDone,
       isDonable: isDonable ?? this.isDonable,
     );
@@ -74,7 +98,7 @@ class Task {
 
   @override
   String toString() {
-    return 'Task(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, timeEnd: $timeEnd, isDone: $isDone, isDonable: $isDonable)';
+    return 'Task(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable)';
   }
 
   @override
@@ -86,7 +110,7 @@ class Task {
         other.title == title &&
         other.subtitle == subtitle &&
         other.timeStart == timeStart &&
-        other.timeEnd == timeEnd &&
+        other.period == period &&
         other.isDone == isDone &&
         other.isDonable == isDonable;
   }
@@ -97,7 +121,7 @@ class Task {
         title.hashCode ^
         subtitle.hashCode ^
         timeStart.hashCode ^
-        timeEnd.hashCode ^
+        period.hashCode ^
         isDone.hashCode ^
         isDonable.hashCode;
   }
