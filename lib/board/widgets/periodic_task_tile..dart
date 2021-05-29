@@ -78,8 +78,6 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           .difference(widget.task.timeStart)
           .inMinutes;
       var currFromStart = currt.difference(widget.task.timeStart).inMinutes;
-
-      // print(0.1.);
       return currFromStart / dif;
     }
 
@@ -88,7 +86,6 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
 
   @override
   Widget build(BuildContext context) {
-    print(timeDiffEquality());
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -108,16 +105,18 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
                           color: Color(0xff545353),
                           fontSize: 13,
                           fontWeight: FontWeight.w400))),
-              timeDiffEquality() == 0
+              timeDiffEquality() > 1
                   ? SizedBox()
-                  : Positioned(
-                      top: (110 * timeDiffEquality()) + 12,
-                      child: Text(
-                        geTimeString(DateTime.now()),
-                        style:
-                            TextStyle(fontSize: 13, color: Color(0xff545353)),
-                      ),
-                    ),
+                  : (timeDiffEquality() == 0
+                      ? SizedBox()
+                      : Positioned(
+                          top: (110 * timeDiffEquality()) + 12,
+                          child: Text(
+                            geTimeString(DateTime.now()),
+                            style: TextStyle(
+                                fontSize: 13, color: Color(0xff545353)),
+                          ),
+                        )),
               Positioned(
                   bottom: 0,
                   child: Text(
