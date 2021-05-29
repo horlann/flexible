@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/task_editor.dart';
@@ -5,14 +7,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TaskTile extends StatefulWidget {
+class PeriodicTaskTile extends StatefulWidget {
   final Task task;
-  TaskTile({required this.task});
+  PeriodicTaskTile({required this.task});
   @override
-  _TaskTileState createState() => _TaskTileState();
+  _PeriodicTaskTileState createState() => _PeriodicTaskTileState();
 }
 
-class _TaskTileState extends State<TaskTile> {
+class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
   // DateTime currentTime = DateTime.now();
   late bool completed;
   bool showSubButtons = false;
@@ -21,6 +23,17 @@ class _TaskTileState extends State<TaskTile> {
   void initState() {
     super.initState();
     completed = widget.task.isDone;
+    updateUi();
+  }
+
+  // Start autoupdate cycle
+  // Uses for correct time showing
+  // Auto close if widget disposed
+  updateUi() {
+    if (this.mounted) {
+      setState(() {});
+      Timer(Duration(seconds: 10), () => updateUi());
+    }
   }
 
   onCheckClicked(BuildContext context) {
@@ -48,6 +61,24 @@ class _TaskTileState extends State<TaskTile> {
 
   String geTimeString(DateTime date) => date.toString().substring(11, 16);
 
+  // Calc differense between current time and task period
+  double timeDiffEquality() {
+    DateTime currt = DateTime.now();
+
+    if (currt.difference(widget.task.timeStart).inMinutes > 0) {
+      var dif = widget.task.timeStart
+          .add(widget.task.period)
+          .difference(widget.task.timeStart)
+          .inMinutes;
+      var currFromStart = currt.difference(widget.task.timeStart).inMinutes;
+
+      // print(0.1.);
+      return currFromStart / dif;
+    }
+
+    return 0.0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -63,8 +94,27 @@ class _TaskTileState extends State<TaskTile> {
           child: Stack(
             children: [
               Positioned(
-                  top: 16,
+                  top: 2,
                   child: Text(geTimeString(widget.task.timeStart),
+                      style: TextStyle(
+                          color: Color(0xff545353),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400))),
+              timeDiffEquality() == 0
+                  ? SizedBox()
+                  : Positioned(
+                      top: (120 * timeDiffEquality()) + 12,
+                      child: Text(
+                        geTimeString(DateTime.now()),
+                        style:
+                            TextStyle(fontSize: 13, color: Color(0xff545353)),
+                      ),
+                    ),
+              Positioned(
+                  bottom: 0,
+                  child: Text(
+                      geTimeString(
+                          widget.task.timeStart.add(widget.task.period)),
                       style: TextStyle(
                           color: Color(0xff545353),
                           fontSize: 13,
@@ -95,24 +145,57 @@ class _TaskTileState extends State<TaskTile> {
     );
   }
 
-  Container buildMainIcon() {
-    return Container(
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Color(0xffEE7579).withOpacity(0.75),
-                blurRadius: 20,
-                offset: Offset(0, 10))
-          ],
-          color: widget.task.color,
-          borderRadius: BorderRadius.circular(25),
+  Widget buildMainIcon() {
+    return Stack(
+      children: [
+        Container(
+          height: 150,
+          width: 50,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  color: Color(0xff707070).withOpacity(0.5), blurRadius: 10)
+            ],
+            color: Color(0xffCAC8C4),
+            borderRadius: BorderRadius.circular(25),
+          ),
         ),
-        child: Image.asset(
-          'src/icons/Additional.png',
-          scale: 1.1,
-        ));
+        ClipRRect(
+          borderRadius: BorderRadius.circular(25),
+          child: Container(
+            height: 150,
+            width: 50,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ClipRect(
+                child: Align(
+                  heightFactor: timeDiffEquality(),
+                  child: Container(
+                    height: 150,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color(0xff707070).withOpacity(0.5),
+                            blurRadius: 10)
+                      ],
+                      color: widget.task.color,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Container(
+            height: 150,
+            width: 50,
+            child: Image.asset(
+              'src/icons/Additional.png',
+              scale: 1.1,
+            )),
+      ],
+    );
   }
 
   Column buildTextSection() {
@@ -123,7 +206,7 @@ class _TaskTileState extends State<TaskTile> {
           height: 4,
         ),
         Text(
-          '${geTimeString(widget.task.timeStart)}',
+          '${geTimeString(widget.task.timeStart)} - ${geTimeString(widget.task.timeStart.add(widget.task.period))}',
           style: TextStyle(
               color: Color(0xff545353),
               fontSize: 18,
@@ -164,20 +247,28 @@ class _TaskTileState extends State<TaskTile> {
       crossFadeState:
           showSubButtons ? CrossFadeState.showSecond : CrossFadeState.showFirst,
       firstChild: SizedBox(),
-      secondChild: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          miniWhiteBorderedButton(
-              text: 'Edit Task',
-              iconAsset: 'src/icons/edit.png',
-              callback: () => onEditClicked(context)),
-          miniWhiteBorderedButton(
-              text: 'Copy Task', iconAsset: 'src/icons/copy.png'),
-          miniWhiteBorderedButton(
-              text: 'Delete',
-              iconAsset: 'src/icons/delete.png',
-              callback: () => onDeleteClicked(context))
-        ],
+      secondChild: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            miniWhiteBorderedButton(
+                text: 'Edit Task',
+                iconAsset: 'src/icons/edit.png',
+                callback: () => onEditClicked(context)),
+            SizedBox(
+              width: 8,
+            ),
+            miniWhiteBorderedButton(
+                text: 'Copy Task', iconAsset: 'src/icons/copy.png'),
+            SizedBox(
+              width: 8,
+            ),
+            miniWhiteBorderedButton(
+                text: 'Delete',
+                iconAsset: 'src/icons/delete.png',
+                callback: () => onDeleteClicked(context))
+          ],
+        ),
       ),
     );
   }

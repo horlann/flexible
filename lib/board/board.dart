@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/widgets/empty_task_tile.dart';
 import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/widgets/periodic_task_tile..dart';
 import 'package:flexible/board/widgets/task_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,8 +31,10 @@ class _BoardState extends State<Board> {
       isDone: false,
       title: 'TheTask ${++taskCount}',
       subtitle: 'Nice ${taskCount}day',
-      timeStart: dayForAdd,
-      period: Duration(minutes: 5),
+      // add task to showed date with current time
+      timeStart: DateUtils.dateOnly(dayForAdd).add(
+          Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute)),
+      period: Duration(),
       isDonable: true,
       color: Color(0xffEE7579),
     );
@@ -116,10 +119,11 @@ class _BoardState extends State<Board> {
               builder: (context, state) {
                 if (state is DailytasksCommon) {
                   List<Widget> tasks = state.tasks.map((e) {
-                    // ignore: unnecessary_cast
-                    return TaskTile(
-                      task: e,
-                    ) as Widget;
+                    if (e.period.inMilliseconds == 0) {
+                      return TaskTile(task: e) as Widget;
+                    } else {
+                      return PeriodicTaskTile(task: e) as Widget;
+                    }
                   }).toList();
                   // Insert adding widget before last task
                   // Last task is need be a goodnight by programm logic

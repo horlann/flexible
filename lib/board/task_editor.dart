@@ -193,6 +193,7 @@ class _TaskEditorState extends State<TaskEditor> {
   Widget buildColorPicker() {
     Widget colorPart({required Color color, required String name}) {
       return Material(
+        color: Colors.transparent,
         child: InkWell(
           onTap: () {
             editableTask = editableTask.copyWith(color: color);

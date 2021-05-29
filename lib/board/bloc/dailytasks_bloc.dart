@@ -46,7 +46,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
           title: 'Good Morning',
           subtitle: 'Have a nice day',
           timeStart: startOfaDay(showDay).add(Duration(hours: 8)),
-          period: Duration(minutes: 5),
+          period: Duration(),
           isDonable: true,
           color: Color(0xffEE7579),
         ));
@@ -56,7 +56,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
           title: 'Good night',
           subtitle: 'Sleep well',
           timeStart: startOfaDay(showDay).add(Duration(hours: 23)),
-          period: Duration(minutes: 5),
+          period: Duration(),
           isDonable: false,
           color: Color(0xffEE7579),
         ));
