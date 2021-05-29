@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
+import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/task_editor.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,13 +17,12 @@ class PeriodicTaskTile extends StatefulWidget {
 
 class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
   // DateTime currentTime = DateTime.now();
-  late bool completed;
   bool showSubButtons = false;
 
   @override
   void initState() {
     super.initState();
-    completed = widget.task.isDone;
+
     updateUi();
   }
 
@@ -37,11 +37,8 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
   }
 
   onCheckClicked(BuildContext context) {
-    setState(() {
-      completed = !completed;
-    });
-    BlocProvider.of<DailytasksBloc>(context).add(
-        DailytasksUpdateTask(task: widget.task.copyWith(isDone: completed)));
+    BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdateTask(
+        task: widget.task.copyWith(isDone: !widget.task.isDone)));
   }
 
   onEditClicked(BuildContext context) {
@@ -57,6 +54,16 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
   onDeleteClicked(BuildContext context) {
     BlocProvider.of<DailytasksBloc>(context)
         .add(DailytasksDeleteTask(task: widget.task));
+  }
+
+  void showCopyDialog() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (context) => CopyTaskDialog(
+        task: widget.task,
+      ),
+    );
   }
 
   String geTimeString(DateTime date) => date.toString().substring(11, 16);
@@ -81,6 +88,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
 
   @override
   Widget build(BuildContext context) {
+    print(timeDiffEquality());
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -103,7 +111,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
               timeDiffEquality() == 0
                   ? SizedBox()
                   : Positioned(
-                      top: (120 * timeDiffEquality()) + 12,
+                      top: (110 * timeDiffEquality()) + 12,
                       child: Text(
                         geTimeString(DateTime.now()),
                         style:
@@ -221,8 +229,9 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
               color: Color(0xff545353),
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              decoration:
-                  completed ? TextDecoration.lineThrough : TextDecoration.none),
+              decoration: widget.task.isDone
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none),
         ),
         Text(
           widget.task.subtitle,
@@ -259,7 +268,10 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
               width: 8,
             ),
             miniWhiteBorderedButton(
-                text: 'Copy Task', iconAsset: 'src/icons/copy.png'),
+              text: 'Copy Task',
+              iconAsset: 'src/icons/copy.png',
+              callback: () => showCopyDialog(),
+            ),
             SizedBox(
               width: 8,
             ),
@@ -326,7 +338,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
                 offset: Offset(0, 10))
           ],
         ),
-        child: completed
+        child: widget.task.isDone
             ? Image.asset(
                 'src/icons/checkbox_checked.png',
                 scale: 1.2,

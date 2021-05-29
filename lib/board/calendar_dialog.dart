@@ -1,11 +1,20 @@
 // Show dialog with transparent background and month calendar inside
 // When click on day calendar is closes
-import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'package:flexible/board/bloc/dailytasks_bloc.dart';
+
 class CalendarDialog extends StatelessWidget {
+  final Function onSelect;
+  final DateTime focusedDay;
+  final bool withTail;
+  const CalendarDialog({
+    required this.onSelect,
+    required this.focusedDay,
+    this.withTail = false,
+  });
   @override
   Widget build(BuildContext context) {
     TextStyle calTextStyle = TextStyle(
@@ -33,66 +42,63 @@ class CalendarDialog extends StatelessWidget {
                   child: Container(
                     color: Color(0xffF66868),
                     child: TableCalendar(
-                      onDaySelected: (selectedDay, focusedDay) {
-                        BlocProvider.of<DailytasksBloc>(context)
-                            .add(DailytasksSetDay(day: selectedDay));
-                        Navigator.pop(context);
-                      },
-                      selectedDayPredicate: (day) {
-                        return isSameDay(
-                            BlocProvider.of<DailytasksBloc>(context).showDay,
-                            day);
-                      },
-                      rowHeight: 35,
-                      headerStyle: HeaderStyle(
-                          titleTextStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                        onDaySelected: (selectedDay, focusedDay) {
+                          onSelect(selectedDay);
+                        },
+                        selectedDayPredicate: (day) {
+                          return isSameDay(focusedDay, day);
+                        },
+                        rowHeight: 35,
+                        headerStyle: HeaderStyle(
+                            titleTextStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            leftChevronIcon:
+                                Icon(Icons.chevron_left, color: Colors.white),
+                            rightChevronIcon:
+                                Icon(Icons.chevron_right, color: Colors.white),
+                            formatButtonVisible: false,
+                            titleCentered: true,
+                            headerPadding:
+                                EdgeInsets.symmetric(horizontal: 50)),
+                        calendarStyle: CalendarStyle(
+                          selectedDecoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.5),
                           ),
-                          leftChevronIcon:
-                              Icon(Icons.chevron_left, color: Colors.white),
-                          rightChevronIcon:
-                              Icon(Icons.chevron_right, color: Colors.white),
-                          formatButtonVisible: false,
-                          titleCentered: true,
-                          headerPadding: EdgeInsets.symmetric(horizontal: 50)),
-                      calendarStyle: CalendarStyle(
-                        selectedDecoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.5),
+                          isTodayHighlighted: false,
+                          defaultTextStyle: calTextStyle,
+                          holidayTextStyle: calTextStyle,
+                          todayTextStyle: calTextStyle,
+                          weekendTextStyle: calTextStyle,
+                          outsideTextStyle: calTextStyle,
+                          disabledTextStyle: calTextStyle,
+                          rangeEndTextStyle: calTextStyle,
+                          selectedTextStyle: calTextStyle,
+                          rangeStartTextStyle: calTextStyle,
+                          withinRangeTextStyle: calTextStyle,
                         ),
-                        isTodayHighlighted: false,
-                        defaultTextStyle: calTextStyle,
-                        holidayTextStyle: calTextStyle,
-                        todayTextStyle: calTextStyle,
-                        weekendTextStyle: calTextStyle,
-                        outsideTextStyle: calTextStyle,
-                        disabledTextStyle: calTextStyle,
-                        rangeEndTextStyle: calTextStyle,
-                        selectedTextStyle: calTextStyle,
-                        rangeStartTextStyle: calTextStyle,
-                        withinRangeTextStyle: calTextStyle,
-                      ),
-                      daysOfWeekStyle: DaysOfWeekStyle(
-                        weekdayStyle: calTextStyle,
-                        weekendStyle: calTextStyle,
-                      ),
-                      calendarFormat: CalendarFormat.month,
-                      firstDay: DateTime.utc(2010, 10, 16),
-                      lastDay: DateTime.utc(2030, 3, 14),
-                      focusedDay:
-                          BlocProvider.of<DailytasksBloc>(context).showDay,
-                    ),
+                        daysOfWeekStyle: DaysOfWeekStyle(
+                          weekdayStyle: calTextStyle,
+                          weekendStyle: calTextStyle,
+                        ),
+                        calendarFormat: CalendarFormat.month,
+                        firstDay: DateTime.utc(2010, 10, 16),
+                        lastDay: DateTime.utc(2030, 3, 14),
+                        focusedDay: focusedDay),
                   ),
                 )),
           ),
-          SizedBox(
-            height: 40,
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Image.asset('src/tipTail.png'),
-            ),
-          ),
+          withTail
+              ? SizedBox(
+                  height: 40,
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Image.asset('src/tipTail.png'),
+                  ),
+                )
+              : SizedBox(),
           SizedBox(
             height: 45,
           )

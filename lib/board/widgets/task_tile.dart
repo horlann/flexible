@@ -1,4 +1,5 @@
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
+import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/task_editor.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,21 +15,16 @@ class TaskTile extends StatefulWidget {
 
 class _TaskTileState extends State<TaskTile> {
   // DateTime currentTime = DateTime.now();
-  late bool completed;
   bool showSubButtons = false;
 
   @override
   void initState() {
     super.initState();
-    completed = widget.task.isDone;
   }
 
   onCheckClicked(BuildContext context) {
-    setState(() {
-      completed = !completed;
-    });
-    BlocProvider.of<DailytasksBloc>(context).add(
-        DailytasksUpdateTask(task: widget.task.copyWith(isDone: completed)));
+    BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdateTask(
+        task: widget.task.copyWith(isDone: !widget.task.isDone)));
   }
 
   onEditClicked(BuildContext context) {
@@ -46,10 +42,21 @@ class _TaskTileState extends State<TaskTile> {
         .add(DailytasksDeleteTask(task: widget.task));
   }
 
+  void showCopyDialog() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (context) => CopyTaskDialog(
+        task: widget.task,
+      ),
+    );
+  }
+
   String geTimeString(DateTime date) => date.toString().substring(11, 16);
 
   @override
   Widget build(BuildContext context) {
+    print(widget.task.isDone);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -138,8 +145,9 @@ class _TaskTileState extends State<TaskTile> {
               color: Color(0xff545353),
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              decoration:
-                  completed ? TextDecoration.lineThrough : TextDecoration.none),
+              decoration: widget.task.isDone
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none),
         ),
         Text(
           widget.task.subtitle,
@@ -172,7 +180,10 @@ class _TaskTileState extends State<TaskTile> {
               iconAsset: 'src/icons/edit.png',
               callback: () => onEditClicked(context)),
           miniWhiteBorderedButton(
-              text: 'Copy Task', iconAsset: 'src/icons/copy.png'),
+            text: 'Copy Task',
+            iconAsset: 'src/icons/copy.png',
+            callback: () => showCopyDialog(),
+          ),
           miniWhiteBorderedButton(
               text: 'Delete',
               iconAsset: 'src/icons/delete.png',
@@ -235,7 +246,7 @@ class _TaskTileState extends State<TaskTile> {
                 offset: Offset(0, 10))
           ],
         ),
-        child: completed
+        child: widget.task.isDone
             ? Image.asset(
                 'src/icons/checkbox_checked.png',
                 scale: 1.2,

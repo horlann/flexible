@@ -32,8 +32,8 @@ class _BoardState extends State<Board> {
       title: 'TheTask ${++taskCount}',
       subtitle: 'Nice ${taskCount}day',
       // add task to showed date with current time
-      timeStart: DateUtils.dateOnly(dayForAdd).add(
-          Duration(hours: DateTime.now().hour, minutes: DateTime.now().minute)),
+      timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
+          hours: DateTime.now().hour, minutes: DateTime.now().minute - 5)),
       period: Duration(),
       isDonable: true,
       color: Color(0xffEE7579),
@@ -129,7 +129,7 @@ class _BoardState extends State<Board> {
                   // Last task is need be a goodnight by programm logic
                   tasks.insert(tasks.length - 1, buildAddingSection());
 
-                  return Column(children: tasks);
+                  return new Column(children: tasks);
                 }
                 // TODO loading
                 return Column();

@@ -22,7 +22,14 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
     showDialog(
       context: context,
       barrierColor: Colors.transparent,
-      builder: (context) => CalendarDialog(),
+      builder: (context) => CalendarDialog(
+          focusedDay: BlocProvider.of<DailytasksBloc>(context).showDay,
+          withTail: true,
+          onSelect: (selectedDay) {
+            BlocProvider.of<DailytasksBloc>(context)
+                .add(DailytasksSetDay(day: selectedDay));
+            Navigator.pop(context);
+          }),
     );
   }
 
