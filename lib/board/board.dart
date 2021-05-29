@@ -14,7 +14,6 @@ class Board extends StatefulWidget {
 }
 
 class _BoardState extends State<Board> {
-  List<Widget> tasks = [];
   // Uses for count new tasks
   int taskCount = 0;
 
@@ -45,8 +44,7 @@ class _BoardState extends State<Board> {
 
   @override
   Widget build(BuildContext context) {
-    return buildWrapperwithShiftedBackground(
-        child: buildScrollViewWithLine(children: [...tasks]));
+    return buildWrapperwithShiftedBackground(child: buildScrollViewWithLine());
   }
 
   // Glassmorphic background shifted to right
@@ -96,8 +94,7 @@ class _BoardState extends State<Board> {
 
   // Provide scroll and draw red line beetween tiles
   // Uses only with special task tiles for correct line positioning
-  SingleChildScrollView buildScrollViewWithLine(
-      {required List<Widget> children}) {
+  SingleChildScrollView buildScrollViewWithLine() {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Stack(
@@ -111,28 +108,32 @@ class _BoardState extends State<Board> {
                 alignment: Alignment.centerLeft,
                 child: Container(width: 3, color: Color(0xff707070))),
           )),
-          // its list of tasks
+          // this list of tasks
           // List load from state
           // and insert adding section
           Container(
             child: BlocBuilder<DailytasksBloc, DailytasksState>(
               builder: (context, state) {
-                if (state is DailytasksCommon) {
-                  List<Widget> tasks = state.tasks.map((e) {
-                    if (e.period.inMilliseconds == 0) {
-                      return TaskTile(task: e) as Widget;
-                    } else {
-                      return PeriodicTaskTile(task: e) as Widget;
-                    }
-                  }).toList();
-                  // Insert adding widget before last task
-                  // Last task is need be a goodnight by programm logic
-                  tasks.insert(tasks.length - 1, buildAddingSection());
-
-                  return new Column(children: tasks);
+                List<Widget> getList() {
+                  if (state is DailytasksCommon) {
+                    List<Widget> tasks = state.tasks.map((e) {
+                      if (e.period.inMilliseconds == 0) {
+                        return TaskTile(task: e) as Widget;
+                      } else {
+                        return PeriodicTaskTile(task: e) as Widget;
+                      }
+                    }).toList();
+                    // Insert adding widget before last task
+                    // Last task is need be a goodnight by programm logic
+                    tasks.insert(tasks.length - 1, buildAddingSection());
+                    return tasks;
+                  }
+                  return [];
                 }
-                // TODO loading
-                return Column();
+
+                return Column(
+                  children: getList(),
+                );
               },
             ),
           ),
