@@ -191,6 +191,31 @@ class _TaskEditorState extends State<TaskEditor> {
   }
 
   Widget buildColorPicker() {
+    Widget colorPart({required Color color, required String name}) {
+      return Material(
+        child: InkWell(
+          onTap: () {
+            editableTask = editableTask.copyWith(color: color);
+          },
+          child: Row(
+            children: [
+              Text(name,
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+              SizedBox(
+                width: 4,
+              ),
+              Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                    color: color, borderRadius: BorderRadius.circular(10)),
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -198,63 +223,19 @@ class _TaskEditorState extends State<TaskEditor> {
           Spacer(
             flex: 2,
           ),
-          Text('day',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
-          Spacer(
-            flex: 1,
-          ),
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-                color: Color(0xffE24F4F),
-                borderRadius: BorderRadius.circular(10)),
-          ),
+          colorPart(color: Color(0xffE24F4F), name: 'Day'),
           Spacer(
             flex: 2,
           ),
-          Text('night',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
-          Spacer(
-            flex: 1,
-          ),
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-                color: Color(0xff1260C5).withOpacity(0.5),
-                borderRadius: BorderRadius.circular(10)),
-          ),
+          colorPart(color: Color(0xff1260C5).withOpacity(0.8), name: 'Night'),
           Spacer(
             flex: 2,
           ),
-          Text('classic',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
-          Spacer(
-            flex: 1,
-          ),
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-                color: Color(0xff373535).withOpacity(0.5),
-                borderRadius: BorderRadius.circular(10)),
-          ),
+          colorPart(color: Colors.yellow, name: 'Classic'),
           Spacer(
             flex: 2,
           ),
-          Text('custom',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
-          Spacer(
-            flex: 1,
-          ),
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-                color: Colors.blueGrey[100],
-                borderRadius: BorderRadius.circular(10)),
-          ),
+          colorPart(color: Color(0xff373535).withOpacity(0.2), name: 'custom'),
           Spacer(
             flex: 2,
           ),

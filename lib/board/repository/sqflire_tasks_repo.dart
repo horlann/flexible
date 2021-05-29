@@ -12,7 +12,7 @@ class SqfliteTasksRepo implements ITasksRepo {
         onCreate: (Database db, int version) async {
       print('creating new db');
       await db.execute(
-          'CREATE TABLE Tasks (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER )');
+          'CREATE TABLE Tasks (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER , color TEXT )');
     });
   }
 

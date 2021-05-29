@@ -111,7 +111,7 @@ class _TaskTileState extends State<TaskTile> {
                 blurRadius: 20,
                 offset: Offset(0, 10))
           ],
-          color: Color(0xffEE7579),
+          color: widget.task.color,
           borderRadius: BorderRadius.circular(25),
         ),
         child: Image.asset(

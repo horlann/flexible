@@ -33,6 +33,7 @@ class _BoardState extends State<Board> {
       timeStart: dayForAdd,
       period: Duration(minutes: 5),
       isDonable: true,
+      color: Color(0xffEE7579),
     );
 
     BlocProvider.of<DailytasksBloc>(context)

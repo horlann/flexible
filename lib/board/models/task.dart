@@ -1,6 +1,24 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+
+extension HexColor on Color {
+  /// String is in the format "aabbcc" or "ffaabbcc" with an optional leading "#".
+  static Color fromHex(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
+  /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
+  String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
+      '${alpha.toRadixString(16).padLeft(2, '0')}'
+      '${red.toRadixString(16).padLeft(2, '0')}'
+      '${green.toRadixString(16).padLeft(2, '0')}'
+      '${blue.toRadixString(16).padLeft(2, '0')}';
+}
 
 class Task {
   String? uuid;
@@ -10,6 +28,7 @@ class Task {
   final Duration period;
   final bool isDone;
   final bool isDonable;
+  final Color color;
   Task({
     this.uuid,
     required this.title,
@@ -18,6 +37,7 @@ class Task {
     required this.period,
     required this.isDone,
     required this.isDonable,
+    required this.color,
   }) {
     if (uuid == null) {
       this.uuid = Uuid().v1();
@@ -33,6 +53,7 @@ class Task {
       'period': period.inMilliseconds,
       'isDone': isDone,
       'isDonable': isDonable,
+      'color': color.toHex(),
     };
   }
 
@@ -45,6 +66,7 @@ class Task {
       'period': period.inMilliseconds,
       'isDone': isDone ? 1 : 0,
       'isDonable': isDonable ? 1 : 0,
+      'color': color.toHex(),
     };
   }
 
@@ -57,6 +79,7 @@ class Task {
       period: Duration(milliseconds: map['period']),
       isDone: map['isDone'],
       isDonable: map['isDonable'],
+      color: HexColor.fromHex(map['color']),
     );
   }
 
@@ -69,6 +92,7 @@ class Task {
       period: Duration(milliseconds: map['period']),
       isDone: map['isDone'] == 1 ? true : false,
       isDonable: map['isDonable'] == 1 ? true : false,
+      color: HexColor.fromHex(map['color']),
     );
   }
 
@@ -84,6 +108,7 @@ class Task {
     Duration? period,
     bool? isDone,
     bool? isDonable,
+    Color? color,
   }) {
     return Task(
       uuid: uuid ?? this.uuid,
@@ -93,12 +118,13 @@ class Task {
       period: period ?? this.period,
       isDone: isDone ?? this.isDone,
       isDonable: isDonable ?? this.isDonable,
+      color: color ?? this.color,
     );
   }
 
   @override
   String toString() {
-    return 'Task(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable)';
+    return 'Task(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, color: $color)';
   }
 
   @override
@@ -112,7 +138,8 @@ class Task {
         other.timeStart == timeStart &&
         other.period == period &&
         other.isDone == isDone &&
-        other.isDonable == isDonable;
+        other.isDonable == isDonable &&
+        other.color == color;
   }
 
   @override
@@ -123,6 +150,7 @@ class Task {
         timeStart.hashCode ^
         period.hashCode ^
         isDone.hashCode ^
-        isDonable.hashCode;
+        isDonable.hashCode ^
+        color.hashCode;
   }
 }

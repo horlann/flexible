@@ -42,20 +42,24 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
       if (sqTasks.isEmpty) {
         // Add Good morning task
         await tasksRepo.addTask(Task(
-            isDone: false,
-            title: 'Good Morning',
-            subtitle: 'Have a nice day',
-            timeStart: startOfaDay(showDay).add(Duration(hours: 8)),
-            period: Duration(minutes: 5),
-            isDonable: true));
+          isDone: false,
+          title: 'Good Morning',
+          subtitle: 'Have a nice day',
+          timeStart: startOfaDay(showDay).add(Duration(hours: 8)),
+          period: Duration(minutes: 5),
+          isDonable: true,
+          color: Color(0xffEE7579),
+        ));
         // Add undonable good night task
         await tasksRepo.addTask(Task(
-            isDone: false,
-            title: 'Good night',
-            subtitle: 'Sleep well',
-            timeStart: startOfaDay(showDay).add(Duration(hours: 23)),
-            period: Duration(minutes: 5),
-            isDonable: false));
+          isDone: false,
+          title: 'Good night',
+          subtitle: 'Sleep well',
+          timeStart: startOfaDay(showDay).add(Duration(hours: 23)),
+          period: Duration(minutes: 5),
+          isDonable: false,
+          color: Color(0xffEE7579),
+        ));
         // Reload
         sqTasks = await tasksRepo.tasksByPeriod(
             from: startOfaDay(showDay), to: endOfaDay(showDay));
