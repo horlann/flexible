@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/widgets/empty_task_tile.dart';
@@ -35,7 +36,9 @@ class _BoardState extends State<Board> {
           hours: DateTime.now().hour, minutes: DateTime.now().minute - 5)),
       period: Duration(),
       isDonable: true,
-      color: Color(0xffEE7579),
+      // generate random color
+      color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
+          Random().nextInt(256), 1),
     );
 
     BlocProvider.of<DailytasksBloc>(context)

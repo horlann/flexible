@@ -39,7 +39,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
           from: startOfaDay(showDay), to: endOfaDay(showDay));
 
       // Add demo taks on first run
-      if (sqTasks.isEmpty) {
+      if (sqTasks.length < 2) {
         // Add Good morning task
         await tasksRepo.addTask(Task(
           isDone: false,

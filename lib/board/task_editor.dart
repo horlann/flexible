@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -236,7 +238,10 @@ class _TaskEditorState extends State<TaskEditor> {
           Spacer(
             flex: 2,
           ),
-          colorPart(color: Color(0xff373535).withOpacity(0.2), name: 'custom'),
+          colorPart(
+              color: Color.fromRGBO(Random().nextInt(256),
+                  Random().nextInt(256), Random().nextInt(256), 1),
+              name: 'Custom'),
           Spacer(
             flex: 2,
           ),

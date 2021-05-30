@@ -46,7 +46,7 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
         ? CalendarDialog(
             focusedDay: copyTo,
             onSelect: (date) {
-              copyTo = date;
+              copyTo = DateUtils.dateOnly(date);
               setState(() {
                 showCalendarPicker = false;
               });
