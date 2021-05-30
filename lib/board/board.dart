@@ -24,7 +24,7 @@ class _BoardState extends State<Board> {
   }
 
   // Add new task to list and update ui
-  void addNewTask(BuildContext context) {
+  addNewTask(BuildContext context) {
     DateTime dayForAdd = BlocProvider.of<DailytasksBloc>(context).state.showDay;
     var newtask = Task(
       uuid: null,
@@ -43,6 +43,83 @@ class _BoardState extends State<Board> {
 
     BlocProvider.of<DailytasksBloc>(context)
         .add(DailytasksAddTask(task: newtask));
+  }
+
+  addBunchOfTasks(BuildContext context) {
+    DateTime dayForAdd = BlocProvider.of<DailytasksBloc>(context).state.showDay;
+
+    var newtask2 = Task(
+      uuid: null,
+      isDone: false,
+      title: 'Demo task ${++taskCount}',
+      subtitle: 'Nice turbo day',
+      // add task to showed date with current time
+      timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
+          hours: DateTime.now().hour, minutes: DateTime.now().minute - 25)),
+      period: Duration(),
+      isDonable: true,
+      // generate random color
+      color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
+          Random().nextInt(256), 1),
+    );
+
+    BlocProvider.of<DailytasksBloc>(context)
+        .add(DailytasksAddTask(task: newtask2));
+
+    var newtask3 = Task(
+      uuid: null,
+      isDone: false,
+      title: 'Duration task',
+      subtitle: 'Happy birthday',
+      // add task to showed date with current time
+      timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
+          hours: DateTime.now().hour, minutes: DateTime.now().minute - 20)),
+      period: Duration(hours: 1),
+      isDonable: true,
+      // generate random color
+      color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
+          Random().nextInt(256), 1),
+    );
+
+    BlocProvider.of<DailytasksBloc>(context)
+        .add(DailytasksAddTask(task: newtask3));
+
+    var newtask4 = Task(
+      uuid: null,
+      isDone: true,
+      title: 'Finished task',
+      subtitle: 'Ultra bright day',
+      // add task to showed date with current time
+      timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
+          hours: DateTime.now().hour, minutes: DateTime.now().minute - 10)),
+      period: Duration(),
+      isDonable: true,
+      // generate random color
+      color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
+          Random().nextInt(256), 1),
+    );
+
+    BlocProvider.of<DailytasksBloc>(context)
+        .add(DailytasksAddTask(task: newtask4));
+
+    var newtask5 = Task(
+      uuid: null,
+      isDone: false,
+      title: 'Forwarded task',
+      subtitle: 'Nice may day',
+      // add task to showed date with current time
+      timeStart:
+          DateUtils.dateOnly(dayForAdd).add(Duration(hours: 21, minutes: 58)),
+      period: Duration(),
+      isDonable: true,
+      // generate random color
+      color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
+          Random().nextInt(256), 1),
+    );
+
+    BlocProvider.of<DailytasksBloc>(context)
+        .add(DailytasksAddTask(task: newtask5));
+    ;
   }
 
   @override
@@ -195,6 +272,7 @@ class _BoardState extends State<Board> {
                   ),
                   GestureDetector(
                     onTap: () => addNewTask(context),
+                    onLongPressEnd: (v) => addBunchOfTasks(context),
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24),
