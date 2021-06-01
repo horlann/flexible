@@ -29,6 +29,9 @@ dependencies:
   uuid: ^3.0.4
   table_calendar: ^3.0.0
   f_datetimerangepicker: ^0.1.3
+  # slivers: ^0.0.1+2
+  # flutter_sticky_header: ^0.6.0
+  sliver_tools: ^0.2.2
   # glass_kit: ^2.0.0
   flutter:
     sdk: flutter

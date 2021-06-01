@@ -33,10 +33,10 @@ class _BoardPageState extends State<BoardPage> {
             child: Container(
           decoration: BoxDecoration(
             gradient: mainBackgroundGradient,
-            // image: DecorationImage(
-            //   image: AssetImage('src/testbg.jpg'),
-            //   fit: BoxFit.cover,
-            // ),
+            image: DecorationImage(
+                image: AssetImage('src/testbg.jpg'),
+                fit: BoxFit.cover,
+                alignment: Alignment.center),
           ),
           child: Column(
             children: [

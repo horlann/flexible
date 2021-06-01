@@ -161,7 +161,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                  color: Color(0xff707070).withOpacity(0.5), blurRadius: 10)
+                  color: widget.task.color.withOpacity(0.75), blurRadius: 10)
             ],
             color: Color(0xffCAC8C4),
             borderRadius: BorderRadius.circular(25),

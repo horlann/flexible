@@ -15,9 +15,6 @@ class SliverPersisHeader extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      // height: 200,
-      // width: 200,
-      // color: Colors.amber,
       child: Center(child: child),
     );
   }

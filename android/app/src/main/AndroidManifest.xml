@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.flexible.flexible">
    <application
-        android:label="flexible.a.0.0.12"
+        android:label="flexible.a.0.0.13"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

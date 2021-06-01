@@ -109,7 +109,7 @@ class _TaskTileState extends State<TaskTile> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-                color: Color(0xffEE7579).withOpacity(0.75),
+                color: widget.task.color.withOpacity(0.75),
                 blurRadius: 20,
                 offset: Offset(0, 10))
           ],
