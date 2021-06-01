@@ -15,8 +15,10 @@ class DailytasksLoading extends DailytasksState {
 }
 
 class DailytasksCommon extends DailytasksState {
+  final DayOptions dayOptions;
   final List<Task> tasks;
-  DailytasksCommon({required this.tasks, required showDay})
+  DailytasksCommon(
+      {required this.tasks, required this.dayOptions, required showDay})
       : super(showDay: showDay);
 }
 

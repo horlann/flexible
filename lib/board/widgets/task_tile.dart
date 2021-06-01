@@ -2,6 +2,7 @@ import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/task_editor.dart';
+import 'package:flexible/board/widgets/mini_buttons_with_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,7 +57,6 @@ class _TaskTileState extends State<TaskTile> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.task.isDone);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -173,62 +173,19 @@ class _TaskTileState extends State<TaskTile> {
           showSubButtons ? CrossFadeState.showSecond : CrossFadeState.showFirst,
       firstChild: SizedBox(),
       secondChild: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          miniWhiteBorderedButton(
+          MiniButtonWithIcon(
+              color: Color(0xff4077C1).withOpacity(0.75),
               text: 'Edit Task',
               iconAsset: 'src/icons/edit.png',
               callback: () => onEditClicked(context)),
-          miniWhiteBorderedButton(
-            text: 'Copy Task',
-            iconAsset: 'src/icons/copy.png',
-            callback: () => showCopyDialog(),
-          ),
-          miniWhiteBorderedButton(
-              text: 'Delete',
-              iconAsset: 'src/icons/delete.png',
-              callback: () => onDeleteClicked(context))
+          MiniButtonWithIcon(
+              color: Color(0xffF4D700).withOpacity(0.75),
+              text: 'Copy Task',
+              iconAsset: 'src/icons/copy.png',
+              callback: () => showCopyDialog()),
         ],
-      ),
-    );
-  }
-
-  Widget miniWhiteBorderedButton(
-      {required String text,
-      required String iconAsset,
-      VoidCallback? callback}) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          if (callback != null) {
-            callback();
-          }
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.6),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Color(0xffF66868), width: 2)),
-          child: Row(
-            children: [
-              Image.asset(
-                iconAsset,
-                width: 8,
-                height: 8,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(
-                width: 2,
-              ),
-              Text(
-                text,
-                style: TextStyle(fontSize: 8, color: Color(0xffF66868)),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/task_editor.dart';
+import 'package:flexible/board/widgets/mini_buttons_with_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -255,31 +256,20 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
       crossFadeState:
           showSubButtons ? CrossFadeState.showSecond : CrossFadeState.showFirst,
       firstChild: SizedBox(),
-      secondChild: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            miniWhiteBorderedButton(
-                text: 'Edit Task',
-                iconAsset: 'src/icons/edit.png',
-                callback: () => onEditClicked(context)),
-            SizedBox(
-              width: 8,
-            ),
-            miniWhiteBorderedButton(
+      secondChild: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          MiniButtonWithIcon(
+              color: Color(0xff4077C1).withOpacity(0.75),
+              text: 'Edit Task',
+              iconAsset: 'src/icons/edit.png',
+              callback: () => onEditClicked(context)),
+          MiniButtonWithIcon(
+              color: Color(0xffF4D700).withOpacity(0.75),
               text: 'Copy Task',
               iconAsset: 'src/icons/copy.png',
-              callback: () => showCopyDialog(),
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            miniWhiteBorderedButton(
-                text: 'Delete',
-                iconAsset: 'src/icons/delete.png',
-                callback: () => onDeleteClicked(context))
-          ],
-        ),
+              callback: () => showCopyDialog()),
+        ],
       ),
     );
   }

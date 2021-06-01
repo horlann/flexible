@@ -24,7 +24,7 @@ class Board extends StatelessWidget {
           }).toList();
           return TurboAnimatedScrollView(
             // key: Key(Random().nextInt(9999).toString()),
-            childrens: tasks,
+            tasks: tasks, dayOptions: state.dayOptions,
           );
         }
         // TODO loading

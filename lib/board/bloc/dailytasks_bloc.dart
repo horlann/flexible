@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flexible/board/models/day_options.dart';
 import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/repository/day_options_interface.dart';
 import 'package:flexible/board/repository/tasts_repo_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -10,12 +12,13 @@ part 'dailytasks_event.dart';
 part 'dailytasks_state.dart';
 
 class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
-  DailytasksBloc({required this.tasksRepo})
+  DailytasksBloc({required this.tasksRepo, required this.dayOptionsRepo})
       : super(DailytasksInitial(showDay: DateTime.now())) {
     add(DailytasksUpdate());
   }
   // db
   late ITasksRepo tasksRepo;
+  late IDayOptionsRepo dayOptionsRepo;
 
   // determine what the day to show
   DateTime showDay = DateTime.now();
@@ -31,6 +34,8 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
     DailytasksEvent event,
   ) async* {
     if (event is DailytasksUpdate) {
+      // Load day options
+      DayOptions dayOptions = await dayOptionsRepo.getDayOptionsByDate(showDay);
       // Load from sqlite
 
       // List<Task> sqTasks = await tasksRepo.allTasks();
@@ -38,34 +43,8 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
       List<Task> sqTasks = await tasksRepo.tasksByPeriod(
           from: startOfaDay(showDay), to: endOfaDay(showDay));
 
-      // Add demo taks on first run
-      if (sqTasks.length < 2) {
-        // Add Good morning task
-        await tasksRepo.addTask(Task(
-          isDone: false,
-          title: 'Good Morning',
-          subtitle: 'Have a nice day',
-          timeStart: startOfaDay(showDay).add(Duration(hours: 8)),
-          period: Duration(),
-          isDonable: true,
-          color: Color(0xffEE7579),
-        ));
-        // Add undonable good night task
-        await tasksRepo.addTask(Task(
-          isDone: false,
-          title: 'Good night',
-          subtitle: 'Sleep well',
-          timeStart: startOfaDay(showDay).add(Duration(hours: 23)),
-          period: Duration(),
-          isDonable: false,
-          color: Color(0xffEE7579),
-        ));
-        // Reload
-        sqTasks = await tasksRepo.tasksByPeriod(
-            from: startOfaDay(showDay), to: endOfaDay(showDay));
-      }
-
-      yield DailytasksCommon(tasks: sqTasks, showDay: showDay);
+      yield DailytasksCommon(
+          tasks: sqTasks, dayOptions: dayOptions, showDay: showDay);
     }
 
     if (event is DailytasksAddTask) {

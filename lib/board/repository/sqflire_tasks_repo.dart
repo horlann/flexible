@@ -7,10 +7,8 @@ class SqfliteTasksRepo implements ITasksRepo {
 
   // Init new db and create table
   Future _init() async {
-    print('init sqflite db');
-    db = await openDatabase('flex.a.0.0.12.db', version: 1,
+    db = await openDatabase('tasks.db', version: 1,
         onCreate: (Database db, int version) async {
-      print('creating new db');
       await db.execute(
           'CREATE TABLE Tasks (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER , color TEXT )');
     });
