@@ -143,8 +143,9 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                   )),
               // Main sliver
               SliverClip(
-                child:
-                    SliverList(delegate: SliverChildListDelegate(widget.tasks)),
+                child: SliverList(
+                    delegate: SliverChildListDelegate(
+                        widget.tasks.reversed.toList())),
               ),
               // Good morning
               SliverList(

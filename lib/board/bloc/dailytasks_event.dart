@@ -39,6 +39,16 @@ class DailytasksUpdateTask extends DailytasksEvent {
   List<Object?> get props => [task.toString()];
 }
 
+class DailytasksUpdateTaskAndShiftOther extends DailytasksEvent {
+  final Task task;
+  DailytasksUpdateTaskAndShiftOther({
+    required this.task,
+  });
+
+  @override
+  List<Object?> get props => [task.toString()];
+}
+
 class DailytasksUpdateDayOptions extends DailytasksEvent {
   final DayOptions dayOptions;
   DailytasksUpdateDayOptions({

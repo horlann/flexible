@@ -61,6 +61,41 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
       this.add(DailytasksUpdate());
     }
 
+    if (event is DailytasksUpdateTaskAndShiftOther) {
+      var statee = state;
+      if (statee is DailytasksCommon) {
+        // Save old task version
+        Task oldTask = statee.tasks
+            .where((element) => element.uuid == event.task.uuid)
+            .first;
+        // Calc time shifting beetwen old and new task version
+        Duration timeShift = event.task.timeStart.difference(oldTask.timeStart);
+        // Select only infront tssks with unlocked shift
+        List<Task> infrontUnlockedTasks = statee.tasks
+            .where((e) =>
+                !e.timeStart.difference(oldTask.timeStart).isNegative &
+                !e.timeLock &
+                (e.uuid != event.task.uuid))
+            .toList();
+        // Do all only if shift is positive
+        if (!timeShift.isNegative) {
+          // Add timeshift to all selected tasks
+          var shiftedTasks = infrontUnlockedTasks
+              .map((e) => e.copyWith(timeStart: e.timeStart.add(timeShift)));
+          // Update it data
+          shiftedTasks.forEach((element) async {
+            await tasksRepo.updateTask(element);
+          });
+        }
+      }
+
+      // update task data
+      await tasksRepo.updateTask(event.task);
+
+      // Update ui
+      this.add(DailytasksUpdate());
+    }
+
     if (event is DailytasksDeleteTask) {
       // update in db
       await tasksRepo.deleteTask(event.task);

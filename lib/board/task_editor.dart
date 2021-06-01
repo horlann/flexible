@@ -138,7 +138,7 @@ class _TaskEditorState extends State<TaskEditor> {
         GestureDetector(
           onTap: () {
             BlocProvider.of<DailytasksBloc>(context)
-                .add(DailytasksUpdateTask(task: editableTask));
+                .add(DailytasksUpdateTaskAndShiftOther(task: editableTask));
             Navigator.pop(context);
           },
           child: Container(
