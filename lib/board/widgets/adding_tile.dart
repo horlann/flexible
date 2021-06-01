@@ -24,6 +24,7 @@ class _AddingTileState extends State<AddingTile> {
           hours: DateTime.now().hour, minutes: DateTime.now().minute - 5)),
       period: Duration(),
       isDonable: true,
+      timeLock: false,
       // generate random color
       color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
           Random().nextInt(256), 1),
@@ -45,7 +46,7 @@ class _AddingTileState extends State<AddingTile> {
       timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
           hours: DateTime.now().hour, minutes: DateTime.now().minute - 25)),
       period: Duration(),
-      isDonable: true,
+      isDonable: true, timeLock: false,
       // generate random color
       color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
           Random().nextInt(256), 1),
@@ -63,7 +64,7 @@ class _AddingTileState extends State<AddingTile> {
       timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
           hours: DateTime.now().hour, minutes: DateTime.now().minute - 20)),
       period: Duration(hours: 1),
-      isDonable: true,
+      isDonable: true, timeLock: false,
       // generate random color
       color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
           Random().nextInt(256), 1),
@@ -81,7 +82,7 @@ class _AddingTileState extends State<AddingTile> {
       timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
           hours: DateTime.now().hour, minutes: DateTime.now().minute - 10)),
       period: Duration(),
-      isDonable: true,
+      isDonable: true, timeLock: false,
       // generate random color
       color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
           Random().nextInt(256), 1),
@@ -99,7 +100,7 @@ class _AddingTileState extends State<AddingTile> {
       timeStart:
           DateUtils.dateOnly(dayForAdd).add(Duration(hours: 21, minutes: 58)),
       period: Duration(),
-      isDonable: true,
+      isDonable: true, timeLock: false,
       // generate random color
       color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
           Random().nextInt(256), 1),

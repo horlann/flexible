@@ -43,6 +43,11 @@ class _TaskTileState extends State<TaskTile> {
         .add(DailytasksDeleteTask(task: widget.task));
   }
 
+  onLockClicked(BuildContext context) {
+    BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdateTask(
+        task: widget.task.copyWith(timeLock: !widget.task.timeLock)));
+  }
+
   void showCopyDialog() {
     showDialog(
       context: context,
@@ -89,6 +94,7 @@ class _TaskTileState extends State<TaskTile> {
                   Expanded(
                     child: buildTextSection(),
                   ),
+                  buildTimeLock(),
                   widget.task.isDonable ? buildCheckbox(context) : SizedBox(),
                   SizedBox(
                     width: 25,
@@ -98,6 +104,37 @@ class _TaskTileState extends State<TaskTile> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildTimeLock() {
+    return AnimatedCrossFade(
+      crossFadeState:
+          showSubButtons ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+      duration: Duration(
+        milliseconds: 200,
+      ),
+      firstChild: GestureDetector(
+        onTap: () => onLockClicked(context),
+        child: Container(
+          margin: EdgeInsets.only(top: 14, right: 4),
+          child: widget.task.timeLock
+              ? Image.asset(
+                  'src/icons/locked.png',
+                  width: 22,
+                  height: 22,
+                )
+              : Image.asset(
+                  'src/icons/unlocked.png',
+                  width: 22,
+                  height: 22,
+                ),
+        ),
+      ),
+      secondChild: SizedBox(
+        width: 26,
+        height: 22,
       ),
     );
   }

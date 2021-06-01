@@ -28,6 +28,7 @@ class Task {
   final Duration period;
   final bool isDone;
   final bool isDonable;
+  final bool timeLock;
   final Color color;
   Task({
     this.uuid,
@@ -37,6 +38,7 @@ class Task {
     required this.period,
     required this.isDone,
     required this.isDonable,
+    required this.timeLock,
     required this.color,
   }) {
     if (uuid == null) {
@@ -53,7 +55,8 @@ class Task {
       'period': period.inMilliseconds,
       'isDone': isDone,
       'isDonable': isDonable,
-      'color': color.toHex(),
+      'timeLock': timeLock,
+      'color': color.value,
     };
   }
 
@@ -65,6 +68,7 @@ class Task {
       'timeStart': timeStart.millisecondsSinceEpoch,
       'period': period.inMilliseconds,
       'isDone': isDone ? 1 : 0,
+      'timeLock': timeLock ? 1 : 0,
       'isDonable': isDonable ? 1 : 0,
       'color': color.toHex(),
     };
@@ -79,7 +83,8 @@ class Task {
       period: Duration(milliseconds: map['period']),
       isDone: map['isDone'],
       isDonable: map['isDonable'],
-      color: HexColor.fromHex(map['color']),
+      timeLock: map['timeLock'],
+      color: Color(map['color']),
     );
   }
 
@@ -92,6 +97,7 @@ class Task {
       period: Duration(milliseconds: map['period']),
       isDone: map['isDone'] == 1 ? true : false,
       isDonable: map['isDonable'] == 1 ? true : false,
+      timeLock: map['timeLock'] == 1 ? true : false,
       color: HexColor.fromHex(map['color']),
     );
   }
@@ -108,6 +114,7 @@ class Task {
     Duration? period,
     bool? isDone,
     bool? isDonable,
+    bool? timeLock,
     Color? color,
   }) {
     return Task(
@@ -118,13 +125,14 @@ class Task {
       period: period ?? this.period,
       isDone: isDone ?? this.isDone,
       isDonable: isDonable ?? this.isDonable,
+      timeLock: timeLock ?? this.timeLock,
       color: color ?? this.color,
     );
   }
 
   @override
   String toString() {
-    return 'Task(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, color: $color)';
+    return 'Task(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, timeLock: $timeLock, color: $color)';
   }
 
   @override
@@ -139,6 +147,7 @@ class Task {
         other.period == period &&
         other.isDone == isDone &&
         other.isDonable == isDonable &&
+        other.timeLock == timeLock &&
         other.color == color;
   }
 
@@ -151,6 +160,7 @@ class Task {
         period.hashCode ^
         isDone.hashCode ^
         isDonable.hashCode ^
+        timeLock.hashCode ^
         color.hashCode;
   }
 }
