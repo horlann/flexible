@@ -36,7 +36,7 @@ class _TaskTileState extends State<SystemTile> {
           });
         },
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 16),
+          margin: EdgeInsets.only(top: 16),
           child: Stack(
             children: [
               Positioned(
@@ -166,24 +166,24 @@ class _TaskTileState extends State<SystemTile> {
           padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           decoration: BoxDecoration(
             color: Color(0xff4077C1).withOpacity(0.75),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(16),
             // border: Border.all(color: Color(0xffF66868), width: 2),
           ),
           child: Row(
             children: [
               Image.asset(
                 iconAsset,
-                width: 8,
-                height: 8,
-                fit: BoxFit.cover,
+                width: 16,
+                height: 16,
+                // fit: BoxFit.cover,
               ),
-              SizedBox(
-                width: 2,
-              ),
-              Text(
-                text,
-                style: TextStyle(fontSize: 8, color: Colors.white),
-              ),
+              // SizedBox(
+              //   width: 2,
+              // ),
+              // Text(
+              //   text,
+              //   style: TextStyle(fontSize: 8, color: Colors.white),
+              // ),
             ],
           ),
         ),

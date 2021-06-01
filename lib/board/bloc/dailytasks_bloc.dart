@@ -38,8 +38,6 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
       DayOptions dayOptions = await dayOptionsRepo.getDayOptionsByDate(showDay);
       // Load from sqlite
 
-      // List<Task> sqTasks = await tasksRepo.allTasks();
-
       List<Task> sqTasks = await tasksRepo.tasksByPeriod(
           from: startOfaDay(showDay), to: endOfaDay(showDay));
 
@@ -49,7 +47,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
 
     if (event is DailytasksAddTask) {
       // add to db
-      tasksRepo.addTask(event.task);
+      await tasksRepo.addTask(event.task);
 
       // Update
       this.add(DailytasksUpdate());
@@ -57,7 +55,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
 
     if (event is DailytasksUpdateTask) {
       // update in db
-      tasksRepo.updateTask(event.task);
+      await tasksRepo.updateTask(event.task);
 
       // Update
       this.add(DailytasksUpdate());
@@ -65,7 +63,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
 
     if (event is DailytasksDeleteTask) {
       // update in db
-      tasksRepo.deleteTask(event.task);
+      await tasksRepo.deleteTask(event.task);
 
       // Update
       this.add(DailytasksUpdate());
@@ -74,6 +72,14 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
     if (event is DailytasksSetDay) {
       // Set day
       showDay = event.day;
+      // Update
+      this.add(DailytasksUpdate());
+    }
+
+    if (event is DailytasksUpdateDayOptions) {
+      // update in db
+      await dayOptionsRepo.updateDayOptions(event.dayOptions);
+
       // Update
       this.add(DailytasksUpdate());
     }

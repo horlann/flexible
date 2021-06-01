@@ -32,7 +32,7 @@ class SqfliteDayOptionsRepo extends IDayOptionsRepo {
   @override
   Future updateDayOptions(DayOptions dayOptions) async {
     await (await getDb).update('DayOptions', dayOptions.toMap(),
-        where: 'day = ?', whereArgs: [dayOptions.day]);
+        where: 'day = ?', whereArgs: [dayOptions.day.millisecondsSinceEpoch]);
   }
 
   @override

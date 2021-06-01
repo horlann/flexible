@@ -1,4 +1,6 @@
+import 'package:flexible/board/day_options_editor.dart';
 import 'package:flexible/board/widgets/system_tile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -56,9 +58,9 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
         });
       }
 
-      if (scr.offset < 48) {
+      if (scr.offset < 32) {
         setState(() {
-          bottomLinePadding = scr.offset.abs() + 48;
+          bottomLinePadding = scr.offset.abs() + 32;
         });
       } else {
         setState(() {
@@ -66,26 +68,15 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
         });
       }
     });
-
-    // Move to end of list
-    // coz sliver are revesed
-    // work as shit
-
-    // void movetoStart() {
-    //   if (scr.hasClients) {
-    //     scr.jumpTo(scr.position.maxScrollExtent);
-    //   } else {
-    //     Timer(Duration(milliseconds: 1), () => movetoStart());
-    //   }
-    // }
-    // movetoStart();
   }
 
   @override
   void didUpdateWidget(covariant TurboAnimatedScrollView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    topOverscroll = 16;
-    bottomLinePadding = 48;
+    if (oldWidget.tasks.length != widget.tasks.length) {
+      topOverscroll = 16;
+      bottomLinePadding = 48;
+    }
   }
 
   @override
@@ -131,7 +122,14 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                       'src/icons/Additional.png',
                       scale: 1.1,
                     ),
-                    callback: () {})
+                    callback: () {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) =>
+                                DayOptionsEditor(dayOptions: widget.dayOptions),
+                          ));
+                    })
               ])),
               // Adding section with last tile
               // grows up when main sliver is fully scrolled
@@ -159,7 +157,14 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                       'src/icons/Additional.png',
                       scale: 1.1,
                     ),
-                    callback: () {})
+                    callback: () {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) =>
+                                DayOptionsEditor(dayOptions: widget.dayOptions),
+                          ));
+                    })
               ])),
             ],
           ),
