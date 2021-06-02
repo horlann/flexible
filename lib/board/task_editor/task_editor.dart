@@ -1,7 +1,15 @@
+import 'dart:typed_data';
+
+import 'package:flexible/board/task_editor/color_picker_row.dart';
+import 'package:flexible/board/task_editor/icon_picker_page.dart';
+import 'package:flexible/board/repository/image_repo_mock.dart';
+import 'package:flexible/board/task_editor/row_with_close_btn.dart';
+import 'package:flexible/board/task_editor/task_icon_in_round.dart';
+import 'package:flexible/board/task_editor/time_slider.dart';
+import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:glassmorphism/glassmorphism.dart';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/task.dart';
@@ -27,6 +35,22 @@ class _TaskEditorState extends State<TaskEditor> {
     editableTask = widget.task.copyWith();
   }
 
+  // Open picker
+  // Picker should return icon id as string
+  openImgPicker() {
+    Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => IconPickerPage(),
+        )).then((iconId) {
+      if (iconId != null) {
+        setState(() {
+          editableTask = editableTask.copyWith(iconId: iconId);
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,10 +73,10 @@ class _TaskEditorState extends State<TaskEditor> {
                     children: [
                       // the glass layer
                       // fill uses for adopt is size
-                      Positioned.fill(child: buildGlassmorphicLayer()),
+                      Positioned.fill(child: GlassmorphLayer()),
                       Column(
                         children: [
-                          buildCloseButton(),
+                          RowWithCloseBtn(context: context),
                           Text(
                             'Edit Task',
                             style: TextStyle(
@@ -110,7 +134,12 @@ class _TaskEditorState extends State<TaskEditor> {
                           SizedBox(
                             height: 16,
                           ),
-                          buildColorPicker(),
+                          ColorPickerRow(callback: (color) {
+                            setState(() {
+                              editableTask =
+                                  editableTask.copyWith(color: color);
+                            });
+                          }),
                           SizedBox(
                             height: 16,
                           ),
@@ -190,57 +219,6 @@ class _TaskEditorState extends State<TaskEditor> {
     );
   }
 
-  Widget buildColorPicker() {
-    Widget colorPart({required Color color, required String name}) {
-      return Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            editableTask = editableTask.copyWith(color: color);
-          },
-          child: Row(
-            children: [
-              SizedBox(
-                width: 6,
-              ),
-              Text(name,
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
-              SizedBox(
-                width: 4,
-              ),
-              Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                    color: color, borderRadius: BorderRadius.circular(10)),
-              ),
-              SizedBox(
-                width: 6,
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            colorPart(color: Colors.lime, name: 'Lime'),
-            colorPart(color: Colors.redAccent, name: 'RedC'),
-            colorPart(color: Colors.indigo, name: 'Indigo'),
-            colorPart(color: Colors.cyan, name: 'Cyan'),
-            colorPart(color: Colors.amber, name: 'Amber'),
-            colorPart(color: Colors.deepPurple, name: 'DeepPurple'),
-          ],
-        ),
-      ),
-    );
-  }
-
   SizedBox buildTimePicker() {
     return SizedBox(
         height: 190,
@@ -269,10 +247,10 @@ class _TaskEditorState extends State<TaskEditor> {
         textBaseline: TextBaseline.alphabetic,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Image.asset(
-            'src/icons/supermarket.png',
-            width: 32,
-          ),
+          GestureDetector(
+              onTap: () => openImgPicker(),
+              child: TaskIconInRound(
+                  taskColor: editableTask.color, iconId: editableTask.iconId)),
           SizedBox(
             width: 4,
           ),
@@ -302,131 +280,6 @@ class _TaskEditorState extends State<TaskEditor> {
           )
         ],
       ),
-    );
-  }
-
-  Widget buildCloseButton() {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16, top: 16),
-            child: Image.asset(
-              'src/icons/close.png',
-              width: 24,
-              fit: BoxFit.fitWidth,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  GlassmorphicContainer buildGlassmorphicLayer() {
-    return GlassmorphicContainer(
-      width: double.maxFinite,
-      height: double.maxFinite,
-      borderRadius: 40,
-      blur: 5,
-      border: 2,
-      linearGradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            Color(0xFFffffff).withOpacity(0.6),
-            Color(0xfff4f3f3).withOpacity(0.2),
-            Color(0xFFffffff).withOpacity(0.6),
-          ],
-          stops: [
-            0,
-            0.2,
-            1,
-          ]),
-      borderGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Color(0xFFffffff).withOpacity(0.15),
-          Color(0xFFffffff).withOpacity(0.15),
-          Color(0xFFFFFFFF).withOpacity(0.15),
-        ],
-      ),
-    );
-  }
-}
-
-class TimeSlider extends StatelessWidget {
-  final Duration period;
-  final Function(Duration) callback;
-
-  const TimeSlider({required this.period, required this.callback});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${period.inHours.toString()} hours',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-              ),
-              Text('Edit',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12))
-            ],
-          ),
-        ),
-        SliderTheme(
-          data: SliderThemeData(
-            // trackHeight: 2,
-            activeTickMarkColor: Colors.black,
-            inactiveTickMarkColor: Colors.black,
-            // thumbColor: ColorAssets.themeColorMagenta,
-            thumbColor: Color(0xffE24F4F),
-            activeTrackColor: Color(0xffDDDDDD),
-            inactiveTrackColor: Color(0xffDDDDDD),
-            trackShape: RectangularSliderTrackShape(),
-
-            // overlayColor: Colors.red.withAlpha(32),
-            // overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-
-            valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-            valueIndicatorColor: Colors.redAccent,
-            valueIndicatorTextStyle: TextStyle(
-              color: Colors.white,
-            ),
-            trackHeight: 6.0,
-          ),
-          child: Slider(
-            max: 8,
-            min: 0,
-            value: period.inHours.toDouble(),
-            // activeColor: Colors.grey,
-            // inactiveColor: Colors.grey,
-            onChanged: (v) => callback(
-              Duration(hours: v.toInt()),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                  9,
-                  (index) => Text(
-                        '$index h',
-                        style: TextStyle(fontSize: 12),
-                      ))),
-        )
-      ],
     );
   }
 }

@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/task.dart';
-import 'package:flexible/board/task_editor.dart';
+import 'package:flexible/board/repository/image_repo_mock.dart';
+import 'package:flexible/board/task_editor/task_editor.dart';
 import 'package:flexible/board/widgets/mini_buttons_with_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -93,13 +96,13 @@ class _TaskTileState extends State<TaskTile> {
                   ),
                   Expanded(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            buildTextSection(),
+                            Expanded(child: buildTextSection()),
                             Row(
                               children: [
                                 buildTimeLock(),
@@ -174,9 +177,26 @@ class _TaskTileState extends State<TaskTile> {
           color: widget.task.color,
           borderRadius: BorderRadius.circular(25),
         ),
-        child: Image.asset(
-          'src/icons/Additional.png',
-          scale: 1.1,
+        child: Center(
+          child: FutureBuilder(
+            future: RepositoryProvider.of<ImageRepoMock>(context)
+                .imageById(widget.task.iconId),
+            builder: (context, AsyncSnapshot<Uint8List> snapshot) {
+              if (snapshot.hasData) {
+                return Image.memory(
+                  snapshot.data!,
+                  width: 24,
+                  height: 24,
+                );
+              }
+
+              return Image.asset(
+                'src/icons/noimage.png',
+                width: 24,
+                height: 24,
+              );
+            },
+          ),
         ));
   }
 

@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/task_editor/new_task_editor.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,26 +14,14 @@ class AddingTile extends StatefulWidget {
 
 class _AddingTileState extends State<AddingTile> {
   int taskCount = 0;
-  addNewTask(BuildContext context) {
-    DateTime dayForAdd = BlocProvider.of<DailytasksBloc>(context).state.showDay;
-    var newtask = Task(
-      uuid: null,
-      isDone: false,
-      title: 'TheTask ${++taskCount}',
-      subtitle: 'Nice ${taskCount}day',
-      // add task to showed date with current time
-      timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
-          hours: DateTime.now().hour, minutes: DateTime.now().minute - 5)),
-      period: Duration(),
-      isDonable: true,
-      timeLock: false,
-      // generate random color
-      color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
-          Random().nextInt(256), 1),
-    );
 
-    BlocProvider.of<DailytasksBloc>(context)
-        .add(DailytasksAddTask(task: newtask));
+  // Open new task page
+  addNewTask(BuildContext context) {
+    Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => NewTaskEditor(),
+        ));
   }
 
   addBunchOfTasks(BuildContext context) {
@@ -50,6 +40,7 @@ class _AddingTileState extends State<AddingTile> {
       // generate random color
       color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
           Random().nextInt(256), 1),
+      iconId: 'presentation',
     );
 
     BlocProvider.of<DailytasksBloc>(context)
@@ -68,6 +59,7 @@ class _AddingTileState extends State<AddingTile> {
       // generate random color
       color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
           Random().nextInt(256), 1),
+      iconId: 'meeting',
     );
 
     BlocProvider.of<DailytasksBloc>(context)
@@ -86,6 +78,7 @@ class _AddingTileState extends State<AddingTile> {
       // generate random color
       color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
           Random().nextInt(256), 1),
+      iconId: 'burger',
     );
 
     BlocProvider.of<DailytasksBloc>(context)
@@ -104,6 +97,7 @@ class _AddingTileState extends State<AddingTile> {
       // generate random color
       color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
           Random().nextInt(256), 1),
+      iconId: 'meditation',
     );
 
     BlocProvider.of<DailytasksBloc>(context)
