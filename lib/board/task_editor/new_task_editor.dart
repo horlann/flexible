@@ -24,10 +24,12 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   void initState() {
     super.initState();
     // Create New Task
+
+    ;
     editableTask = Task(
         title: 'New Task',
         subtitle: '',
-        timeStart: DateTime.now(),
+        timeStart: BlocProvider.of<DailytasksBloc>(context).state.showDay,
         period: Duration(),
         isDone: false,
         isDonable: true,
@@ -79,7 +81,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                         children: [
                           RowWithCloseBtn(context: context),
                           Text(
-                            'Edit Task',
+                            'Create an Task',
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.w700,
@@ -180,7 +182,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                 borderRadius: BorderRadius.circular(30)),
             child: Center(
               child: Text(
-                'Update Task',
+                'Create Task',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
