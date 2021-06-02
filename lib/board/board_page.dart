@@ -28,16 +28,16 @@ class _BoardPageState extends State<BoardPage> {
 
     return Scaffold(
       backgroundColor: Color(0xffE9E9E9),
-      body: SafeArea(
-        child: SizedBox.expand(
-            child: Container(
-          decoration: BoxDecoration(
-            gradient: mainBackgroundGradient,
-            image: DecorationImage(
-                image: AssetImage('src/testbg.jpg'),
-                fit: BoxFit.cover,
-                alignment: Alignment.center),
-          ),
+      body: SizedBox.expand(
+          child: Container(
+        decoration: BoxDecoration(
+          gradient: mainBackgroundGradient,
+          image: DecorationImage(
+              image: AssetImage('src/testbg.jpg'),
+              fit: BoxFit.cover,
+              alignment: Alignment.center),
+        ),
+        child: SafeArea(
           child: Column(
             children: [
               SizedBox(
@@ -53,8 +53,8 @@ class _BoardPageState extends State<BoardPage> {
               ),
             ],
           ),
-        )),
-      ),
+        ),
+      )),
     );
   }
 }
