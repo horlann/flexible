@@ -200,6 +200,9 @@ class _TaskEditorState extends State<TaskEditor> {
           },
           child: Row(
             children: [
+              SizedBox(
+                width: 6,
+              ),
               Text(name,
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
               SizedBox(
@@ -210,7 +213,10 @@ class _TaskEditorState extends State<TaskEditor> {
                 height: 20,
                 decoration: BoxDecoration(
                     color: color, borderRadius: BorderRadius.circular(10)),
-              )
+              ),
+              SizedBox(
+                width: 6,
+              ),
             ],
           ),
         ),
@@ -219,28 +225,18 @@ class _TaskEditorState extends State<TaskEditor> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          Spacer(
-            flex: 2,
-          ),
-          colorPart(color: Color(0xffE24F4F), name: 'Day'),
-          Spacer(
-            flex: 2,
-          ),
-          colorPart(color: Color(0xff1260C5).withOpacity(0.8), name: 'Night'),
-          Spacer(
-            flex: 2,
-          ),
-          colorPart(color: Colors.yellow, name: 'Classic'),
-          Spacer(
-            flex: 2,
-          ),
-          colorPart(color: Color(0xff373535).withOpacity(0.2), name: 'Custom'),
-          Spacer(
-            flex: 2,
-          ),
-        ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            colorPart(color: Colors.lime, name: 'Lime'),
+            colorPart(color: Colors.redAccent, name: 'RedC'),
+            colorPart(color: Colors.indigo, name: 'Indigo'),
+            colorPart(color: Colors.cyan, name: 'Cyan'),
+            colorPart(color: Colors.amber, name: 'Amber'),
+            colorPart(color: Colors.deepPurple, name: 'DeepPurple'),
+          ],
+        ),
       ),
     );
   }
