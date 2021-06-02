@@ -92,10 +92,31 @@ class _TaskTileState extends State<TaskTile> {
                     width: 20,
                   ),
                   Expanded(
-                    child: buildTextSection(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildTextSection(),
+                            Row(
+                              children: [
+                                buildTimeLock(),
+                                widget.task.isDonable
+                                    ? buildCheckbox(context)
+                                    : SizedBox(),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        buildSubButtons(),
+                      ],
+                    ),
                   ),
-                  buildTimeLock(),
-                  widget.task.isDonable ? buildCheckbox(context) : SizedBox(),
                   SizedBox(
                     width: 25,
                   ),
@@ -193,10 +214,6 @@ class _TaskTileState extends State<TaskTile> {
               fontSize: 14,
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
-          height: 16,
-        ),
-        buildSubButtons()
       ],
     );
   }
