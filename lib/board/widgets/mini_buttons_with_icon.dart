@@ -33,8 +33,8 @@ class MiniButtonWithIcon extends StatelessWidget {
             children: [
               Image.asset(
                 iconAsset,
-                width: 8,
-                height: 8,
+                width: 10,
+                height: 10,
                 fit: BoxFit.cover,
               ),
               SizedBox(
@@ -42,7 +42,7 @@ class MiniButtonWithIcon extends StatelessWidget {
               ),
               Text(
                 text,
-                style: TextStyle(fontSize: 8, color: Colors.white),
+                style: TextStyle(fontSize: 10, color: Colors.white),
               ),
             ],
           ),
