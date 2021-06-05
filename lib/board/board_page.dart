@@ -54,7 +54,7 @@ class _BoardPageState extends State<BoardPage> {
   @override
   void initState() {
     super.initState();
-    getWeatherByLocation();
+    // getWeatherByLocation();
   }
 
   @override
@@ -94,14 +94,14 @@ class _BoardPageState extends State<BoardPage> {
                     height: 16,
                   ),
                   BottomDatePicker(),
-                  Container(
-                    color: Colors.white,
-                    margin: EdgeInsets.all(8),
-                    padding: EdgeInsets.all(8),
-                    child: Text(weatherDescription.isEmpty
-                        ? 'NO PAGODA'
-                        : weatherDescription),
-                  ),
+                  // Container(
+                  //   color: Colors.white,
+                  //   margin: EdgeInsets.all(8),
+                  //   padding: EdgeInsets.all(8),
+                  //   child: Text(weatherDescription.isEmpty
+                  //       ? 'NO PAGODA'
+                  //       : weatherDescription),
+                  // ),
                   SizedBox(
                     height: 16,
                   ),
