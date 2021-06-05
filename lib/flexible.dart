@@ -1,3 +1,7 @@
+import 'package:flexible/authentification/bloc/auth_bloc.dart';
+import 'package:flexible/authentification/code_verification_page.dart';
+import 'package:flexible/authentification/firebase_auth.dart';
+import 'package:flexible/authentification/registration_page.dart';
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/board_page.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
@@ -21,12 +25,42 @@ class FlexibleApp extends StatelessWidget {
           create: (context) => ImageRepoMock(),
         )
       ],
-      child: BlocProvider(
-        create: (context) => DailytasksBloc(
-            dayOptionsRepo:
-                RepositoryProvider.of<SqfliteDayOptionsRepo>(context),
-            tasksRepo: RepositoryProvider.of<SqfliteTasksRepo>(context)),
-        child: MaterialApp(home: BoardPage()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                AuthBloc(fireAuthService: FireAuthService())..add(AppStart()),
+          ),
+          BlocProvider(
+            create: (context) => DailytasksBloc(
+                dayOptionsRepo:
+                    RepositoryProvider.of<SqfliteDayOptionsRepo>(context),
+                tasksRepo: RepositoryProvider.of<SqfliteTasksRepo>(context)),
+          ),
+        ],
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is NotAuthentificated) {
+              return MaterialApp(
+                home: RegistrationPage(),
+              );
+            }
+
+            if (state is CodeSended) {
+              return MaterialApp(
+                home: CodeVerificationPage(),
+              );
+            }
+
+            if (state is Authentificated) {
+              BlocProvider.of<AuthBloc>(context).fireAuthService.signOut();
+            }
+            print(state);
+            return MaterialApp(
+              home: BoardPage(),
+            );
+          },
+        ),
       ),
     );
   }
