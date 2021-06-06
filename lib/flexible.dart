@@ -2,13 +2,16 @@ import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/code_verification_page.dart';
 import 'package:flexible/authentification/firebase_auth.dart';
 import 'package:flexible/authentification/registration_page.dart';
+import 'package:flexible/authentification/sign_in_page.dart';
+import 'package:flexible/authentification/user_data_update_page.dart';
+import 'package:flexible/board/board_page.dart';
 import 'package:flexible/helper/bloc/helper_bloc.dart';
-import 'package:flexible/helper/first_time_servise.dart';
 import 'package:flexible/helper/helper_page.dart';
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/repository/sqflire_tasks_repo.dart';
 import 'package:flexible/board/repository/sqflite_day_options_repo.dart';
+import 'package:flexible/helper/helper_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,43 +50,6 @@ class FlexibleApp extends StatelessWidget {
   }
 }
 
-class HelperWrapper extends StatelessWidget {
-  final HelperBloc bloc = HelperBloc()..add(HelperAppStart());
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<HelperBloc, HelperState>(
-      bloc: bloc,
-      builder: (context, state) {
-        // Show helper page if app is run first
-        if (state is ShowHelper) {
-          return HelperPage(
-            callback: () {
-              bloc.add(HelperSeened());
-            },
-          );
-        }
-
-        if (state is HelperShowed) {
-          return AuthBlocWrapper();
-        }
-
-        return Scaffold(
-          body: Center(
-            child: Text(
-              'LOGO',
-              style: TextStyle(
-                  color: Color(0xffE24F4F),
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
 class AuthBlocWrapper extends StatelessWidget {
   const AuthBlocWrapper({
     Key? key,
@@ -93,16 +59,31 @@ class AuthBlocWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        if (state is NotAuthentificated) {
+        print(state);
+        if (state is ShowSignIn) {
+          return SignInPage();
+        }
+
+        if (state is ShowRegistration) {
           return RegistrationPage();
+        }
+
+        if (state is ShowDataUpdate) {
+          return UserDataUpdatePage();
         }
 
         if (state is CodeSended) {
           return CodeVerificationPage();
         }
 
+        if (state is VerificationCodeInvalid) {
+          return CodeVerificationPage();
+        }
+
         if (state is Authentificated) {
-          BlocProvider.of<AuthBloc>(context).fireAuthService.signOut();
+          return BoardPage();
+          // BlocProvider.of<AuthBloc>(context).add(SignOut());
+          // print(BlocProvider.of<AuthBloc>(context).fireAuthService.getUser());
         }
 
         return Scaffold(

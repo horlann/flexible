@@ -3,28 +3,25 @@ import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 
-class CodeVerificationPage extends StatefulWidget {
-  CodeVerificationPage({Key? key}) : super(key: key);
+class SignInPage extends StatefulWidget {
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
-  _CodeVerificationPageState createState() => _CodeVerificationPageState();
+  _SignInPageState createState() => _SignInPageState();
 }
 
-class _CodeVerificationPageState extends State<CodeVerificationPage> {
-  final TextEditingController pincodeController = TextEditingController();
-  String pincode = '';
+class _SignInPageState extends State<SignInPage> {
+  String phoneNumber = '';
 
-  bool get pinValid {
-    if (pincode.length == 6) {
-      return true;
-    }
-    return false;
+  bool get submitActive => phoneNumber.isNotEmpty;
+
+  onSignin() {
+    BlocProvider.of<AuthBloc>(context).add(SignInByPhone(phone: phoneNumber));
   }
 
-  submitCode() {
-    BlocProvider.of<AuthBloc>(context).add(VerifyCode(smsCode: pincode));
+  onSignUpTap() {
+    BlocProvider.of<AuthBloc>(context).add(GoToRegistration());
   }
 
   @override
@@ -67,7 +64,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                                 height: 32,
                               ),
                               Text(
-                                'SMS protection',
+                                'Sign In',
                                 style: TextStyle(
                                     color: Color(0xffE24F4F),
                                     fontSize: 32,
@@ -76,46 +73,27 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                               SizedBox(
                                 height: 128,
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: PinCodeTextField(
-                                  keyboardType: TextInputType.number,
-                                  length: 6,
-                                  obscureText: false,
-                                  animationType: AnimationType.fade,
-                                  pinTheme: PinTheme(
-                                    shape: PinCodeFieldShape.box,
-                                    borderRadius: BorderRadius.circular(20),
-                                    fieldHeight: 40,
-                                    fieldWidth: 40,
-                                    inactiveColor: Colors.grey[300],
-                                    disabledColor: Colors.grey[200],
-                                    activeFillColor: Colors.white,
-                                    inactiveFillColor: Colors.white,
-                                    selectedFillColor: Colors.white,
-                                    activeColor: Colors.grey[200],
-                                    selectedColor: Color(0xffE24F4F),
-                                  ),
-                                  animationDuration:
-                                      Duration(milliseconds: 300),
-                                  enableActiveFill: true,
-                                  controller: pincodeController,
-                                  onCompleted: (v) {
-                                    print("Completed");
-                                  },
-                                  onChanged: (value) {
-                                    print(value);
-                                    setState(() {
-                                      pincode = value;
-                                    });
-                                  },
-                                  appContext: context,
-                                ),
-                              ),
+                              buildPhoneInput(),
                               SizedBox(
                                 height: 32,
                               ),
+                              Wrap(
+                                children: [
+                                  Text(
+                                    'Don\'t have account yet? ',
+                                    softWrap: true,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => onSignUpTap(),
+                                    child: Text(
+                                      'Sign Up',
+                                      softWrap: true,
+                                      style:
+                                          TextStyle(color: Color(0xffE24F4F)),
+                                    ),
+                                  )
+                                ],
+                              )
                             ],
                           ),
                         )
@@ -125,19 +103,19 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                   Column(
                     children: [
                       GestureDetector(
-                        onTap: () => pinValid ? submitCode() : {},
+                        onTap: () => submitActive ? onSignin() : {},
                         child: Container(
                           height: 40,
                           width: double.maxFinite,
                           margin: EdgeInsets.symmetric(horizontal: 40),
                           decoration: BoxDecoration(
-                              color: pinValid
+                              color: submitActive
                                   ? Color(0xffE24F4F)
-                                  : Color(0xffE24F4F).withOpacity(0.40),
+                                  : Color(0xffE24F4F).withOpacity(0.25),
                               borderRadius: BorderRadius.circular(30)),
                           child: Center(
                             child: Text(
-                              'Continue',
+                              'Sign up',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -153,6 +131,35 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildPhoneInput() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: TextField(
+        keyboardType: TextInputType.phone,
+        decoration: InputDecoration(
+            hintText: 'Phone',
+            isDense: true,
+            contentPadding: EdgeInsets.all(12),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: Color(0xffFA6400))),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: Color(0xffC9C9C9))),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: Color(0xffC9C9C9))),
+            fillColor: Colors.white,
+            filled: true),
+        onChanged: (value) {
+          setState(() {
+            phoneNumber = value;
+          });
+        },
       ),
     );
   }

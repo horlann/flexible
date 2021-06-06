@@ -11,6 +11,16 @@ class AuthInitial extends AuthState {}
 
 class CodeSended extends AuthState {}
 
+class VerificationCodeInvalid extends AuthState {}
+
 class Authentificated extends AuthState {}
 
+class NeedToAddData extends AuthState {}
+
 class NotAuthentificated extends AuthState {}
+
+class ShowSignIn extends NotAuthentificated {}
+
+class ShowRegistration extends NotAuthentificated {}
+
+class ShowDataUpdate extends NotAuthentificated {}

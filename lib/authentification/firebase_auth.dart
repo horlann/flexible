@@ -81,7 +81,7 @@ class FireAuthService {
 
     _verificationFailed(authException) {
       print('pho failed');
-      completer.complete();
+      completer.completeError(authException.toString());
     }
 
     await _firebaseAuth.verifyPhoneNumber(

@@ -13,12 +13,23 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   bool isUserAgree = false;
+  String fullName = '';
   String phoneNumber = '';
+  String email = '';
 
-  bool get submitActive => phoneNumber.isNotEmpty && isUserAgree;
+  bool get submitActive =>
+      phoneNumber.isNotEmpty &&
+      isUserAgree &&
+      fullName.isNotEmpty &&
+      email.isNotEmpty;
 
-  onSignin() {
-    BlocProvider.of<AuthBloc>(context).add(SendCode(phone: phoneNumber));
+  onRegistration() {
+    BlocProvider.of<AuthBloc>(context)
+        .add(CreateAccount(name: fullName, email: email, phone: phoneNumber));
+  }
+
+  onSignInTap() {
+    BlocProvider.of<AuthBloc>(context).add(GoToSignIn());
   }
 
   @override
@@ -108,7 +119,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   Column(
                     children: [
                       GestureDetector(
-                        onTap: () => submitActive ? onSignin() : {},
+                        onTap: () => submitActive ? onRegistration() : {},
                         child: Container(
                           height: 40,
                           width: double.maxFinite,
@@ -120,9 +131,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               borderRadius: BorderRadius.circular(30)),
                           child: Center(
                             child: Text(
-                              'Sign up',
+                              'Continue',
                               style: TextStyle(
                                   color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => onSignInTap(),
+                        child: Container(
+                          height: 40,
+                          width: double.maxFinite,
+                          margin: EdgeInsets.symmetric(horizontal: 40),
+                          child: Center(
+                            child: Text(
+                              'Sign in',
+                              style: TextStyle(
+                                  color: Color(0xffE24F4F),
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700),
                             ),
@@ -198,7 +226,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 borderSide: BorderSide(color: Color(0xffC9C9C9))),
             fillColor: Colors.white,
             filled: true),
-        onChanged: (value) => print(value),
+        onChanged: (value) {
+          setState(() {
+            fullName = value;
+          });
+        },
       ),
     );
   }
@@ -251,7 +283,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 borderSide: BorderSide(color: Color(0xffC9C9C9))),
             fillColor: Colors.white,
             filled: true),
-        onChanged: (value) => print(value),
+        onChanged: (value) {
+          setState(() {
+            email = value;
+          });
+        },
       ),
     );
   }

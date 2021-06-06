@@ -9,10 +9,14 @@ abstract class AuthEvent extends Equatable {
 
 class AppStart extends AuthEvent {}
 
-class SendCode extends AuthEvent {
+class GoToSignIn extends AuthEvent {}
+
+class GoToRegistration extends AuthEvent {}
+
+class SignInByPhone extends AuthEvent {
   final String phone;
 
-  SendCode({
+  SignInByPhone({
     required this.phone,
   });
 
@@ -32,3 +36,23 @@ class VerifyCode extends AuthEvent {
 }
 
 class SignOut extends AuthEvent {}
+
+class CreateAccount extends AuthEvent {
+  final String name;
+  final String email;
+  final String phone;
+  CreateAccount({
+    required this.name,
+    required this.email,
+    required this.phone,
+  });
+}
+
+class AddData extends AuthEvent {
+  final String name;
+  final String email;
+  AddData({
+    required this.name,
+    required this.email,
+  });
+}
