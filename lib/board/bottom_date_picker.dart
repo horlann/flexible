@@ -19,18 +19,21 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
   bool showCalendar = false;
 
   void showCalendarDialog() {
+    DateTime showday = BlocProvider.of<DailytasksBloc>(context).showDay;
     showDialog(
       context: context,
       barrierColor: Colors.transparent,
       builder: (context) => CalendarDialog(
-          focusedDay: BlocProvider.of<DailytasksBloc>(context).showDay,
+          focusedDay: showday,
           withTail: true,
-          onSelect: (selectedDay) {
-            BlocProvider.of<DailytasksBloc>(context)
-                .add(DailytasksSetDay(day: selectedDay));
-            Navigator.pop(context);
-          }),
+          onSelect: (selectedDay) => onCalendarSelect(selectedDay)),
     );
+  }
+
+  onCalendarSelect(selectedDay) {
+    BlocProvider.of<DailytasksBloc>(context)
+        .add(DailytasksSetDay(day: selectedDay));
+    Navigator.pop(context);
   }
 
   @override
