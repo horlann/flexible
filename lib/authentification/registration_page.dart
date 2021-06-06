@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
@@ -16,14 +18,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String fullName = '';
   String phoneNumber = '';
   String email = '';
+  bool isSignButtonTimeout = false;
 
   bool get submitActive =>
       phoneNumber.isNotEmpty &&
       isUserAgree &&
       fullName.isNotEmpty &&
-      email.isNotEmpty;
+      email.isNotEmpty &&
+      !isSignButtonTimeout;
 
   onRegistration() {
+    // Prevent multiple click to submit button before captcha is show
+    setState(() {
+      isSignButtonTimeout = true;
+    });
+    Timer(Duration(seconds: 10), () {
+      setState(() {
+        isSignButtonTimeout = false;
+      });
+    });
+    // Submit registration
     BlocProvider.of<AuthBloc>(context)
         .add(CreateAccount(name: fullName, email: email, phone: phoneNumber));
   }

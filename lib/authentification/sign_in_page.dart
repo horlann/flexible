@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
@@ -13,10 +15,21 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   String phoneNumber = '';
+  bool isSignButtonTimeout = false;
 
-  bool get submitActive => phoneNumber.isNotEmpty;
+  bool get submitActive => phoneNumber.isNotEmpty & !isSignButtonTimeout;
 
   onSignin() {
+    // Prevent multiple click to submit button before captcha is show
+    setState(() {
+      isSignButtonTimeout = true;
+      print('timeout');
+    });
+    Timer(Duration(seconds: 10), () {
+      setState(() {
+        isSignButtonTimeout = false;
+      });
+    });
     BlocProvider.of<AuthBloc>(context).add(SignInByPhone(phone: phoneNumber));
   }
 

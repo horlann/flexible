@@ -5,12 +5,10 @@ import 'package:flexible/authentification/registration_page.dart';
 import 'package:flexible/authentification/sign_in_page.dart';
 import 'package:flexible/authentification/user_data_update_page.dart';
 import 'package:flexible/board/board_page.dart';
-import 'package:flexible/helper/bloc/helper_bloc.dart';
-import 'package:flexible/helper/helper_page.dart';
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
-import 'package:flexible/board/repository/sqflire_tasks_repo.dart';
-import 'package:flexible/board/repository/sqflite_day_options_repo.dart';
+import 'package:flexible/board/repository/sqFliteTasksRepository/sqflire_tasks_repo.dart';
+import 'package:flexible/board/repository/sqFliteTasksRepository/sqflite_day_options_repo.dart';
 import 'package:flexible/helper/helper_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,22 +28,15 @@ class FlexibleApp extends StatelessWidget {
           create: (context) => ImageRepoMock(),
         )
       ],
-      child: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) =>
-                  AuthBloc(fireAuthService: FireAuthService())..add(AppStart()),
-            ),
-            BlocProvider(
-              create: (context) => DailytasksBloc(
-                  dayOptionsRepo:
-                      RepositoryProvider.of<SqfliteDayOptionsRepo>(context),
-                  tasksRepo: RepositoryProvider.of<SqfliteTasksRepo>(context)),
-            ),
-          ],
-          child: MaterialApp(
-            home: HelperWrapper(),
-          )),
+      child: BlocProvider(
+        create: (context) =>
+            AuthBloc(fireAuthService: FireAuthService())..add(AppStart()),
+        child: MaterialApp(
+          home: HelperWrapper(
+            child: AuthBlocWrapper(),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -78,11 +69,18 @@ class AuthBlocWrapper extends StatelessWidget {
 
         if (state is VerificationCodeInvalid) {
           return CodeVerificationPage();
+          // TODO show error
         }
 
         if (state is Authentificated) {
-          return BoardPage();
           // BlocProvider.of<AuthBloc>(context).add(SignOut());
+          return BlocProvider(
+            create: (context) => DailytasksBloc(
+                dayOptionsRepo:
+                    RepositoryProvider.of<SqfliteDayOptionsRepo>(context),
+                tasksRepo: RepositoryProvider.of<SqfliteTasksRepo>(context)),
+            child: BoardPage(),
+          );
           // print(BlocProvider.of<AuthBloc>(context).fireAuthService.getUser());
         }
 

@@ -1,10 +1,7 @@
 // Show dialog with transparent background and month calendar inside
 // When click on day calendar is closes
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 
 class CalendarDialog extends StatelessWidget {
   final Function onSelect;
