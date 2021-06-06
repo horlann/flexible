@@ -1,6 +1,7 @@
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flexible/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,14 +13,17 @@ class UserDataUpdatePage extends StatefulWidget {
 }
 
 class _UserDataUpdatePageState extends State<UserDataUpdatePage> {
+  final _formKey = GlobalKey<FormState>();
   String fullName = '';
   String email = '';
 
   bool get submitActive => fullName.isNotEmpty && email.isNotEmpty;
 
   onSubmit() {
-    BlocProvider.of<AuthBloc>(context)
-        .add(AddData(email: email, name: fullName));
+    if (_formKey.currentState!.validate()) {
+      BlocProvider.of<AuthBloc>(context)
+          .add(AddData(email: email, name: fullName));
+    }
   }
 
   @override
@@ -87,11 +91,17 @@ class _UserDataUpdatePageState extends State<UserDataUpdatePage> {
                               SizedBox(
                                 height: 32,
                               ),
-                              buildFullNameInput(),
-                              SizedBox(
-                                height: 32,
-                              ),
-                              buildEmailInput(),
+                              Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    children: [
+                                      buildFullNameInput(),
+                                      SizedBox(
+                                        height: 32,
+                                      ),
+                                      buildEmailInput(),
+                                    ],
+                                  )),
                               SizedBox(
                                 height: 32,
                               ),
@@ -139,7 +149,12 @@ class _UserDataUpdatePageState extends State<UserDataUpdatePage> {
   Widget buildFullNameInput() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: TextField(
+      child: TextFormField(
+        keyboardType: TextInputType.name,
+        validator: (value) {
+          print(value);
+          return nameValidator(value!);
+        },
         decoration: InputDecoration(
             hintText: 'Full name',
             isDense: true,
@@ -167,7 +182,11 @@ class _UserDataUpdatePageState extends State<UserDataUpdatePage> {
   Widget buildEmailInput() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: TextField(
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        validator: (value) {
+          return emailValidator(value!);
+        },
         decoration: InputDecoration(
             hintText: 'Email',
             isDense: true,

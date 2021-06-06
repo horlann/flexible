@@ -15,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   String registratonName = '';
   String registrationEmail = '';
+  String phoneNumber = '';
 
   @override
   Stream<AuthState> mapEventToState(
@@ -38,6 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // Sign by phone
     // Sent sms to user and wait for verification
     if (event is SignInByPhone) {
+      phoneNumber = event.phone;
       await fireAuthService.verifyPhoneNumber(event.phone);
       yield CodeSended();
     }
@@ -46,6 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // Sent sms to user and wait for verification
     // Save name and email localy and add it to userdata after verification
     if (event is CreateAccount) {
+      phoneNumber = event.phone;
       registratonName = event.name;
       registrationEmail = event.email;
 
@@ -53,14 +56,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await fireAuthService.verifyPhoneNumber(event.phone);
       } catch (e) {
         print('Registration error');
-        yield NotAuthentificated();
+        yield ShowRegistration();
         return;
       }
       yield CodeSended();
     }
 
+    // Resend code to last number
+    if (event is ResendCode) {
+      await fireAuthService.verifyPhoneNumber(phoneNumber);
+      yield CodeSended();
+    }
+
     // Verify sms code
     if (event is VerifyCode) {
+      print(event.smsCode);
       try {
         await fireAuthService.signInWithSmsCode(event.smsCode);
       } catch (e) {

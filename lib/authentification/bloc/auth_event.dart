@@ -24,6 +24,8 @@ class SignInByPhone extends AuthEvent {
   List<Object> get props => [phone];
 }
 
+class ResendCode extends AuthEvent {}
+
 class VerifyCode extends AuthEvent {
   final String smsCode;
 

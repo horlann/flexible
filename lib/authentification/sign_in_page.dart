@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flexible/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,23 +15,29 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  final _formKey = GlobalKey<FormState>();
   String phoneNumber = '';
   bool isSignButtonTimeout = false;
 
   bool get submitActive => phoneNumber.isNotEmpty & !isSignButtonTimeout;
 
   onSignin() {
-    // Prevent multiple click to submit button before captcha is show
-    setState(() {
-      isSignButtonTimeout = true;
-      print('timeout');
-    });
-    Timer(Duration(seconds: 10), () {
+    if (_formKey.currentState!.validate()) {
+      // Prevent multiple click to submit button before captcha is show
       setState(() {
-        isSignButtonTimeout = false;
+        isSignButtonTimeout = true;
+        print('timeout');
       });
-    });
-    BlocProvider.of<AuthBloc>(context).add(SignInByPhone(phone: phoneNumber));
+      Timer(Duration(seconds: 10), () {
+        if (this.mounted) {
+          setState(() {
+            isSignButtonTimeout = false;
+          });
+        }
+      });
+      BlocProvider.of<AuthBloc>(context)
+          .add(SignInByPhone(phone: '+' + phoneNumber));
+    }
   }
 
   onSignUpTap() {
@@ -86,7 +93,7 @@ class _SignInPageState extends State<SignInPage> {
                               SizedBox(
                                 height: 128,
                               ),
-                              buildPhoneInput(),
+                              Form(key: _formKey, child: buildPhoneInput()),
                               SizedBox(
                                 height: 32,
                               ),
@@ -151,8 +158,11 @@ class _SignInPageState extends State<SignInPage> {
   Widget buildPhoneInput() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: TextField(
+      child: TextFormField(
         keyboardType: TextInputType.phone,
+        validator: (value) {
+          return phoneNumberValidator(value!);
+        },
         decoration: InputDecoration(
             hintText: 'Phone',
             isDense: true,

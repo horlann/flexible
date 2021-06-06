@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flexible/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +15,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  final _formKey = GlobalKey<FormState>();
   bool isUserAgree = false;
   String fullName = '';
   String phoneNumber = '';
@@ -28,18 +30,24 @@ class _RegistrationPageState extends State<RegistrationPage> {
       !isSignButtonTimeout;
 
   onRegistration() {
-    // Prevent multiple click to submit button before captcha is show
-    setState(() {
-      isSignButtonTimeout = true;
-    });
-    Timer(Duration(seconds: 10), () {
+    // Validate all
+    if (_formKey.currentState!.validate()) {
+      // Prevent multiple click to submit button before captcha is show
       setState(() {
-        isSignButtonTimeout = false;
+        isSignButtonTimeout = true;
       });
-    });
-    // Submit registration
-    BlocProvider.of<AuthBloc>(context)
-        .add(CreateAccount(name: fullName, email: email, phone: phoneNumber));
+      Timer(Duration(seconds: 30), () {
+        if (this.mounted) {
+          setState(() {
+            isSignButtonTimeout = false;
+          });
+        }
+      });
+
+      // Submit registration
+      BlocProvider.of<AuthBloc>(context).add(CreateAccount(
+          name: fullName, email: email, phone: '+' + phoneNumber));
+    }
   }
 
   onSignInTap() {
@@ -109,19 +117,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             SizedBox(
                               height: 32,
                             ),
-                            buildFullNameInput(),
-                            SizedBox(
-                              height: 32,
-                            ),
-                            buildPhoneInput(),
-                            SizedBox(
-                              height: 32,
-                            ),
-                            buildEmailInput(),
-                            SizedBox(
-                              height: 32,
-                            ),
-                            buildAgreement(),
+                            Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: [
+                                    buildFullNameInput(),
+                                    SizedBox(
+                                      height: 32,
+                                    ),
+                                    buildPhoneInput(),
+                                    SizedBox(
+                                      height: 32,
+                                    ),
+                                    buildEmailInput(),
+                                    SizedBox(
+                                      height: 32,
+                                    ),
+                                    buildAgreement(),
+                                  ],
+                                )),
                             SizedBox(
                               height: 32,
                             ),
@@ -224,7 +238,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget buildFullNameInput() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: TextField(
+      child: TextFormField(
+        keyboardType: TextInputType.name,
+        validator: (value) {
+          print(value);
+          return nameValidator(value!);
+        },
         decoration: InputDecoration(
             hintText: 'Full name',
             isDense: true,
@@ -252,7 +271,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget buildPhoneInput() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: TextField(
+      child: TextFormField(
+        validator: (value) {
+          return phoneNumberValidator(value!);
+        },
         keyboardType: TextInputType.phone,
         decoration: InputDecoration(
             hintText: 'Phone',
@@ -281,7 +303,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget buildEmailInput() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: TextField(
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        validator: (value) {
+          return emailValidator(value!);
+        },
         decoration: InputDecoration(
             hintText: 'Email',
             isDense: true,

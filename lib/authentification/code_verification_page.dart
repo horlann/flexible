@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
@@ -6,7 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class CodeVerificationPage extends StatefulWidget {
-  CodeVerificationPage({Key? key}) : super(key: key);
+  final bool afterError;
+  CodeVerificationPage({Key? key, required this.afterError}) : super(key: key);
 
   @override
   _CodeVerificationPageState createState() => _CodeVerificationPageState();
@@ -15,6 +18,7 @@ class CodeVerificationPage extends StatefulWidget {
 class _CodeVerificationPageState extends State<CodeVerificationPage> {
   final TextEditingController pincodeController = TextEditingController();
   String pincode = '';
+  bool resendOnTimeout = false;
 
   bool get pinValid {
     if (pincode.length == 6) {
@@ -25,6 +29,44 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
 
   submitCode() {
     BlocProvider.of<AuthBloc>(context).add(VerifyCode(smsCode: pincode));
+    pincodeController.clear();
+  }
+
+  onResend() {
+    BlocProvider.of<AuthBloc>(context).add(ResendCode());
+    startResendTimeout();
+  }
+
+  startResendTimeout() {
+    setState(() {
+      resendOnTimeout = true;
+      print('timeout');
+    });
+    Timer(Duration(seconds: 20), () {
+      if (this.mounted) {
+        setState(() {
+          resendOnTimeout = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startResendTimeout();
+  }
+
+  @override
+  void didUpdateWidget(covariant CodeVerificationPage oldWidget) {
+    print('asdasd');
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    print('asdasd');
+    super.didChangeDependencies();
   }
 
   @override
@@ -98,7 +140,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                                     selectedColor: Color(0xffE24F4F),
                                   ),
                                   animationDuration:
-                                      Duration(milliseconds: 300),
+                                      Duration(milliseconds: 100),
                                   enableActiveFill: true,
                                   controller: pincodeController,
                                   onCompleted: (v) {
@@ -112,6 +154,45 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                                   },
                                   appContext: context,
                                 ),
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              widget.afterError
+                                  ? Text(
+                                      'Invalid code',
+                                      style: TextStyle(
+                                          color: Color(0xffE24F4F),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400),
+                                    )
+                                  : SizedBox(),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Wrap(
+                                children: [
+                                  Text(
+                                    'Didnt receive sms? ',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () =>
+                                        !resendOnTimeout ? onResend() : {},
+                                    child: Text(
+                                      'Send again',
+                                      style: TextStyle(
+                                          color: resendOnTimeout
+                                              ? Color(0xffE24F4F)
+                                                  .withOpacity(0.25)
+                                              : Color(0xffE24F4F),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  )
+                                ],
                               ),
                               SizedBox(
                                 height: 32,
@@ -138,6 +219,32 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                           child: Center(
                             child: Text(
                               'Continue',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<AuthBloc>(context)
+                              .add(GoToRegistration());
+                        },
+                        child: Container(
+                          height: 40,
+                          width: double.maxFinite,
+                          margin: EdgeInsets.symmetric(horizontal: 40),
+                          decoration: BoxDecoration(
+                              color: Color(0xffE24F4F),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Center(
+                            child: Text(
+                              'Cancel',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/code_verification_page.dart';
 import 'package:flexible/authentification/firebase_auth.dart';
@@ -64,12 +66,15 @@ class AuthBlocWrapper extends StatelessWidget {
         }
 
         if (state is CodeSended) {
-          return CodeVerificationPage();
+          return CodeVerificationPage(
+            afterError: false,
+          );
         }
 
         if (state is VerificationCodeInvalid) {
-          return CodeVerificationPage();
-          // TODO show error
+          return CodeVerificationPage(
+            afterError: true,
+          );
         }
 
         if (state is Authentificated) {
