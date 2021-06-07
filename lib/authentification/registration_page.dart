@@ -1,15 +1,19 @@
 import 'dart:async';
+import 'dart:typed_data';
 
-import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flexible/authentification/terms_of_use.dart';
+import 'package:flexible/widgets/wide_rounded_button.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:image_picker/image_picker.dart';
+
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/utils/validators.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sim_country_code/flutter_sim_country_code.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -21,10 +25,17 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   MaskedTextController controller = MaskedTextController(mask: '00-000-00-00');
   FocusNode focusNode = FocusNode();
+  Uint8List? _image;
+  final picker = ImagePicker();
 
-  @override
-  void initState() {
-    super.initState();
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      _image = await pickedFile.readAsBytes();
+      setState(() {});
+    } else {
+      print('No image selected.');
+    }
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -115,16 +126,27 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             SizedBox(
                               height: 32,
                             ),
-                            Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(40)),
-                              child: Center(
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.grey[500],
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Material(
+                                color: Colors.grey[300],
+                                child: InkWell(
+                                  onTap: () => getImage(),
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    child: _image != null
+                                        ? Image.memory(
+                                            _image!,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Center(
+                                            child: Icon(
+                                              Icons.person,
+                                              color: Colors.grey[500],
+                                            ),
+                                          ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -160,45 +182,31 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   Column(
                     children: [
-                      GestureDetector(
-                        onTap: () => submitActive ? onRegistration() : {},
-                        child: Container(
-                          height: 40,
-                          width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(horizontal: 40),
-                          decoration: BoxDecoration(
-                              color: submitActive
-                                  ? Color(0xffE24F4F)
-                                  : Color(0xffE24F4F).withOpacity(0.25),
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Center(
-                            child: Text(
-                              'Continue',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 60),
+                        child: WideRoundedButton(
+                          text: 'Continue',
+                          enable: submitActive,
+                          textColor: Colors.white,
+                          enableColor: Color(0xffE24F4F),
+                          disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                          callback: () => onRegistration(),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () => onSignInTap(),
-                        child: Container(
-                          height: 40,
-                          width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(horizontal: 40),
-                          child: Center(
-                            child: Text(
-                              'Sign in',
-                              style: TextStyle(
-                                  color: Color(0xffE24F4F),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 60),
+                        child: WideRoundedButton(
+                          text: 'Sign in',
+                          enable: true,
+                          textColor: Color(0xffE24F4F),
+                          enableColor: Colors.transparent,
+                          disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                          callback: () => onSignInTap(),
                         ),
-                      )
+                      ),
                     ],
                   )
                 ],
@@ -225,23 +233,32 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 });
               }),
           Expanded(
-            child: Wrap(
-              children: [
-                Text(
-                  'By creating an account you agree to our ',
-                  softWrap: true,
-                ),
-                Text(
-                  'Terms of Service ',
-                  softWrap: true,
-                  style: TextStyle(color: Color(0xffE24F4F)),
-                ),
-                Text(
-                  'and Privacy Policy',
-                  softWrap: true,
-                  style: TextStyle(color: Color(0xffE24F4F)),
-                ),
-              ],
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => TermsPage(),
+                    ));
+              },
+              child: Wrap(
+                children: [
+                  Text(
+                    'By creating an account you agree to our ',
+                    softWrap: true,
+                  ),
+                  Text(
+                    'Terms of Service ',
+                    softWrap: true,
+                    style: TextStyle(color: Color(0xffE24F4F)),
+                  ),
+                  Text(
+                    'and Privacy Policy',
+                    softWrap: true,
+                    style: TextStyle(color: Color(0xffE24F4F)),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

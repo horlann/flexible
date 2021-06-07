@@ -1,5 +1,6 @@
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/material.dart';
 
 class HelperPage extends StatelessWidget {
@@ -66,26 +67,17 @@ class HelperPage extends StatelessWidget {
                   ),
                   Column(
                     children: [
-                      GestureDetector(
-                        onTap: () => onContinue(),
-                        child: Container(
-                          height: 40,
-                          width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(horizontal: 40),
-                          decoration: BoxDecoration(
-                              color: Color(0xffE24F4F),
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Center(
-                            child: Text(
-                              'Continue',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 60),
+                        child: WideRoundedButton(
+                          text: 'Continue',
+                          enable: true,
+                          textColor: Colors.white,
+                          enableColor: Color(0xffE24F4F),
+                          disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                          callback: () => onContinue(),
                         ),
-                      )
+                      ),
                     ],
                   )
                 ],

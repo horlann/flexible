@@ -5,6 +5,7 @@ import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/utils/validators.dart';
+import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
@@ -127,28 +128,17 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   Column(
                     children: [
-                      GestureDetector(
-                        onTap: () => submitActive ? onSignin() : {},
-                        child: Container(
-                          height: 40,
-                          width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(horizontal: 40),
-                          decoration: BoxDecoration(
-                              color: submitActive
-                                  ? Color(0xffE24F4F)
-                                  : Color(0xffE24F4F).withOpacity(0.25),
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Center(
-                            child: Text(
-                              'Sign up',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 60),
+                        child: WideRoundedButton(
+                          text: 'Sign in',
+                          enable: submitActive,
+                          textColor: Colors.white,
+                          enableColor: Color(0xffE24F4F),
+                          disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                          callback: () => onSignin(),
                         ),
-                      )
+                      ),
                     ],
                   )
                 ],
