@@ -75,6 +75,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await fireAuthService.signInWithSmsCode(event.smsCode);
       } catch (e) {
         print('Verification error');
+        print(e);
         yield VerificationCodeInvalid();
         return;
       }

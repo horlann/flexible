@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
+import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -15,8 +17,11 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  MaskedTextController controller = MaskedTextController(mask: '00-000-00-00');
+  FocusNode focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   String phoneNumber = '';
+  String countryCode = '';
   bool isSignButtonTimeout = false;
 
   bool get submitActive => phoneNumber.isNotEmpty & !isSignButtonTimeout;
@@ -36,7 +41,7 @@ class _SignInPageState extends State<SignInPage> {
         }
       });
       BlocProvider.of<AuthBloc>(context)
-          .add(SignInByPhone(phone: '+' + phoneNumber));
+          .add(SignInByPhone(phone: countryCode + phoneNumber));
     }
   }
 
@@ -158,31 +163,52 @@ class _SignInPageState extends State<SignInPage> {
   Widget buildPhoneInput() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: TextFormField(
-        keyboardType: TextInputType.phone,
-        validator: (value) {
-          return phoneNumberValidator(value!);
-        },
-        decoration: InputDecoration(
-            hintText: 'Phone',
-            isDense: true,
-            contentPadding: EdgeInsets.all(12),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide: BorderSide(color: Color(0xffFA6400))),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide: BorderSide(color: Color(0xffC9C9C9))),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide: BorderSide(color: Color(0xffC9C9C9))),
-            fillColor: Colors.white,
-            filled: true),
-        onChanged: (value) {
-          setState(() {
-            phoneNumber = value;
-          });
-        },
+      child: Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              validator: (value) {
+                return phoneNumberValidator(value!.replaceAll(RegExp('-'), ''));
+              },
+              focusNode: focusNode,
+              controller: controller,
+              keyboardType: TextInputType.phone,
+              style: TextStyle(fontSize: 16),
+              decoration: InputDecoration(
+                  prefixIcon: Container(
+                    margin: const EdgeInsets.only(left: 8, bottom: 2),
+                    width: 50,
+                    alignment: Alignment.center,
+                    child: CountryCodePickerWidegt(
+                      onChange: (code) {
+                        countryCode = code;
+                        print(code);
+                      },
+                      focusNode: focusNode,
+                    ),
+                  ),
+                  hintText: 'Phone',
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(12),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Color(0xffFA6400))),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Color(0xffC9C9C9))),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(color: Color(0xffC9C9C9))),
+                  fillColor: Colors.white,
+                  filled: true),
+              onChanged: (value) {
+                setState(() {
+                  phoneNumber = value.replaceAll(RegExp('-'), '');
+                });
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

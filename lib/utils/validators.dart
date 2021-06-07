@@ -1,10 +1,8 @@
 String? phoneNumberValidator(String value) {
-  String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+  String pattern = r'(^(?:[+0]9)?[0-9]{9,9}$)';
   RegExp regExp = new RegExp(pattern);
   if (value.length == 0) {
     return 'Please enter mobile number';
-  } else if (value.length != 12) {
-    return 'Please enter valid mobile number';
   } else if (!regExp.hasMatch(value)) {
     return 'Please enter valid mobile number';
   }
