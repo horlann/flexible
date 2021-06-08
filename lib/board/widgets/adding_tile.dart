@@ -117,7 +117,7 @@ class _AddingTileState extends State<AddingTile> {
               top: 40,
               child: Container(
                 height: 3,
-                width: 30,
+                width: isLessThen350() ? 15 : 25,
                 color: Color(0xff707070),
               ),
             ),
@@ -133,19 +133,19 @@ class _AddingTileState extends State<AddingTile> {
               ),
             ),
             Positioned(
-              left: 95 * byWithScale(context),
+              left: isLessThen350() ? 90 : 115,
               top: 30,
               child: Text(
                 'What else you have to do?',
                 style: TextStyle(
                     color: Color(0xff545353),
-                    fontSize: 16 * byWithScale(context)),
+                    fontSize: 14 * byWithScale(context)),
               ),
             ),
             Container(
               margin: EdgeInsets.only(top: 50, left: 32),
               clipBehavior: Clip.none,
-              // height: 120,
+              height: 100,
               width: double.maxFinite,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

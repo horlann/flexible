@@ -60,7 +60,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
 
       if (scr.offset < 32) {
         setState(() {
-          bottomLinePadding = scr.offset.abs() + 32;
+          bottomLinePadding = scr.offset.abs() + 45;
         });
       } else {
         setState(() {

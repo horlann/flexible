@@ -73,6 +73,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
 
   @override
   Widget build(BuildContext context) {
+    double safeTopPadding = MediaQuery.of(context).padding.top;
     return Scaffold(
       // backgroundColor: Color(0xffE9E9E9),
       body: SizedBox.expand(
@@ -81,14 +82,15 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
             gradient: mainBackgroundGradient,
           ),
           child: SafeArea(
-            child: CustomScrollView(
-              physics: BouncingScrollPhysics(),
-              slivers: [
-                SliverFillRemaining(
-                  hasScrollBody: false,
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight:
+                        MediaQuery.of(context).size.height - safeTopPadding),
+                child: IntrinsicHeight(
                   child: buildBody(context),
                 ),
-              ],
+              ),
             ),
           ),
         ),

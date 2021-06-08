@@ -61,16 +61,6 @@ class HelperPage extends StatelessWidget {
   Widget buildBody(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double helpHeight() {
-          if (constraints.maxHeight > 600) {
-            return 500;
-          }
-          if (constraints.maxHeight > 500) {
-            return 450;
-          }
-          return 400;
-        }
-
         print(constraints);
         return Column(
           mainAxisSize: MainAxisSize.max,
@@ -91,18 +81,10 @@ class HelperPage extends StatelessWidget {
                 child: Stack(
                   children: [
                     Positioned.fill(child: GlassmorphLayer()),
-                    SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      child: SizedBox(
-                        height: helpHeight(),
-                        width: double.maxFinite,
-                        child: PageView(
-                            physics: BouncingScrollPhysics(),
-                            controller: pageController,
-                            children: subPages),
-                      ),
-                    )
+                    PageView(
+                        physics: BouncingScrollPhysics(),
+                        controller: pageController,
+                        children: subPages)
                   ],
                 ),
               ),
@@ -136,9 +118,10 @@ class Helper1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          height: 16 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Welcome',
@@ -147,8 +130,8 @@ class Helper1 extends StatelessWidget {
               fontSize: 32,
               fontWeight: FontWeight.w700),
         ),
-        SizedBox(
-          height: 8 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Flexible',
@@ -157,8 +140,8 @@ class Helper1 extends StatelessWidget {
               fontSize: 24,
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
-          height: 32 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Bring structure to your day',
@@ -167,15 +150,15 @@ class Helper1 extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
-          height: 16 / hpRatio(context),
+        Spacer(
+          flex: 4,
         ),
         Image.asset(
           'src/helper/wtf.png',
           height: 300 / hpRatio(context),
         ),
-        SizedBox(
-          height: 32 / hpRatio(context),
+        Spacer(
+          flex: 3,
         ),
       ],
     );
@@ -191,9 +174,10 @@ class Helper2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SizedBox(
-          height: 16 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Plain',
@@ -202,8 +186,8 @@ class Helper2 extends StatelessWidget {
               fontSize: 32,
               fontWeight: FontWeight.w700),
         ),
-        SizedBox(
-          height: 8 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Diary',
@@ -212,8 +196,8 @@ class Helper2 extends StatelessWidget {
               fontSize: 24,
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
-          height: 32 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Schedule of all affairs and events',
@@ -222,15 +206,15 @@ class Helper2 extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
-          height: 16 / hpRatio(context),
+        Spacer(
+          flex: 4,
         ),
         Image.asset(
           'src/helper/document.png',
           height: 300 / hpRatio(context),
         ),
-        SizedBox(
-          height: 32 / hpRatio(context),
+        Spacer(
+          flex: 3,
         ),
       ],
     );
@@ -245,9 +229,10 @@ class Helper3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SizedBox(
-          height: 16 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Plain',
@@ -256,8 +241,8 @@ class Helper3 extends StatelessWidget {
               fontSize: 32,
               fontWeight: FontWeight.w700),
         ),
-        SizedBox(
-          height: 8 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Diary',
@@ -266,8 +251,8 @@ class Helper3 extends StatelessWidget {
               fontSize: 24,
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
-          height: 32 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Start with a simple task',
@@ -276,15 +261,15 @@ class Helper3 extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
-          height: 16 / hpRatio(context),
+        Spacer(
+          flex: 4,
         ),
         Image.asset(
           'src/helper/task.png',
           height: 250 / hpRatio(context),
         ),
-        SizedBox(
-          height: 16 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -295,6 +280,9 @@ class Helper3 extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w400),
           ),
+        ),
+        Spacer(
+          flex: 2,
         ),
       ],
     );
@@ -309,9 +297,10 @@ class Helper4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SizedBox(
-          height: 16 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Good',
@@ -320,8 +309,8 @@ class Helper4 extends StatelessWidget {
               fontSize: 32,
               fontWeight: FontWeight.w700),
         ),
-        SizedBox(
-          height: 8 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Morning',
@@ -330,8 +319,8 @@ class Helper4 extends StatelessWidget {
               fontSize: 24,
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
-          height: 32 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Text(
           'Start with a simple task',
@@ -340,15 +329,15 @@ class Helper4 extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w400),
         ),
-        SizedBox(
-          height: 16 / hpRatio(context),
+        Spacer(
+          flex: 4,
         ),
         Image.asset(
           'src/helper/time.png',
           height: 250 / hpRatio(context),
         ),
-        SizedBox(
-          height: 32 / hpRatio(context),
+        Spacer(
+          flex: 1,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -359,6 +348,9 @@ class Helper4 extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w400),
           ),
+        ),
+        Spacer(
+          flex: 2,
         ),
       ],
     );

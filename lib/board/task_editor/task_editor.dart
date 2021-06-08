@@ -64,103 +64,95 @@ class _TaskEditorState extends State<TaskEditor> {
           decoration: BoxDecoration(
             gradient: mainBackgroundGradient,
           ),
-          child: SingleChildScrollView(
+          child: CustomScrollView(
             physics: BouncingScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            child: Column(
+            slivers: [
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: buildBody(context),
+              ),
+            ],
+          ),
+        ),
+      )),
+    );
+  }
+
+  Widget buildBody(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(16 * byWithScale(context)),
+            // Stack uses for make layer of glass
+            child: Stack(
               children: [
-                Padding(
-                  padding: EdgeInsets.all(16 * byWithScale(context)),
-                  // Stack uses for make layer of glass
-                  child: Stack(
-                    children: [
-                      // the glass layer
-                      // fill uses for adopt is size
-                      Positioned.fill(child: GlassmorphLayer()),
-                      Column(
-                        children: [
-                          RowWithCloseBtn(context: context),
-                          Text(
-                            'Edit Task',
-                            style: TextStyle(
-                              fontSize: 24 * byWithScale(context),
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xffE24F4F),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 4 * byWithScale(context),
-                          ),
-                          buildTitleInputSection(),
-                          SizedBox(
-                            height: 8 * byWithScale(context),
-                          ),
-                          Text(
-                            'When do you want to do it...',
-                            style: TextStyle(
-                                fontSize: 12 * byWithScale(context),
-                                fontWeight: FontWeight.w600),
-                          ),
-                          buildTimePicker(),
-                          Text(
-                            '...once on ${editableTask.timeStart.toString().substring(0, 10)}',
-                            style: TextStyle(
-                                fontSize: 10 * byWithScale(context),
-                                fontWeight: FontWeight.w400),
-                          ),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          Text(
-                            '...and how long it will take',
-                            style: TextStyle(
-                                fontSize: 10 * byWithScale(context),
-                                fontWeight: FontWeight.w400),
-                          ),
-                          SizedBox(
-                            height: 8 * byWithScale(context),
-                          ),
-                          TimeSlider(
-                            period: editableTask.period,
-                            callback: (Duration newPeriod) {
-                              setState(() {
-                                editableTask =
-                                    editableTask.copyWith(period: newPeriod);
-                              });
-                            },
-                          ),
-                          SizedBox(
-                            height: 16 * byWithScale(context),
-                          ),
-                          Text(
-                            'What color should you task be?',
-                            style: TextStyle(
-                                fontSize: 12 * byWithScale(context),
-                                fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(
-                            height: 8 * byWithScale(context),
-                          ),
-                          ColorPickerRow(callback: (color) {
-                            setState(() {
-                              editableTask =
-                                  editableTask.copyWith(color: color);
-                            });
-                          }),
-                          SizedBox(
-                            height: 16 * byWithScale(context),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                buildUpdateDeleteButtons()
+                // the glass layer
+                // fill uses for adopt is size
+                Positioned.fill(child: GlassmorphLayer()),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RowWithCloseBtn(context: context),
+                    Text(
+                      'Edit Task',
+                      style: TextStyle(
+                        fontSize: 24 * byWithScale(context),
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xffE24F4F),
+                      ),
+                    ),
+                    buildTitleInputSection(),
+                    Text(
+                      'When do you want to do it...',
+                      style: TextStyle(
+                          fontSize: 12 * byWithScale(context),
+                          fontWeight: FontWeight.w600),
+                    ),
+                    buildTimePicker(),
+                    Text(
+                      '...once on ${editableTask.timeStart.toString().substring(0, 10)}',
+                      style: TextStyle(
+                          fontSize: 10 * byWithScale(context),
+                          fontWeight: FontWeight.w400),
+                    ),
+                    Text(
+                      '...and how long it will take',
+                      style: TextStyle(
+                          fontSize: 10 * byWithScale(context),
+                          fontWeight: FontWeight.w400),
+                    ),
+                    TimeSlider(
+                      period: editableTask.period,
+                      callback: (Duration newPeriod) {
+                        setState(() {
+                          editableTask =
+                              editableTask.copyWith(period: newPeriod);
+                        });
+                      },
+                    ),
+                    Text(
+                      'What color should you task be?',
+                      style: TextStyle(
+                          fontSize: 12 * byWithScale(context),
+                          fontWeight: FontWeight.w600),
+                    ),
+                    ColorPickerRow(callback: (color) {
+                      setState(() {
+                        editableTask = editableTask.copyWith(color: color);
+                      });
+                    }),
+                  ],
+                )
               ],
             ),
           ),
         ),
-      )),
+        // Expanded(
+        //   child: Container(height: 100, width: 100, color: Colors.red),
+        // ),
+        buildUpdateDeleteButtons()
+      ],
     );
   }
 

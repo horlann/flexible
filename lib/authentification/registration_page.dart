@@ -82,8 +82,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(byWithScale(context));
+    double safeTopPadding = MediaQuery.of(context).padding.top;
+
     return Scaffold(
+      // resizeToAvoidBottomInset: false,
       // backgroundColor: Color(0xffE9E9E9),
       body: SizedBox.expand(
         child: Container(
@@ -91,14 +93,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
             gradient: mainBackgroundGradient,
           ),
           child: SafeArea(
-            child: CustomScrollView(
-              physics: BouncingScrollPhysics(),
-              slivers: [
-                SliverFillRemaining(
-                  hasScrollBody: false,
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight:
+                        MediaQuery.of(context).size.height - safeTopPadding),
+                child: IntrinsicHeight(
                   child: buildBody(context),
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -123,15 +126,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: Stack(
               children: [
                 Positioned.fill(child: GlassmorphLayer()),
-                SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
+                Form(
+                  key: _formKey,
                   child: Column(
                     children: [
-                      SizedBox(
-                        width: double.maxFinite,
-                      ),
-                      SizedBox(
-                        height: 16 * byWithScale(context),
+                      Spacer(
+                        flex: 1,
                       ),
                       Text(
                         'Create an Acount',
@@ -140,8 +140,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             fontSize: 20 * byWithScale(context),
                             fontWeight: FontWeight.w700),
                       ),
-                      SizedBox(
-                        height: 16 * byWithScale(context),
+                      Spacer(
+                        flex: 1,
                       ),
                       ClipRRect(
                         borderRadius:
@@ -168,30 +168,24 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 16 * byWithScale(context),
+                      Spacer(
+                        flex: 1,
                       ),
-                      Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              buildFullNameInput(),
-                              SizedBox(
-                                height: 16 * byWithScale(context),
-                              ),
-                              buildPhoneInput(),
-                              SizedBox(
-                                height: 16 * byWithScale(context),
-                              ),
-                              buildEmailInput(),
-                              SizedBox(
-                                height: 16 * byWithScale(context),
-                              ),
-                              buildAgreement(),
-                            ],
-                          )),
-                      SizedBox(
-                        height: 16 * byWithScale(context),
+                      buildFullNameInput(),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      buildPhoneInput(),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      buildEmailInput(),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      buildAgreement(),
+                      Spacer(
+                        flex: 2,
                       ),
                     ],
                   ),
