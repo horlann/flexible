@@ -35,13 +35,11 @@ class HelperWrapper extends StatelessWidget {
         }
 
         return Scaffold(
-          body: Center(
-            child: Text(
-              'LOGO',
-              style: TextStyle(
-                  color: Color(0xffE24F4F),
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700),
+          body: SizedBox.expand(
+            child: Image.asset(
+              'src/splash.jpg',
+              fit: BoxFit.cover,
+              scale: 2,
             ),
           ),
         );
