@@ -1,6 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sim_country_code/flutter_sim_country_code.dart';
 
@@ -79,7 +80,7 @@ class _CountryCodePickerWidegtState extends State<CountryCodePickerWidegt> {
       },
       child: Text(
           '+' + CountryPickerUtils.getCountryByIsoCode(isoCode).phoneCode,
-          style: TextStyle(fontSize: 16)),
+          style: TextStyle(fontSize: 10 * byWithScale(context))),
     );
   }
 }

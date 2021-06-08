@@ -1,7 +1,9 @@
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class HelperPage extends StatelessWidget {
   HelperPage({required this.callback});
@@ -28,64 +30,100 @@ class HelperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Lock portreit mode
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    print(MediaQuery.of(context).size.shortestSide);
+    print(MediaQuery.of(context).devicePixelRatio);
+
     return Scaffold(
-      // backgroundColor: Color(0xffE9E9E9),
-      body: SizedBox.expand(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: mainBackgroundGradient,
-          ),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    height: 32,
-                  ),
-                  Text(
-                    'fleXible',
-                    style: TextStyle(
-                        color: Color(0xffE24F4F),
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(32),
-                    child: Stack(
-                      children: [
-                        Positioned.fill(child: GlassmorphLayer()),
-                        SizedBox(
-                          height: 500,
-                          width: double.maxFinite,
-                          child: PageView(
-                              controller: pageController, children: subPages),
-                        )
-                      ],
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 60),
-                        child: WideRoundedButton(
-                          text: 'Continue',
-                          enable: true,
-                          textColor: Colors.white,
-                          enableColor: Color(0xffE24F4F),
-                          disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                          callback: () => onContinue(),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+        body: Container(
+      decoration: BoxDecoration(
+        gradient: mainBackgroundGradient,
+      ),
+      child: SafeArea(
+        child: CustomScrollView(
+          physics: BouncingScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: true,
+              child: buildBody(context),
             ),
-          ),
+          ],
         ),
       ),
+    ));
+  }
+
+  Widget buildBody(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double helpHeight() {
+          if (constraints.maxHeight > 600) {
+            return 500;
+          }
+          if (constraints.maxHeight > 500) {
+            return 450;
+          }
+          return 400;
+        }
+
+        print(constraints);
+        return Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(
+              height: 16 * byWithScale(context),
+            ),
+            Text(
+              'fleXible',
+              style: TextStyle(
+                  color: Color(0xffE24F4F),
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(32 / hpRatio(context)),
+                child: Stack(
+                  children: [
+                    Positioned.fill(child: GlassmorphLayer()),
+                    SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      child: SizedBox(
+                        height: helpHeight(),
+                        width: double.maxFinite,
+                        child: PageView(
+                            physics: BouncingScrollPhysics(),
+                            controller: pageController,
+                            children: subPages),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 60),
+              child: WideRoundedButton(
+                text: 'Continue',
+                enable: true,
+                textColor: Colors.white,
+                enableColor: Color(0xffE24F4F),
+                disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                callback: () => onContinue(),
+              ),
+            ),
+            SizedBox(
+              height: 16 * byWithScale(context),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -100,7 +138,7 @@ class Helper1 extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 16,
+          height: 16 / hpRatio(context),
         ),
         Text(
           'Welcome',
@@ -110,7 +148,7 @@ class Helper1 extends StatelessWidget {
               fontWeight: FontWeight.w700),
         ),
         SizedBox(
-          height: 8,
+          height: 8 / hpRatio(context),
         ),
         Text(
           'Flexible',
@@ -120,7 +158,7 @@ class Helper1 extends StatelessWidget {
               fontWeight: FontWeight.w400),
         ),
         SizedBox(
-          height: 32,
+          height: 32 / hpRatio(context),
         ),
         Text(
           'Bring structure to your day',
@@ -130,17 +168,18 @@ class Helper1 extends StatelessWidget {
               fontWeight: FontWeight.w400),
         ),
         SizedBox(
-          height: 16,
+          height: 16 / hpRatio(context),
         ),
         Image.asset(
           'src/helper/wtf.png',
-          height: 250,
+          height: 300 / hpRatio(context),
         ),
         SizedBox(
-          height: 32,
+          height: 32 / hpRatio(context),
         ),
       ],
     );
+    ;
   }
 }
 
@@ -154,7 +193,7 @@ class Helper2 extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 16,
+          height: 16 / hpRatio(context),
         ),
         Text(
           'Plain',
@@ -164,7 +203,7 @@ class Helper2 extends StatelessWidget {
               fontWeight: FontWeight.w700),
         ),
         SizedBox(
-          height: 8,
+          height: 8 / hpRatio(context),
         ),
         Text(
           'Diary',
@@ -174,7 +213,7 @@ class Helper2 extends StatelessWidget {
               fontWeight: FontWeight.w400),
         ),
         SizedBox(
-          height: 32,
+          height: 32 / hpRatio(context),
         ),
         Text(
           'Schedule of all affairs and events',
@@ -184,14 +223,14 @@ class Helper2 extends StatelessWidget {
               fontWeight: FontWeight.w400),
         ),
         SizedBox(
-          height: 16,
+          height: 16 / hpRatio(context),
         ),
         Image.asset(
           'src/helper/document.png',
-          height: 250,
+          height: 300 / hpRatio(context),
         ),
         SizedBox(
-          height: 32,
+          height: 32 / hpRatio(context),
         ),
       ],
     );
@@ -208,7 +247,7 @@ class Helper3 extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 16,
+          height: 16 / hpRatio(context),
         ),
         Text(
           'Plain',
@@ -218,7 +257,7 @@ class Helper3 extends StatelessWidget {
               fontWeight: FontWeight.w700),
         ),
         SizedBox(
-          height: 8,
+          height: 8 / hpRatio(context),
         ),
         Text(
           'Diary',
@@ -228,7 +267,7 @@ class Helper3 extends StatelessWidget {
               fontWeight: FontWeight.w400),
         ),
         SizedBox(
-          height: 32,
+          height: 32 / hpRatio(context),
         ),
         Text(
           'Start with a simple task',
@@ -238,14 +277,14 @@ class Helper3 extends StatelessWidget {
               fontWeight: FontWeight.w400),
         ),
         SizedBox(
-          height: 16,
+          height: 16 / hpRatio(context),
         ),
         Image.asset(
           'src/helper/task.png',
-          height: 250,
+          height: 250 / hpRatio(context),
         ),
         SizedBox(
-          height: 32,
+          height: 16 / hpRatio(context),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -272,7 +311,7 @@ class Helper4 extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 16,
+          height: 16 / hpRatio(context),
         ),
         Text(
           'Good',
@@ -282,7 +321,7 @@ class Helper4 extends StatelessWidget {
               fontWeight: FontWeight.w700),
         ),
         SizedBox(
-          height: 8,
+          height: 8 / hpRatio(context),
         ),
         Text(
           'Morning',
@@ -292,7 +331,7 @@ class Helper4 extends StatelessWidget {
               fontWeight: FontWeight.w400),
         ),
         SizedBox(
-          height: 32,
+          height: 32 / hpRatio(context),
         ),
         Text(
           'Start with a simple task',
@@ -302,14 +341,14 @@ class Helper4 extends StatelessWidget {
               fontWeight: FontWeight.w400),
         ),
         SizedBox(
-          height: 16,
+          height: 16 / hpRatio(context),
         ),
         Image.asset(
           'src/helper/time.png',
-          height: 250,
+          height: 250 / hpRatio(context),
         ),
         SizedBox(
-          height: 32,
+          height: 32 / hpRatio(context),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),

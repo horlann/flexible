@@ -1,4 +1,5 @@
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/material.dart';
 
@@ -44,12 +45,12 @@ class _TermsPageState extends State<TermsPage> {
                   'fleXible',
                   style: TextStyle(
                       color: Color(0xffE24F4F),
-                      fontSize: 32,
+                      fontSize: 28 * byWithScale(context),
                       fontWeight: FontWeight.w700),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.all(32),
+                    padding: EdgeInsets.all(16 * byWithScale(context)),
                     child: Stack(
                       children: [
                         Positioned.fill(child: GlassmorphLayer()),
@@ -57,6 +58,7 @@ class _TermsPageState extends State<TermsPage> {
                           // height: 500,
                           width: double.maxFinite,
                           child: PageView(
+                            physics: BouncingScrollPhysics(),
                             onPageChanged: (value) {
                               setState(() {
                                 _currentPage = value;
@@ -94,7 +96,7 @@ class _TermsPageState extends State<TermsPage> {
                   }),
                 ),
                 SizedBox(
-                  height: 16,
+                  height: 8 * byWithScale(context),
                 )
               ],
             ),
@@ -111,20 +113,21 @@ class Terms extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 16,
+          height: 16 * byWithScale(context),
         ),
         Text(
           'Terms of use',
           style: TextStyle(
               color: Color(0xffE24F4F),
-              fontSize: 32,
+              fontSize: 16 * byWithScale(context),
               fontWeight: FontWeight.w700),
         ),
         SizedBox(
-          height: 32,
+          height: 8 * byWithScale(context),
         ),
         Flexible(
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             scrollDirection: Axis.vertical,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -132,7 +135,7 @@ class Terms extends StatelessWidget {
                 '"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"',
                 style: TextStyle(
                     color: Color(0xffE24F4F),
-                    fontSize: 16,
+                    fontSize: 12 * byWithScale(context),
                     fontWeight: FontWeight.w400),
               ),
             ),
@@ -152,20 +155,21 @@ class Privacy extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 16,
+          height: 16 * byWithScale(context),
         ),
         Text(
           'Privacy Policy',
           style: TextStyle(
               color: Color(0xffE24F4F),
-              fontSize: 32,
+              fontSize: 16 * byWithScale(context),
               fontWeight: FontWeight.w700),
         ),
         SizedBox(
-          height: 32,
+          height: 8 * byWithScale(context),
         ),
         Flexible(
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             scrollDirection: Axis.vertical,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -173,7 +177,7 @@ class Privacy extends StatelessWidget {
                 '"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"',
                 style: TextStyle(
                     color: Color(0xffE24F4F),
-                    fontSize: 16,
+                    fontSize: 12 * byWithScale(context),
                     fontWeight: FontWeight.w400),
               ),
             ),

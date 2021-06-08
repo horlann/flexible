@@ -1,3 +1,4 @@
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 
 class WideRoundedButton extends StatelessWidget {
@@ -22,7 +23,7 @@ class WideRoundedButton extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: SizedBox(
-        height: 40,
+        height: 30 * byWithScale(context),
         child: Material(
           color: enable ? enableColor : disableColor,
           child: InkWell(
@@ -32,7 +33,7 @@ class WideRoundedButton extends StatelessWidget {
                 text,
                 style: TextStyle(
                     color: textColor,
-                    fontSize: 20,
+                    fontSize: 16 * byWithScale(context),
                     fontWeight: FontWeight.w700),
               ),
             ),

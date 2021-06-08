@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/utils/validators.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
@@ -60,93 +61,117 @@ class _SignInPageState extends State<SignInPage> {
             gradient: mainBackgroundGradient,
           ),
           child: SafeArea(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 32,
-                  ),
-                  Text(
-                    'fleXible',
-                    style: TextStyle(
-                        color: Color(0xffE24F4F),
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(32),
-                    child: Stack(
-                      children: [
-                        Positioned.fill(child: GlassmorphLayer()),
-                        SizedBox(
-                          height: 500,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: double.maxFinite,
-                              ),
-                              SizedBox(
-                                height: 32,
-                              ),
-                              Text(
-                                'Sign In',
-                                style: TextStyle(
-                                    color: Color(0xffE24F4F),
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              SizedBox(
-                                height: 128,
-                              ),
-                              Form(key: _formKey, child: buildPhoneInput()),
-                              SizedBox(
-                                height: 32,
-                              ),
-                              Wrap(
-                                children: [
-                                  Text(
-                                    'Don\'t have account yet? ',
-                                    softWrap: true,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () => onSignUpTap(),
-                                    child: Text(
-                                      'Sign Up',
-                                      softWrap: true,
-                                      style:
-                                          TextStyle(color: Color(0xffE24F4F)),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 60),
-                        child: WideRoundedButton(
-                          text: 'Sign in',
-                          enable: submitActive,
-                          textColor: Colors.white,
-                          enableColor: Color(0xffE24F4F),
-                          disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                          callback: () => onSignin(),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+            child: CustomScrollView(
+              physics: BouncingScrollPhysics(),
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: buildBody(context),
+                ),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildBody(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 16 * byWithScale(context),
+        ),
+        Text(
+          'fleXible',
+          style: TextStyle(
+              color: Color(0xffE24F4F),
+              fontSize: 24 * byWithScale(context),
+              fontWeight: FontWeight.w700),
+        ),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(16 * byWithScale(context)),
+            child: Stack(
+              children: [
+                Positioned.fill(child: GlassmorphLayer()),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: double.maxFinite,
+                    ),
+                    SizedBox(
+                      height: 16 * byWithScale(context),
+                    ),
+                    Text(
+                      'Sign In',
+                      style: TextStyle(
+                          color: Color(0xffE24F4F),
+                          fontSize: 20 * byWithScale(context),
+                          fontWeight: FontWeight.w700),
+                    ),
+                    // SizedBox(
+                    //   height: 128 * byWithScale(context),
+                    // ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Form(key: _formKey, child: buildPhoneInput()),
+                          SizedBox(
+                            height: 16 * byWithScale(context),
+                          ),
+                          Wrap(
+                            children: [
+                              Text(
+                                'Don\'t have account yet? ',
+                                style: TextStyle(
+                                    fontSize: 12 * byWithScale(context)),
+                                softWrap: true,
+                              ),
+                              GestureDetector(
+                                onTap: () => onSignUpTap(),
+                                child: Text(
+                                  'Sign Up',
+                                  softWrap: true,
+                                  style: TextStyle(
+                                      color: Color(0xffE24F4F),
+                                      fontSize: 12 * byWithScale(context)),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 16 * byWithScale(context),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              child: WideRoundedButton(
+                text: 'Sign in',
+                enable: submitActive,
+                textColor: Colors.white,
+                enableColor: Color(0xffE24F4F),
+                disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                callback: () => onSignin(),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 16 * byWithScale(context),
+        ),
+      ],
     );
   }
 
@@ -163,7 +188,7 @@ class _SignInPageState extends State<SignInPage> {
               focusNode: focusNode,
               controller: controller,
               keyboardType: TextInputType.phone,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 12 * byWithScale(context)),
               decoration: InputDecoration(
                   prefixIcon: Container(
                     margin: const EdgeInsets.only(left: 8, bottom: 2),
@@ -177,9 +202,10 @@ class _SignInPageState extends State<SignInPage> {
                       focusNode: focusNode,
                     ),
                   ),
+                  prefixIconConstraints: BoxConstraints(minHeight: 0),
                   hintText: 'Phone',
                   isDense: true,
-                  contentPadding: EdgeInsets.all(12),
+                  contentPadding: EdgeInsets.all(8 * byWithScale(context)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide(color: Color(0xffFA6400))),

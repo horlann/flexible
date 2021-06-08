@@ -76,7 +76,7 @@ class AuthBlocWrapper extends StatelessWidget {
         }
 
         if (state is Authentificated) {
-          BlocProvider.of<AuthBloc>(context).add(SignOut());
+          // BlocProvider.of<AuthBloc>(context).add(SignOut());
           return BlocProvider(
             create: (context) => DailytasksBloc(
                 dayOptionsRepo:
