@@ -4,6 +4,8 @@ import 'package:flexible/board/task_editor/row_with_close_btn.dart';
 import 'package:flexible/board/task_editor/task_icon_in_round.dart';
 import 'package:flexible/board/task_editor/time_slider.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,6 +68,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
             gradient: mainBackgroundGradient,
           ),
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             scrollDirection: Axis.vertical,
             child: Column(
               children: [
@@ -81,30 +84,32 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                         children: [
                           RowWithCloseBtn(context: context),
                           Text(
-                            'Create an Task',
+                            'Edit Task',
                             style: TextStyle(
-                              fontSize: 28,
+                              fontSize: 24 * byWithScale(context),
                               fontWeight: FontWeight.w700,
                               color: Color(0xffE24F4F),
                             ),
                           ),
                           SizedBox(
-                            height: 8,
+                            height: 4 * byWithScale(context),
                           ),
                           buildTitleInputSection(),
                           SizedBox(
-                            height: 24,
+                            height: 8 * byWithScale(context),
                           ),
                           Text(
                             'When do you want to do it...',
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                                fontSize: 12 * byWithScale(context),
+                                fontWeight: FontWeight.w600),
                           ),
                           buildTimePicker(),
                           Text(
                             '...once on ${editableTask.timeStart.toString().substring(0, 10)}',
                             style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w400),
+                                fontSize: 10 * byWithScale(context),
+                                fontWeight: FontWeight.w400),
                           ),
                           SizedBox(
                             height: 2,
@@ -112,10 +117,11 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                           Text(
                             '...and how long it will take',
                             style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w400),
+                                fontSize: 10 * byWithScale(context),
+                                fontWeight: FontWeight.w400),
                           ),
                           SizedBox(
-                            height: 8,
+                            height: 8 * byWithScale(context),
                           ),
                           TimeSlider(
                             period: editableTask.period,
@@ -127,15 +133,16 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                             },
                           ),
                           SizedBox(
-                            height: 32,
+                            height: 16 * byWithScale(context),
                           ),
                           Text(
-                            'What color shoulz you task be?',
+                            'What color should you task be?',
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                                fontSize: 12 * byWithScale(context),
+                                fontWeight: FontWeight.w600),
                           ),
                           SizedBox(
-                            height: 16,
+                            height: 8 * byWithScale(context),
                           ),
                           ColorPickerRow(callback: (color) {
                             setState(() {
@@ -144,7 +151,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                             });
                           }),
                           SizedBox(
-                            height: 16,
+                            height: 16 * byWithScale(context),
                           ),
                         ],
                       )
@@ -164,35 +171,22 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   Widget buildUpdateDeleteButtons() {
     return Column(
       children: [
-        SizedBox(
-          height: 16,
-        ),
-        GestureDetector(
-          onTap: () {
-            BlocProvider.of<DailytasksBloc>(context)
-                .add(DailytasksAddTask(task: editableTask));
-            Navigator.pop(context);
-          },
-          child: Container(
-            height: 40,
-            width: double.maxFinite,
-            margin: EdgeInsets.symmetric(horizontal: 40),
-            decoration: BoxDecoration(
-                color: Color(0xffE24F4F),
-                borderRadius: BorderRadius.circular(30)),
-            child: Center(
-              child: Text(
-                'Create Task',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
-          ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 40),
+          child: WideRoundedButton(
+              enable: true,
+              textColor: Colors.white,
+              enableColor: Color(0xffE24F4F),
+              disableColor: Color(0xffE24F4F),
+              callback: () {
+                BlocProvider.of<DailytasksBloc>(context)
+                    .add(DailytasksAddTask(task: editableTask));
+                Navigator.pop(context);
+              },
+              text: 'Create Task'),
         ),
         SizedBox(
-          height: 16,
+          height: 8 * byWithScale(context),
         ),
       ],
     );
@@ -200,24 +194,30 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
 
   SizedBox buildTimePicker() {
     return SizedBox(
-        height: 190,
-        child: CupertinoTimerPicker(
-            initialTimerDuration: editableTask.timeStart
-                .difference(DateUtils.dateOnly(editableTask.timeStart)),
-            mode: CupertinoTimerPickerMode.hm,
-            onTimerDurationChanged: (v) {
-              DateTime timeStart =
-                  DateUtils.dateOnly(editableTask.timeStart).add(v);
+      height: 120 * byWithScale(context),
+      child: FittedBox(
+        child: SizedBox(
+            height: 190,
+            child: CupertinoTimerPicker(
+                initialTimerDuration: editableTask.timeStart
+                    .difference(DateUtils.dateOnly(editableTask.timeStart)),
+                mode: CupertinoTimerPickerMode.hm,
+                onTimerDurationChanged: (v) {
+                  DateTime timeStart =
+                      DateUtils.dateOnly(editableTask.timeStart).add(v);
 
-              setState(() {
-                editableTask = editableTask.copyWith(timeStart: timeStart);
-              });
-            }));
+                  setState(() {
+                    editableTask = editableTask.copyWith(timeStart: timeStart);
+                  });
+                })),
+      ),
+    );
   }
 
   Container buildTitleInputSection() {
     return Container(
       decoration: BoxDecoration(
+          // color: Colors.red,
           border:
               Border(bottom: BorderSide(width: 1, color: Color(0xffB1B1B1)))),
       padding: EdgeInsets.only(bottom: 2),
@@ -236,7 +236,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
           Expanded(
             child: Container(
                 child: SizedBox(
-              height: 32,
+              height: 20 * byWithScale(context),
               child: TextFormField(
                 // Change title
                 onChanged: (value) {
@@ -244,16 +244,19 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                     editableTask = editableTask.copyWith(title: value);
                   });
                 },
+
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
-                  contentPadding: EdgeInsets.all(0),
+                  // contentPadding: EdgeInsets.all(10),
                 ),
                 initialValue: editableTask.title,
-                style: TextStyle(color: Color(0xff373535)),
+                style: TextStyle(
+                    color: Color(0xff373535),
+                    fontSize: 12 * byWithScale(context)),
               ),
             )),
           )

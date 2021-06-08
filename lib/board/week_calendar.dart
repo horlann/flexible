@@ -1,6 +1,7 @@
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/repository/sqFliteTasksRepository/sqflire_tasks_repo.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -17,7 +18,7 @@ class WeekCalendar extends StatelessWidget {
   Widget build(BuildContext context) {
     // RepositoryProvider.of<DailytasksBloc>(context);
     TextStyle calTextStyle = TextStyle(
-      fontSize: 10,
+      fontSize: 10 * byWithScale(context),
       fontWeight: FontWeight.w900,
       color: Color(0xff716D6E),
       height: 0,
@@ -31,7 +32,7 @@ class WeekCalendar extends StatelessWidget {
             ? SizedBox()
             : SizedBox(
                 // height: 60,
-                width: 280,
+                width: 250 * byWithScale(context),
                 // Logic for providing nuber on events on day
                 child: FutureBuilder(
                     future: RepositoryProvider.of<SqfliteTasksRepo>(context)

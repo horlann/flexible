@@ -6,6 +6,7 @@ import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/task_editor.dart';
 import 'package:flexible/board/widgets/mini_buttons_with_icon.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,6 +66,8 @@ class _TaskTileState extends State<TaskTile> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLessThen350() => MediaQuery.of(context).size.width < 350;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -82,13 +85,13 @@ class _TaskTileState extends State<TaskTile> {
                   child: Text(geTimeString(widget.task.timeStart),
                       style: TextStyle(
                           color: Color(0xff545353),
-                          fontSize: 13,
+                          fontSize: 10 * byWithScale(context),
                           fontWeight: FontWeight.w400))),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 59,
+                    width: isLessThen350() ? 40 : 59,
                   ),
                   buildMainIcon(),
                   SizedBox(
@@ -146,13 +149,13 @@ class _TaskTileState extends State<TaskTile> {
           child: widget.task.timeLock
               ? Image.asset(
                   'src/icons/locked.png',
-                  width: 22,
-                  height: 22,
+                  width: 18 * byWithScale(context),
+                  height: 18 * byWithScale(context),
                 )
               : Image.asset(
                   'src/icons/unlocked.png',
-                  width: 22,
-                  height: 22,
+                  width: 18 * byWithScale(context),
+                  height: 18 * byWithScale(context),
                 ),
         ),
       ),
@@ -211,7 +214,7 @@ class _TaskTileState extends State<TaskTile> {
           '${geTimeString(widget.task.timeStart)}',
           style: TextStyle(
               color: Color(0xff545353),
-              fontSize: 18,
+              fontSize: 14 * byWithScale(context),
               fontWeight: FontWeight.w600),
         ),
         SizedBox(
@@ -221,7 +224,7 @@ class _TaskTileState extends State<TaskTile> {
           widget.task.title,
           style: TextStyle(
               color: Color(0xff545353),
-              fontSize: 18,
+              fontSize: 14 * byWithScale(context),
               fontWeight: FontWeight.w600,
               decoration: widget.task.isDone
                   ? TextDecoration.lineThrough
@@ -231,7 +234,7 @@ class _TaskTileState extends State<TaskTile> {
           widget.task.subtitle,
           style: TextStyle(
               color: Color(0xff545353),
-              fontSize: 14,
+              fontSize: 12 * byWithScale(context),
               fontWeight: FontWeight.w400),
         ),
       ],
@@ -281,10 +284,12 @@ class _TaskTileState extends State<TaskTile> {
             ? Image.asset(
                 'src/icons/checkbox_checked.png',
                 scale: 1.2,
+                width: 18 * byWithScale(context),
               )
             : Image.asset(
                 'src/icons/checkbox_unchecked.png',
                 scale: 1.2,
+                width: 18 * byWithScale(context),
               ),
       ),
     );

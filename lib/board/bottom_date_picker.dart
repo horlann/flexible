@@ -5,6 +5,7 @@ import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/calendar_dialog.dart';
 import 'package:flexible/board/week_calendar.dart';
 import 'package:flexible/board/widgets/mini_red_button.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -68,9 +69,9 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                 firstChild: SizedBox(),
                 secondChild: WeekCalendar(showCalendar: showCalendar)),
             SizedBox(
-              width: 380,
+              width: 300 * byWithScale(context),
               child: Padding(
-                padding: const EdgeInsets.only(left: 16),
+                padding: EdgeInsets.only(left: 8 * byWithScale(context)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -87,7 +88,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                         onTap: () => onTapLeft(),
                         child: Image.asset(
                           'src/icons/arrow_left.png',
-                          width: 32,
+                          width: 26 * byWithScale(context),
                           fit: BoxFit.fitWidth,
                         ),
                       ),
@@ -102,7 +103,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                         currentDate(state.showDay),
                         style: TextStyle(
                             fontWeight: FontWeight.w900,
-                            fontSize: 28,
+                            fontSize: 20 * byWithScale(context),
                             color: Color(0xffF66868)),
                       ),
                     ),
@@ -119,7 +120,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                         onTap: () => onTapRight(),
                         child: Image.asset(
                           'src/icons/arrow_right.png',
-                          width: 32,
+                          width: 26 * byWithScale(context),
                           fit: BoxFit.fitWidth,
                         ),
                       ),

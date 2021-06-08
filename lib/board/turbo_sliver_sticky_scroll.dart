@@ -81,6 +81,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLessThen350() => MediaQuery.of(context).size.width < 350;
     return SizedBox(
       child: Stack(
         children: [
@@ -89,7 +90,9 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
           Positioned.fill(
               child: Padding(
             padding: EdgeInsets.only(
-                left: 82, top: topOverscroll, bottom: bottomLinePadding),
+                left: isLessThen350() ? 64 : 82,
+                top: topOverscroll,
+                bottom: bottomLinePadding),
             child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(width: 3, color: Color(0xff707070))),

@@ -1,3 +1,4 @@
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 
@@ -12,13 +13,14 @@ class GlassmorphicBackgroundShifted extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(left: 8, right: 16),
+        padding: EdgeInsets.only(
+            left: 4 * byWithScale(context), right: 8 * byWithScale(context)),
         child: Container(
             color: Colors.red.withOpacity(0.0),
             child: Stack(
               children: [
                 GlassmorphicContainer(
-                  margin: EdgeInsets.only(left: 44),
+                  margin: EdgeInsets.only(left: 30 * byWithScale(context)),
                   width: double.maxFinite,
                   height: double.maxFinite,
                   borderRadius: 30,

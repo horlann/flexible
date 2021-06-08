@@ -1,3 +1,4 @@
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +28,8 @@ class _TaskTileState extends State<SystemTile> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLessThen350() => MediaQuery.of(context).size.width < 350;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -44,13 +47,13 @@ class _TaskTileState extends State<SystemTile> {
                   child: Text(geTimeString(widget.showTime),
                       style: TextStyle(
                           color: Color(0xff545353),
-                          fontSize: 13,
+                          fontSize: 10 * byWithScale(context),
                           fontWeight: FontWeight.w400))),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 59,
+                    width: isLessThen350() ? 40 : 59,
                   ),
                   buildMainIcon(),
                   SizedBox(
@@ -98,7 +101,7 @@ class _TaskTileState extends State<SystemTile> {
           '${geTimeString(widget.showTime)}',
           style: TextStyle(
               color: Color(0xff545353),
-              fontSize: 18,
+              fontSize: 14 * byWithScale(context),
               fontWeight: FontWeight.w600),
         ),
         SizedBox(
@@ -108,7 +111,7 @@ class _TaskTileState extends State<SystemTile> {
           widget.title,
           style: TextStyle(
             color: Color(0xff545353),
-            fontSize: 18,
+            fontSize: 14 * byWithScale(context),
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -116,7 +119,7 @@ class _TaskTileState extends State<SystemTile> {
           widget.subtitle,
           style: TextStyle(
               color: Color(0xff545353),
-              fontSize: 14,
+              fontSize: 12 * byWithScale(context),
               fontWeight: FontWeight.w400),
         ),
         SizedBox(

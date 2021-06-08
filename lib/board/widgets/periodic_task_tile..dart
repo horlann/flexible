@@ -7,6 +7,7 @@ import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/task_editor.dart';
 import 'package:flexible/board/widgets/mini_buttons_with_icon.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -94,6 +95,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLessThen350() => MediaQuery.of(context).size.width < 350;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -111,7 +113,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
                   child: Text(geTimeString(widget.task.timeStart),
                       style: TextStyle(
                           color: Color(0xff545353),
-                          fontSize: 13,
+                          fontSize: 10 * byWithScale(context),
                           fontWeight: FontWeight.w400))),
               timeDiffEquality() > 1
                   ? SizedBox()
@@ -122,7 +124,8 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
                           child: Text(
                             geTimeString(DateTime.now()),
                             style: TextStyle(
-                                fontSize: 13, color: Color(0xff545353)),
+                                fontSize: 10 * byWithScale(context),
+                                color: Color(0xff545353)),
                           ),
                         )),
               Positioned(
@@ -132,13 +135,13 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
                           widget.task.timeStart.add(widget.task.period)),
                       style: TextStyle(
                           color: Color(0xff545353),
-                          fontSize: 13,
+                          fontSize: 10 * byWithScale(context),
                           fontWeight: FontWeight.w400))),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 59,
+                    width: isLessThen350() ? 40 : 59,
                   ),
                   buildMainIcon(),
                   SizedBox(
@@ -263,7 +266,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           '${geTimeString(widget.task.timeStart)} - ${geTimeString(widget.task.timeStart.add(widget.task.period))}',
           style: TextStyle(
               color: Color(0xff545353),
-              fontSize: 18,
+              fontSize: 14 * byWithScale(context),
               fontWeight: FontWeight.w600),
         ),
         SizedBox(
@@ -273,7 +276,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           widget.task.title,
           style: TextStyle(
               color: Color(0xff545353),
-              fontSize: 18,
+              fontSize: 14 * byWithScale(context),
               fontWeight: FontWeight.w600,
               decoration: widget.task.isDone
                   ? TextDecoration.lineThrough
@@ -283,7 +286,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           widget.task.subtitle,
           style: TextStyle(
               color: Color(0xff545353),
-              fontSize: 14,
+              fontSize: 12 * byWithScale(context),
               fontWeight: FontWeight.w400),
         ),
       ],

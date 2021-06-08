@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,8 +19,8 @@ class TaskIconInRound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 32,
-      height: 32,
+      width: 24 * byWithScale(context),
+      height: 24 * byWithScale(context),
       decoration: BoxDecoration(
           color: taskColor, borderRadius: BorderRadius.circular(16)),
       child: Center(
@@ -30,16 +31,16 @@ class TaskIconInRound extends StatelessWidget {
             if (snapshot.hasData) {
               return Image.memory(
                 snapshot.data!,
-                width: 20,
-                height: 20,
+                width: 16 * byWithScale(context),
+                height: 16 * byWithScale(context),
                 gaplessPlayback: true,
               );
             }
 
             return Image.asset(
               'src/icons/noimage.png',
-              width: 20,
-              height: 20,
+              width: 16 * byWithScale(context),
+              height: 16 * byWithScale(context),
             );
           },
         ),

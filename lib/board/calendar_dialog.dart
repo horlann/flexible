@@ -1,5 +1,6 @@
 // Show dialog with transparent background and month calendar inside
 // When click on day calendar is closes
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -15,7 +16,7 @@ class CalendarDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle calTextStyle = TextStyle(
-      fontSize: 14,
+      fontSize: 10 * byWithScale(context),
       fontWeight: FontWeight.w400,
       color: Colors.white,
       // height: 0,
@@ -27,7 +28,7 @@ class CalendarDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: 330,
+            height: 250 * byWithScale(context),
             width: double.maxFinite,
             child: Dialog(
                 insetAnimationCurve: Curves.bounceInOut,
@@ -89,7 +90,7 @@ class CalendarDialog extends StatelessWidget {
           ),
           withTail
               ? SizedBox(
-                  height: 40,
+                  height: 30 * byWithScale(context),
                   child: Align(
                     alignment: Alignment.topRight,
                     child: Image.asset('src/tipTail.png'),

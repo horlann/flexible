@@ -1,3 +1,4 @@
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 
 class TimeSlider extends StatelessWidget {
@@ -17,10 +18,14 @@ class TimeSlider extends StatelessWidget {
             children: [
               Text(
                 '${period.inHours.toString()} hours',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 10 * byWithScale(context)),
               ),
               Text('Edit',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12))
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 10 * byWithScale(context)))
             ],
           ),
         ),
@@ -31,28 +36,34 @@ class TimeSlider extends StatelessWidget {
             inactiveTickMarkColor: Colors.black,
             // thumbColor: ColorAssets.themeColorMagenta,
             thumbColor: Color(0xffE24F4F),
+
             activeTrackColor: Color(0xffDDDDDD),
             inactiveTrackColor: Color(0xffDDDDDD),
             trackShape: RectangularSliderTrackShape(),
 
             // overlayColor: Colors.red.withAlpha(32),
             // overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+            thumbShape: RoundSliderThumbShape(
+                enabledThumbRadius: 8 * byWithScale(context)),
 
             valueIndicatorShape: PaddleSliderValueIndicatorShape(),
             valueIndicatorColor: Colors.redAccent,
             valueIndicatorTextStyle: TextStyle(
               color: Colors.white,
             ),
-            trackHeight: 6.0,
+            trackHeight: 3.0 * byWithScale(context),
           ),
-          child: Slider(
-            max: 8,
-            min: 0,
-            value: period.inHours.toDouble(),
-            // activeColor: Colors.grey,
-            // inactiveColor: Colors.grey,
-            onChanged: (v) => callback(
-              Duration(hours: v.toInt()),
+          child: SizedBox(
+            height: 30 * byWithScale(context),
+            child: Slider(
+              max: 4 * byWithScale(context),
+              min: 0,
+              value: period.inHours.toDouble(),
+              // activeColor: Colors.grey,
+              // inactiveColor: Colors.grey,
+              onChanged: (v) => callback(
+                Duration(hours: v.toInt()),
+              ),
             ),
           ),
         ),
@@ -64,7 +75,7 @@ class TimeSlider extends StatelessWidget {
                   9,
                   (index) => Text(
                         '$index h',
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(fontSize: 8 * byWithScale(context)),
                       ))),
         )
       ],

@@ -1,3 +1,4 @@
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 
 class MiniButtonWithIcon extends StatelessWidget {
@@ -33,8 +34,8 @@ class MiniButtonWithIcon extends StatelessWidget {
             children: [
               Image.asset(
                 iconAsset,
-                width: 10,
-                height: 10,
+                width: 8 * byWithScale(context),
+                height: 8 * byWithScale(context),
                 fit: BoxFit.cover,
               ),
               SizedBox(
@@ -42,7 +43,8 @@ class MiniButtonWithIcon extends StatelessWidget {
               ),
               Text(
                 text,
-                style: TextStyle(fontSize: 10, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 8 * byWithScale(context), color: Colors.white),
               ),
             ],
           ),

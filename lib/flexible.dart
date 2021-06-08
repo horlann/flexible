@@ -31,9 +31,15 @@ class FlexibleApp extends StatelessWidget {
       child: BlocProvider(
         create: (context) =>
             AuthBloc(fireAuthService: FireAuthService())..add(AppStart()),
-        child: MaterialApp(
-          home: HelperWrapper(
-            child: AuthBlocWrapper(),
+        child: BlocProvider(
+          create: (context) => DailytasksBloc(
+              dayOptionsRepo:
+                  RepositoryProvider.of<SqfliteDayOptionsRepo>(context),
+              tasksRepo: RepositoryProvider.of<SqfliteTasksRepo>(context)),
+          child: MaterialApp(
+            home: HelperWrapper(
+              child: AuthBlocWrapper(),
+            ),
           ),
         ),
       ),
@@ -76,15 +82,7 @@ class AuthBlocWrapper extends StatelessWidget {
         }
 
         if (state is Authentificated) {
-          // BlocProvider.of<AuthBloc>(context).add(SignOut());
-          return BlocProvider(
-            create: (context) => DailytasksBloc(
-                dayOptionsRepo:
-                    RepositoryProvider.of<SqfliteDayOptionsRepo>(context),
-                tasksRepo: RepositoryProvider.of<SqfliteTasksRepo>(context)),
-            child: BoardPage(),
-          );
-          // print(BlocProvider.of<AuthBloc>(context).fireAuthService.getUser());
+          return BoardPage();
         }
 
         return Scaffold(

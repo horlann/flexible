@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/task_editor/new_task_editor.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -106,12 +107,13 @@ class _AddingTileState extends State<AddingTile> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLessThen350() => MediaQuery.of(context).size.width < 350;
     return Column(
       children: [
         Stack(
           children: [
             Positioned(
-              left: 82,
+              left: isLessThen350() ? 64 : 82,
               top: 40,
               child: Container(
                 height: 3,
@@ -120,22 +122,24 @@ class _AddingTileState extends State<AddingTile> {
               ),
             ),
             Positioned(
-              left: 80,
-              top: 38,
+              left: isLessThen350() ? 61 : 80,
+              top: 37,
               child: Container(
-                height: 8,
-                width: 8,
+                height: 10,
+                width: 10,
                 decoration: BoxDecoration(
                     color: Color(0xffEE7579),
-                    borderRadius: BorderRadius.circular(4)),
+                    borderRadius: BorderRadius.circular(5)),
               ),
             ),
             Positioned(
-              left: 115,
+              left: 95 * byWithScale(context),
               top: 30,
               child: Text(
                 'What else you have to do?',
-                style: TextStyle(color: Color(0xff545353), fontSize: 18),
+                style: TextStyle(
+                    color: Color(0xff545353),
+                    fontSize: 16 * byWithScale(context)),
               ),
             ),
             Container(
@@ -165,6 +169,7 @@ class _AddingTileState extends State<AddingTile> {
                       child: Image.asset(
                         'src/icons/plus_btn.png',
                         scale: 1.4,
+                        width: 46 * byWithScale(context),
                       ),
                     ),
                   ),

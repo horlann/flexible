@@ -1,3 +1,4 @@
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 
 class RowWithCloseBtn extends StatelessWidget {
@@ -18,10 +19,12 @@ class RowWithCloseBtn extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 16, top: 16),
+            padding: EdgeInsets.only(
+                right: 16 * byWithScale(context),
+                top: 12 * byWithScale(context)),
             child: Image.asset(
               'src/icons/close.png',
-              width: 24,
+              width: 20 * byWithScale(context),
               fit: BoxFit.fitWidth,
             ),
           )
