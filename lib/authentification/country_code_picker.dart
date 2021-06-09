@@ -37,7 +37,12 @@ class _CountryCodePickerWidegtState extends State<CountryCodePickerWidegt> {
 
   // Load iso code by sim card
   updateIsoCode() async {
-    var _isoCode = (await FlutterSimCountryCode.simCountryCode) ?? 'GB';
+    String? simcode;
+
+    try {
+      simcode = await FlutterSimCountryCode.simCountryCode;
+    } catch (e) {}
+    var _isoCode = simcode ?? 'GB';
 
     widget.onChange(
         '+' + CountryPickerUtils.getCountryByIsoCode(_isoCode).phoneCode);

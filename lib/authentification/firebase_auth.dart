@@ -73,13 +73,14 @@ class FireAuthService {
   Future verifyPhoneNumber(String phoneNumber) async {
     Completer completer = Completer();
 
-    _smsCodeSent(String verificationCode, List<int> code) {
+    _smsCodeSent(String verificationCode) {
       print('pho sent');
       this._verificationCode = verificationCode;
       completer.complete();
     }
 
     _verificationFailed(authException) {
+      print(authException.toString());
       print('pho failed');
       completer.completeError(authException.toString());
     }
@@ -91,8 +92,7 @@ class FireAuthService {
         verificationFailed: (authException) =>
             _verificationFailed(authException),
         codeAutoRetrievalTimeout: (verificationId) => {},
-        codeSent: (verificationId, [code]) =>
-            _smsCodeSent(verificationId, [code!]));
+        codeSent: (verificationId, c) => _smsCodeSent(verificationId));
 
     return completer.future;
   }
