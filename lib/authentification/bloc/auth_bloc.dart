@@ -1,21 +1,32 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flexible/authentification/firebase_auth.dart';
+import 'package:flexible/authentification/models/user_data_model.dart';
+import 'package:flexible/authentification/services/firebase_auth.dart';
+import 'package:flexible/authentification/services/users_data_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({required this.fireAuthService}) : super(AuthInitial());
+  AuthBloc({required this.fireAuthService, required this.usersDataRepo})
+      : super(AuthInitial());
 
   late FireAuthService fireAuthService;
+  late UsersDataRepo usersDataRepo;
 
-  String registratonName = '';
-  String registrationEmail = '';
-  String phoneNumber = '';
+  // Uses for complete registration
+  // On user register set userdata there and use after confirmation
+  UserData? userData;
+
+  // Uses for resend code
+  String? signPhoneNumber;
+
+  // Mark for verify completition check
+  bool isRegistration = false;
 
   @override
   Stream<AuthState> mapEventToState(
@@ -39,7 +50,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // Sign by phone
     // Sent sms to user and wait for verification
     if (event is SignInByPhone) {
-      phoneNumber = event.phone;
+      isRegistration = false;
+      // Save phone
+      signPhoneNumber = event.phone;
       await fireAuthService.verifyPhoneNumber(event.phone);
       yield CodeSended();
     }
@@ -48,23 +61,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // Sent sms to user and wait for verification
     // Save name and email localy and add it to userdata after verification
     if (event is CreateAccount) {
-      phoneNumber = event.phone;
-      registratonName = event.name;
-      registrationEmail = event.email;
+      isRegistration = true;
+      // Save phone
+      signPhoneNumber = event.phone;
+      // Save user data
+      userData = UserData(
+          fullName: event.name,
+          email: event.email,
+          phoneNumber: event.phone,
+          photo: event.photo);
 
       try {
         await fireAuthService.verifyPhoneNumber(event.phone);
+        yield CodeSended();
       } catch (e) {
         print('Registration error');
         yield ShowRegistration();
-        return;
       }
-      yield CodeSended();
     }
 
     // Resend code to last number
     if (event is ResendCode) {
-      await fireAuthService.verifyPhoneNumber(phoneNumber);
+      await fireAuthService.verifyPhoneNumber(signPhoneNumber!);
       yield CodeSended();
     }
 
@@ -73,13 +91,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       print(event.smsCode);
       try {
         await fireAuthService.signInWithSmsCode(event.smsCode);
+
+        // Check if user data stored before
+        if (await usersDataRepo.existsByPhone(signPhoneNumber!)) {
+          yield Authentificated();
+        } else {
+          // If its registration pass new data
+          if (isRegistration) {
+            await usersDataRepo.setUser(
+                userData!.copyWith(uid: fireAuthService.getUser()!.uid));
+            yield Authentificated();
+          } else {
+            yield ShowDataUpdate();
+          }
+        }
       } catch (e) {
         print('Verification error');
         print(e);
         yield VerificationCodeInvalid();
-        return;
       }
-      yield* mapCheckAuthStatus();
     }
 
     // sign out
@@ -91,42 +121,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // Add data to user if user dont register before or clic sign in instead of registration
     if (event is AddData) {
       try {
-        print(event.email);
         User fireuser = fireAuthService.getUser()!;
-        await fireuser.updateDisplayName(event.name);
-        // await fireuser.updateEmail(event.email);
+
+        UserData newUserData = UserData(
+            uid: fireuser.uid,
+            fullName: event.name,
+            email: event.email,
+            phoneNumber: signPhoneNumber!,
+            photo: event.photo);
+
+        await usersDataRepo.setUser(newUserData);
+
+        yield* mapCheckAuthStatus();
       } catch (e) {
         print('error when update user data');
+        print(e);
       }
-
-      yield* mapCheckAuthStatus();
     }
   }
 
   // Check auth status and return state by result
   Stream<AuthState> mapCheckAuthStatus() async* {
     if (fireAuthService.isAuthenticated) {
-      //
-      // Check user data and update
-      // Its need to add user name and email to userdata after sms verification
-      // Or if user try to signin first
-      User fireuser = fireAuthService.getUser()!;
-      print(fireuser);
-      if (fireuser.displayName == null) {
-        // if after sms code verified
-        // complete registration
-        if (registratonName.isNotEmpty && registrationEmail.isNotEmpty) {
-          fireuser.updateDisplayName(registratonName);
-          // fireuser.updateEmail(registrationEmail);
-          Authentificated();
-        } else {
-          // if user sign in before registration
-          // shou page with name and email input
-          yield ShowDataUpdate();
-          return;
-        }
-      }
-
       // The check
       yield Authentificated();
     } else {

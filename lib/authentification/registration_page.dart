@@ -72,7 +72,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
       print(countryCode + phoneNumber);
       // Submit registration
       BlocProvider.of<AuthBloc>(context).add(CreateAccount(
-          name: fullName, email: email, phone: countryCode + phoneNumber));
+          name: fullName,
+          email: email,
+          phone: countryCode + phoneNumber,
+          photo: _image));
     }
   }
 

@@ -1,6 +1,6 @@
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/task.dart';
-import 'package:flexible/board/repository/sqFliteTasksRepository/sqflire_tasks_repo.dart';
+import 'package:flexible/board/repository/sqFliteRepository/sqflire_tasks.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -43,18 +43,24 @@ class CreateAccount extends AuthEvent {
   final String name;
   final String email;
   final String phone;
+  final Uint8List? photo;
   CreateAccount({
     required this.name,
     required this.email,
     required this.phone,
+    this.photo,
   });
 }
 
 class AddData extends AuthEvent {
   final String name;
   final String email;
+  final Uint8List? photo;
   AddData({
     required this.name,
     required this.email,
+    this.photo,
   });
+
+  get signPhoneNumber => null;
 }
