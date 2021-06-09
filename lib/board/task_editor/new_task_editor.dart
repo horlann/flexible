@@ -98,7 +98,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                   children: [
                     RowWithCloseBtn(context: context),
                     Text(
-                      'Edit Task',
+                      'Create Task',
                       style: TextStyle(
                         fontSize: 24 * byWithScale(context),
                         fontWeight: FontWeight.w700,
