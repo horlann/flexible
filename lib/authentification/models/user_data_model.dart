@@ -44,6 +44,15 @@ class UserData {
     };
   }
 
+  Map<String, dynamic> onlyTextMap() {
+    return {
+      'uid': uid,
+      'fullName': fullName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+    };
+  }
+
   factory UserData.fromMap(Map<String, dynamic> map) {
     return UserData(
       uid: map['uid'],

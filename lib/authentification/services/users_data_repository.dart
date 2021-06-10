@@ -31,8 +31,13 @@ class UsersDataRepo {
   }
 
   setUser(UserData userData) async {
+    print(userData);
     try {
-      await _usersCollection.doc(userData.uid).set(userData.toMap());
+      // yes
+      await _usersCollection.doc(userData.uid).set(userData.onlyTextMap());
+
+      // Prevent errors on large or corrupted data
+      await _usersCollection.doc(userData.uid).update(userData.toMap());
     } catch (e) {
       print(e);
     }
