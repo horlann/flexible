@@ -38,8 +38,7 @@ class HelperWrapper extends StatelessWidget {
           body: SizedBox.expand(
             child: Image.asset(
               'src/splash.jpg',
-              fit: BoxFit.cover,
-              scale: 2,
+              fit: BoxFit.contain,
             ),
           ),
         );

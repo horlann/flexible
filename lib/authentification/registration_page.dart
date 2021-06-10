@@ -31,12 +31,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final picker = ImagePicker();
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      _image = await pickedFile.readAsBytes();
-      setState(() {});
-    } else {
-      print('No image selected.');
+    try {
+      final pickedFile = await picker.getImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        _image = await pickedFile.readAsBytes();
+        setState(() {});
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      print('Error on load image');
     }
   }
 
@@ -87,6 +91,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     double safeTopPadding = MediaQuery.of(context).padding.top;
+    double safeBottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       // resizeToAvoidBottomInset: false,
@@ -100,8 +105,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                    minHeight:
-                        MediaQuery.of(context).size.height - safeTopPadding),
+                    minHeight: MediaQuery.of(context).size.height -
+                        safeTopPadding -
+                        safeBottomPadding),
                 child: IntrinsicHeight(
                   child: buildBody(context),
                 ),

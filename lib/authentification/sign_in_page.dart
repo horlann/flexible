@@ -55,6 +55,7 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     double safeTopPadding = MediaQuery.of(context).padding.top;
+    double safeBottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       // backgroundColor: Color(0xffE9E9E9),
@@ -67,8 +68,9 @@ class _SignInPageState extends State<SignInPage> {
             child: SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                    minHeight:
-                        MediaQuery.of(context).size.height - safeTopPadding),
+                    minHeight: MediaQuery.of(context).size.height -
+                        safeTopPadding -
+                        safeBottomPadding),
                 child: IntrinsicHeight(
                   child: buildBody(context),
                 ),
