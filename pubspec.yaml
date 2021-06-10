@@ -25,6 +25,7 @@ dependencies:
   shared_preferences: ^2.0.6
   sqflite: ^2.0.0+3
   glassmorphism: ^2.0.1
+  invert_colors: ^0.0.3-null-safety.0
   equatable: ^2.0.2
   intl: ^0.17.0
   uuid: ^3.0.4
@@ -84,6 +85,7 @@ flutter:
   assets:
       - src/
       - src/icons/
+      - src/task_icons/
       - src/helper/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

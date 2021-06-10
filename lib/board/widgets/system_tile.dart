@@ -1,6 +1,7 @@
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:invert_colors/invert_colors.dart';
 
 class SystemTile extends StatefulWidget {
   final DateTime showTime;
@@ -87,7 +88,7 @@ class _TaskTileState extends State<SystemTile> {
           color: Color(0xffEE7579),
           borderRadius: BorderRadius.circular(25),
         ),
-        child: widget.image);
+        child: InvertColors(child: widget.image));
   }
 
   Column buildTextSection() {

@@ -25,39 +25,48 @@ class _IconPickerPageState extends State<IconPickerPage> {
           decoration: BoxDecoration(
             gradient: mainBackgroundGradient,
           ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Padding(
-              padding: EdgeInsets.all(28),
-              child: Stack(
-                children: [
-                  // the glass layer
-                  // fill uses for adopt is size
-                  Positioned.fill(child: buildGlassmorphicLayer()),
-                  Column(
-                    children: [
-                      buildCloseButton(),
-                      Text(
-                        'Give it an icon',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xffE24F4F),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      buildImproveSwitch(),
-                      buildImagesGrid(context)
-                    ],
-                  )
-                ],
+          child: CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: buildBody(context),
               ),
-            ),
+            ],
           ),
         ),
       )),
+    );
+  }
+
+  Padding buildBody(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(28),
+      child: Stack(
+        children: [
+          // the glass layer
+          // fill uses for adopt is size
+          Positioned.fill(child: buildGlassmorphicLayer()),
+          Column(
+            children: [
+              buildCloseButton(),
+              Text(
+                'Give it an icon',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xffE24F4F),
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              buildImproveSwitch(),
+              buildImagesGrid(context)
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -78,7 +87,7 @@ class _IconPickerPageState extends State<IconPickerPage> {
                 crossAxisCount: 5,
                 children: snapshot.data!
                     .map((e) => Container(
-                          color: Colors.blueGrey[300],
+                          color: Color(0xffDDDDDD),
                           child: buildImageLoader(context, e),
                         ))
                     .toList(),
@@ -103,13 +112,15 @@ class _IconPickerPageState extends State<IconPickerPage> {
                 snapshot.data!,
                 width: 24,
                 height: 24,
+                gaplessPlayback: true,
               );
             }
 
             return Image.asset(
-              'src/icons/noimage.png',
+              'src/task_icons/noimage.png',
               width: 24,
               height: 24,
+              gaplessPlayback: true,
             );
           },
         ),

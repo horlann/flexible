@@ -122,7 +122,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                     title: 'Good night',
                     subtitle: 'Sleep well',
                     image: Image.asset(
-                      'src/icons/goodnight.png',
+                      'src/task_icons/goodnight.png',
                       scale: 1.1,
                     ),
                     callback: () {
@@ -158,7 +158,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                     title: 'Good morning',
                     subtitle: 'Have a nice day',
                     image: Image.asset(
-                      'src/icons/morning.png',
+                      'src/task_icons/morning.png',
                       scale: 1.1,
                     ),
                     callback: () {

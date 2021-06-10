@@ -11,6 +11,7 @@ import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:invert_colors/invert_colors.dart';
 
 class PeriodicTaskTile extends StatefulWidget {
   final Task task;
@@ -230,25 +231,29 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
         Container(
             height: 150,
             width: 50,
-            child: Center(
-              child: FutureBuilder(
-                future: RepositoryProvider.of<ImageRepoMock>(context)
-                    .imageById(widget.task.iconId),
-                builder: (context, AsyncSnapshot<Uint8List> snapshot) {
-                  if (snapshot.hasData) {
-                    return Image.memory(
-                      snapshot.data!,
+            child: InvertColors(
+              child: Center(
+                child: FutureBuilder(
+                  future: RepositoryProvider.of<ImageRepoMock>(context)
+                      .imageById(widget.task.iconId),
+                  builder: (context, AsyncSnapshot<Uint8List> snapshot) {
+                    if (snapshot.hasData) {
+                      return Image.memory(
+                        snapshot.data!,
+                        width: 24,
+                        height: 24,
+                        gaplessPlayback: true,
+                      );
+                    }
+
+                    return Image.asset(
+                      'src/task_icons/noimage.png',
                       width: 24,
                       height: 24,
+                      gaplessPlayback: true,
                     );
-                  }
-
-                  return Image.asset(
-                    'src/icons/noimage.png',
-                    width: 24,
-                    height: 24,
-                  );
-                },
+                  },
+                ),
               ),
             )),
       ],
