@@ -67,7 +67,25 @@ class _TermsPageState extends State<TermsPage> {
                             controller: pageController,
                             children: subPages,
                           ),
-                        )
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  right: 16 * byWithScale(context),
+                                  top: 12 * byWithScale(context)),
+                              child: GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: Image.asset(
+                                  'src/icons/close.png',
+                                  width: 20 * byWithScale(context),
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     ),
                   ),

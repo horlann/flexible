@@ -5,7 +5,7 @@
         <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
         <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="flexible.a.0.0.21"
+        android:label="flexible.a.0.0.23"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity

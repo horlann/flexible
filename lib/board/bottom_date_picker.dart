@@ -102,7 +102,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                       child: Text(
                         currentDate(state.showDay),
                         style: TextStyle(
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w400,
                             fontSize: 20 * byWithScale(context),
                             color: Color(0xffF66868)),
                       ),

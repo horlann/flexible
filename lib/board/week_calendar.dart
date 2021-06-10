@@ -19,7 +19,7 @@ class WeekCalendar extends StatelessWidget {
     // RepositoryProvider.of<DailytasksBloc>(context);
     TextStyle calTextStyle = TextStyle(
       fontSize: 10 * byWithScale(context),
-      fontWeight: FontWeight.w900,
+      fontWeight: FontWeight.w400,
       color: Color(0xff716D6E),
       height: 0,
     );

@@ -215,7 +215,7 @@ class _TaskTileState extends State<TaskTile> {
           style: TextStyle(
               color: Color(0xff545353),
               fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w600),
+              fontWeight: FontWeight.w400),
         ),
         SizedBox(
           height: 4,
@@ -225,7 +225,7 @@ class _TaskTileState extends State<TaskTile> {
           style: TextStyle(
               color: Color(0xff545353),
               fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w400,
               decoration: widget.task.isDone
                   ? TextDecoration.lineThrough
                   : TextDecoration.none),

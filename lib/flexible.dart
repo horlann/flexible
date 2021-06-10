@@ -54,6 +54,7 @@ class FlexibleApp extends StatelessWidget {
                   RepositoryProvider.of<FireBaseDaysOptionsRepo>(context),
               tasksRepo: RepositoryProvider.of<FireBaseTasksRepo>(context)),
           child: MaterialApp(
+            theme: ThemeData(fontFamily: 'Mikado'),
             home: HelperWrapper(
               child: AuthBlocWrapper(),
             ),
