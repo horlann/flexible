@@ -24,7 +24,8 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  MaskedTextController controller = MaskedTextController(mask: '00-000-00-00');
+  MaskedTextController controller =
+      MaskedTextController(mask: '000-00-00-00-00-00');
   FocusNode focusNode = FocusNode();
   Uint8List? _image;
   final picker = ImagePicker();

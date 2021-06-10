@@ -19,7 +19,8 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  MaskedTextController controller = MaskedTextController(mask: '00-000-00-00');
+  MaskedTextController controller =
+      MaskedTextController(mask: '000-00-00-00-00-00');
   FocusNode focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   String phoneNumber = '';
