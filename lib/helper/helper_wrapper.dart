@@ -1,3 +1,4 @@
+import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +22,7 @@ class HelperWrapper extends StatelessWidget {
     return BlocBuilder<HelperBloc, HelperState>(
       bloc: bloc,
       builder: (context, state) {
+        print(state);
         // Show helper page if app is run first
         if (state is ShowHelper) {
           return HelperPage(
@@ -34,11 +36,10 @@ class HelperWrapper extends StatelessWidget {
           return child;
         }
 
-        return Scaffold(
-          body: SizedBox.expand(
-            child: Image.asset(
-              'src/splash.jpg',
-              fit: BoxFit.contain,
+        return SizedBox.expand(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: mainBackgroundGradient,
             ),
           ),
         );

@@ -13,8 +13,10 @@ import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/repository/sqFliteRepository/sqflire_tasks.dart';
 import 'package:flexible/board/repository/sqFliteRepository/sqflite_day_options.dart';
 import 'package:flexible/helper/helper_wrapper.dart';
+import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:move_to_background/move_to_background.dart';
 
 class FlexibleApp extends StatelessWidget {
   @override
@@ -55,8 +57,14 @@ class FlexibleApp extends StatelessWidget {
               tasksRepo: RepositoryProvider.of<FireBaseTasksRepo>(context)),
           child: MaterialApp(
             theme: ThemeData(fontFamily: 'Mikado'),
-            home: HelperWrapper(
-              child: AuthBlocWrapper(),
+            home: WillPopScope(
+              onWillPop: () async {
+                MoveToBackground.moveTaskToBack();
+                return false;
+              },
+              child: HelperWrapper(
+                child: AuthBlocWrapper(),
+              ),
             ),
           ),
         ),
@@ -108,11 +116,10 @@ class AuthBlocWrapper extends StatelessWidget {
           return BoardPage();
         }
 
-        return Scaffold(
-          body: SizedBox.expand(
-            child: Image.asset(
-              'src/splash.jpg',
-              fit: BoxFit.contain,
+        return SizedBox.expand(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: mainBackgroundGradient,
             ),
           ),
         );

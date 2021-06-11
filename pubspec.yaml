@@ -43,6 +43,7 @@ dependencies:
   flutter_masked_text2: ^0.9.1
   country_pickers: ^2.0.0
   image_picker: ^0.8.0+1
+  move_to_background: ^1.0.2
   flutter:
     sdk: flutter
 
