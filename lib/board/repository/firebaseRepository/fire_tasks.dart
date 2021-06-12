@@ -4,25 +4,35 @@ import 'package:flexible/board/models/task.dart';
 import 'package:flexible/board/repository/tasts_repo_interface.dart';
 
 class FireBaseTasksRepo extends ITasksRepo {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
   FirebaseAuth fireAuth = FirebaseAuth.instance;
 
+  bool get authenticated => fireAuth.currentUser != null;
+
+  // Return tasks collection by user id
   CollectionReference taskCollection() {
-    if (fireAuth.currentUser != null) {
-      return firestore
-          .collection('users')
-          .doc(fireAuth.currentUser!.uid)
-          .collection('tasks');
-    }
-    throw Exception('Not authorized');
+    return _firestore
+        .collection('users')
+        .doc(fireAuth.currentUser!.uid)
+        .collection('tasks');
+  }
+
+  // Return stream tasks collection by user id
+  Stream taskCollectionChanges() {
+    return _firestore
+        .collection('users')
+        .doc(fireAuth.currentUser!.uid)
+        .collection('tasks')
+        .snapshots();
   }
 
   @override
   Future<List<Task>> allTasks() async {
     QuerySnapshot tasks = await taskCollection().get();
 
-    List<Task> taskList =
-        tasks.docs.map((e) => Task.fromMap(e as Map<String, dynamic>)).toList();
+    List<Task> taskList = tasks.docs
+        .map((e) => Task.fromMap(e.data() as Map<String, dynamic>))
+        .toList();
 
     return taskList;
   }
@@ -43,7 +53,7 @@ class FireBaseTasksRepo extends ITasksRepo {
   }
 
   @override
-  Future addTask(Task task) async {
+  Future setTask(Task task) async {
     await taskCollection().doc(task.uuid).set(task.toMap());
   }
 
@@ -53,7 +63,5 @@ class FireBaseTasksRepo extends ITasksRepo {
   }
 
   @override
-  Future updateTask(Task task) async {
-    await taskCollection().doc(task.uuid).set(task.toMap());
-  }
+  Stream? onChanges;
 }

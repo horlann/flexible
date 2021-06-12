@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flexible/board/models/day_options.dart';
 import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/repository/combined_repository/combined_tasks_repo.dart';
 import 'package:flexible/board/repository/day_options_interface.dart';
 import 'package:flexible/board/repository/tasts_repo_interface.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,13 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
   DailytasksBloc({required this.tasksRepo, required this.dayOptionsRepo})
       : super(DailytasksInitial(showDay: DateTime.now())) {
     add(DailytasksUpdate());
+
+    // Listen to changes and update ui
+    if (tasksRepo.onChanges != null) {
+      tasksRepo.onChanges!.listen((event) {
+        add(DailytasksUpdate());
+      });
+    }
   }
   // db
   late ITasksRepo tasksRepo;
@@ -47,7 +55,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
 
     if (event is DailytasksAddTask) {
       // add to db
-      await tasksRepo.addTask(event.task);
+      await tasksRepo.setTask(event.task);
 
       // Update
       this.add(DailytasksUpdate());
@@ -55,7 +63,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
 
     if (event is DailytasksUpdateTask) {
       // update in db
-      await tasksRepo.updateTask(event.task);
+      await tasksRepo.setTask(event.task);
 
       // Update
       this.add(DailytasksUpdate());
@@ -89,13 +97,13 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
               .map((e) => e.copyWith(timeStart: e.timeStart.add(timeShift)));
           // Update it data
           shiftedTasks.forEach((element) async {
-            await tasksRepo.updateTask(element);
+            await tasksRepo.setTask(element);
           });
         }
       }
 
       // update task data
-      await tasksRepo.updateTask(event.task);
+      await tasksRepo.setTask(event.task);
 
       // Update ui
       this.add(DailytasksUpdate());

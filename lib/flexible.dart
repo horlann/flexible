@@ -7,6 +7,7 @@ import 'package:flexible/authentification/sign_in_page.dart';
 import 'package:flexible/authentification/user_data_update_page.dart';
 import 'package:flexible/board/board_page.dart';
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
+import 'package:flexible/board/repository/combined_repository/combined_tasks_repo.dart';
 import 'package:flexible/board/repository/firebaseRepository/fire_days_options.dart';
 import 'package:flexible/board/repository/firebaseRepository/fire_tasks.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
@@ -44,6 +45,9 @@ class FlexibleApp extends StatelessWidget {
         RepositoryProvider(
           create: (context) => FireBaseDaysOptionsRepo(),
         ),
+        RepositoryProvider(
+          create: (context) => CombinedTasksRepository(),
+        ),
       ],
       child: BlocProvider(
         create: (context) => AuthBloc(
@@ -53,8 +57,9 @@ class FlexibleApp extends StatelessWidget {
         child: BlocProvider(
           create: (context) => DailytasksBloc(
               dayOptionsRepo:
-                  RepositoryProvider.of<FireBaseDaysOptionsRepo>(context),
-              tasksRepo: RepositoryProvider.of<FireBaseTasksRepo>(context)),
+                  RepositoryProvider.of<SqfliteDayOptionsRepo>(context),
+              tasksRepo:
+                  RepositoryProvider.of<CombinedTasksRepository>(context)),
           child: MaterialApp(
             theme: ThemeData(fontFamily: 'Mikado'),
             home: WillPopScope(
@@ -88,6 +93,9 @@ class AuthBlocWrapper extends StatelessWidget {
         }
 
         if (state is ShowRegistration) {
+          // RepositoryProvider.of<UsersDataRepo>(context)
+          //     .existsByPhone('+380508210440')
+          //     .then((value) => print(value));
           return RegistrationPage();
         }
 

@@ -24,14 +24,9 @@ class SqfliteTasksRepo implements ITasksRepo {
   }
 
   @override
-  Future addTask(Task task) async {
-    await (await getDb).insert('tasks', task.toSqfMap());
-  }
-
-  @override
-  Future updateTask(Task task) async {
-    await (await getDb).update('tasks', task.toSqfMap(),
-        where: 'uuid = ?', whereArgs: [task.uuid]);
+  Future setTask(Task task) async {
+    await (await getDb).insert('tasks', task.toSqfMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   // Return all posible tasks
@@ -64,4 +59,7 @@ class SqfliteTasksRepo implements ITasksRepo {
     await (await getDb)
         .rawDelete('DELETE FROM Tasks WHERE uuid = ?', ['${task.uuid}']);
   }
+
+  @override
+  Stream? onChanges;
 }

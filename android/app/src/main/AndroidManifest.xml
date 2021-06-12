@@ -1,12 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.flexible.flexible">
-  
         <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
         <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
         <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="flexible.a.0.0.24"
-        android:usesCleartextTraffic="true"
+        android:label="flexible.a.0.0.25"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
