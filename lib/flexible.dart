@@ -93,14 +93,7 @@ class AuthBlocWrapper extends StatelessWidget {
         }
 
         if (state is ShowRegistration) {
-          // RepositoryProvider.of<UsersDataRepo>(context)
-          //     .existsByPhone('+380508210440')
-          //     .then((value) => print(value));
           return RegistrationPage();
-        }
-
-        if (state is ShowDataUpdate) {
-          return UserDataUpdatePage();
         }
 
         if (state is CodeSended) {
@@ -109,16 +102,7 @@ class AuthBlocWrapper extends StatelessWidget {
           );
         }
 
-        if (state is VerificationCodeInvalid) {
-          return CodeVerificationPage(
-            afterError: true,
-          );
-        }
-
         if (state is Authentificated) {
-          // RepositoryProvider.of<UsersDataRepo>(context)
-          //     .existsByPhone('+380508210440')
-          //     .then((value) => print(value));
           // RepositoryProvider.of<FireAuthService>(context).signOut();
 
           return BoardPage();

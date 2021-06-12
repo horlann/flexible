@@ -1,9 +1,10 @@
-import 'dart:async';
-
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flexible/widgets/circular_snakbar.dart';
+import 'package:flexible/widgets/error_snakbar.dart';
+import 'package:flexible/widgets/message_snakbar.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +21,6 @@ class CodeVerificationPage extends StatefulWidget {
 class _CodeVerificationPageState extends State<CodeVerificationPage> {
   final TextEditingController pincodeController = TextEditingController();
   String pincode = '';
-  bool resendOnTimeout = false;
 
   bool get pinValid {
     if (pincode.length == 6) {
@@ -29,34 +29,19 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
     return false;
   }
 
-  submitCode() {
-    BlocProvider.of<AuthBloc>(context).add(VerifyCode(smsCode: pincode));
+  submitCode(String number) {
+    BlocProvider.of<AuthBloc>(context)
+        .add(VerifyCode(smsCode: pincode, number: number));
     pincodeController.clear();
   }
 
-  onResend() {
-    BlocProvider.of<AuthBloc>(context).add(ResendCode());
-    startResendTimeout();
-  }
-
-  startResendTimeout() {
-    setState(() {
-      resendOnTimeout = true;
-      print('timeout');
-    });
-    Timer(Duration(seconds: 20), () {
-      if (this.mounted) {
-        setState(() {
-          resendOnTimeout = false;
-        });
-      }
-    });
+  onResend(String number) {
+    BlocProvider.of<AuthBloc>(context).add(ResendCode(number: number));
   }
 
   @override
   void initState() {
     super.initState();
-    startResendTimeout();
   }
 
   @override
@@ -91,13 +76,41 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                         safeTopPadding -
                         safeBottomPadding),
                 child: IntrinsicHeight(
-                  child: buildBody(context),
+                  child: buildBlocListenr(context),
                 ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildBlocListenr(BuildContext context) {
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        print(state);
+        if (state.isBusy) {
+          ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
+            text: 'Processing',
+          ));
+        }
+
+        if (state.error.isNotEmpty) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
+            text: state.error,
+          ));
+        }
+
+        if (state.message.isNotEmpty) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
+            text: state.message,
+          ));
+        }
+      },
+      child: buildBody(context),
     );
   }
 
@@ -197,17 +210,27 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                                   fontSize: 12 * byWithScale(context),
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () => !resendOnTimeout ? onResend() : {},
-                                child: Text(
-                                  'Send again',
-                                  style: TextStyle(
-                                      color: resendOnTimeout
-                                          ? Color(0xffE24F4F).withOpacity(0.25)
-                                          : Color(0xffE24F4F),
-                                      fontSize: 12 * byWithScale(context),
-                                      fontWeight: FontWeight.w400),
-                                ),
+                              BlocBuilder<AuthBloc, AuthState>(
+                                builder: (context, state) {
+                                  if (state is CodeSended) {
+                                    return GestureDetector(
+                                      onTap: () => !state.isBusy
+                                          ? onResend(state.number)
+                                          : {},
+                                      child: Text(
+                                        'Send again',
+                                        style: TextStyle(
+                                            color: state.isBusy
+                                                ? Color(0xffE24F4F)
+                                                    .withOpacity(0.25)
+                                                : Color(0xffE24F4F),
+                                            fontSize: 12 * byWithScale(context),
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    );
+                                  }
+                                  return SizedBox();
+                                },
                               )
                             ],
                           ),
@@ -225,16 +248,23 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
         ),
         Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60),
-              child: WideRoundedButton(
-                text: 'Continue',
-                enable: pinValid,
-                textColor: Colors.white,
-                enableColor: Color(0xffE24F4F),
-                disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                callback: () => submitCode(),
-              ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is CodeSended) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 60),
+                    child: WideRoundedButton(
+                      text: 'Continue',
+                      enable: !state.isBusy ? pinValid : false,
+                      textColor: Colors.white,
+                      enableColor: Color(0xffE24F4F),
+                      disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                      callback: () => submitCode(state.number),
+                    ),
+                  );
+                }
+                return SizedBox();
+              },
             ),
             SizedBox(
               height: 8 * byWithScale(context),

@@ -1,5 +1,11 @@
 import 'dart:async';
 
+import 'package:flexible/widgets/circular_snakbar.dart';
+import 'package:flexible/widgets/error_snakbar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
@@ -7,9 +13,6 @@ import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/utils/validators.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -25,24 +28,11 @@ class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   String phoneNumber = '';
   String countryCode = '';
-  bool isSignButtonTimeout = false;
 
-  bool get submitActive => phoneNumber.isNotEmpty & !isSignButtonTimeout;
+  bool get submitActive => phoneNumber.isNotEmpty;
 
   onSignin() {
     if (_formKey.currentState!.validate()) {
-      // Prevent multiple click to submit button before captcha is show
-      setState(() {
-        isSignButtonTimeout = true;
-        print('timeout');
-      });
-      Timer(Duration(seconds: 10), () {
-        if (this.mounted) {
-          setState(() {
-            isSignButtonTimeout = false;
-          });
-        }
-      });
       BlocProvider.of<AuthBloc>(context)
           .add(SignInByPhone(phone: countryCode + phoneNumber));
     }
@@ -72,13 +62,34 @@ class _SignInPageState extends State<SignInPage> {
                         safeTopPadding -
                         safeBottomPadding),
                 child: IntrinsicHeight(
-                  child: buildBody(context),
+                  child: buildBlocListenr(context),
                 ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildBlocListenr(BuildContext context) {
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        print(state);
+        if (state.isBusy) {
+          ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
+            text: 'Signing in',
+          ));
+        }
+
+        if (state.error.isNotEmpty) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
+            text: state.error,
+          ));
+        }
+      },
+      child: buildBody(context),
     );
   }
 
@@ -161,16 +172,21 @@ class _SignInPageState extends State<SignInPage> {
         ),
         Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60),
-              child: WideRoundedButton(
-                text: 'Sign in',
-                enable: submitActive,
-                textColor: Colors.white,
-                enableColor: Color(0xffE24F4F),
-                disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                callback: () => onSignin(),
-              ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 60),
+                  child: WideRoundedButton(
+                    text: 'Sign in',
+                    // bloc submit button if processing or on all data passed
+                    enable: !state.isBusy ? submitActive : false,
+                    textColor: Colors.white,
+                    enableColor: Color(0xffE24F4F),
+                    disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                    callback: () => onSignin(),
+                  ),
+                );
+              },
             ),
           ],
         ),

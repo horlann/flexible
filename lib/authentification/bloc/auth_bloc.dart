@@ -22,9 +22,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   // On user register set userdata there and use after confirmation
   UserData? userData;
 
-  // Uses for resend code
-  String? signPhoneNumber;
-
   // Mark for verify completition check
   bool isRegistration = false;
 
@@ -48,67 +45,79 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
 
     // Sign by phone
-    // Sent sms to user and wait for verification
     if (event is SignInByPhone) {
-      isRegistration = false;
-      // Save phone
-      signPhoneNumber = event.phone;
-      await fireAuthService.verifyPhoneNumber(event.phone);
-      yield CodeSended();
+      yield ShowSignIn(isBusy: true);
+      try {
+        // Check if user register before
+        bool isExits = await usersDataRepo.existsByPhone(event.phone);
+        if (!isExits) {
+          yield ShowSignIn(error: 'User found\'nt, sign up first');
+        } else {
+          isRegistration = false;
+          // Sent sms to user and wait for verification
+          await fireAuthService.verifyPhoneNumber(event.phone);
+          yield CodeSended(number: event.phone);
+        }
+      } catch (e) {
+        yield ShowSignIn(error: e.toString());
+      }
     }
 
     // Register new user
     // Sent sms to user and wait for verification
     // Save name and email localy and add it to userdata after verification
     if (event is CreateAccount) {
-      isRegistration = true;
-      // Save phone
-      signPhoneNumber = event.phone;
-      // Save user data
-      userData = UserData(
-          fullName: event.name,
-          email: event.email,
-          phoneNumber: event.phone,
-          photo: event.photo);
-
+      yield ShowRegistration(isBusy: true);
       try {
-        await fireAuthService.verifyPhoneNumber(event.phone);
-        yield CodeSended();
+        // Check if user register before
+        bool isExits = await usersDataRepo.existsByPhone(event.phone);
+        if (isExits) {
+          yield ShowRegistration(
+              error: 'User already registrated, sign in please');
+        } else {
+          isRegistration = true;
+          // Save user data
+          userData = UserData(
+              fullName: event.name,
+              email: event.email,
+              phoneNumber: event.phone,
+              photo: event.photo);
+          await fireAuthService.verifyPhoneNumber(event.phone);
+          yield CodeSended(number: event.phone);
+        }
       } catch (e) {
         print('Registration error');
-        yield ShowRegistration();
+        yield ShowRegistration(error: e.toString());
       }
     }
 
     // Resend code to last number
     if (event is ResendCode) {
-      await fireAuthService.verifyPhoneNumber(signPhoneNumber!);
-      yield CodeSended();
+      yield CodeSended(number: event.number, isBusy: true);
+      try {
+        await fireAuthService.verifyPhoneNumber(event.number);
+        yield CodeSended(number: event.number, message: 'Code resended');
+      } catch (e) {
+        yield CodeSended(number: event.number, error: e.toString());
+      }
     }
 
     // Verify sms code
     if (event is VerifyCode) {
-      print(event.smsCode);
+      yield CodeSended(number: event.number, isBusy: true);
       try {
         await fireAuthService.signInWithSmsCode(event.smsCode);
 
-        // Check if user data stored before
-        if (await usersDataRepo.existsByPhone(signPhoneNumber!)) {
-          yield Authentificated();
-        } else {
-          // If its registration pass new data
-          if (isRegistration) {
-            await usersDataRepo.setUser(
-                userData!.copyWith(uid: fireAuthService.getUser()!.uid));
-            yield Authentificated();
-          } else {
-            yield ShowDataUpdate();
-          }
+        // If it registration add new user data
+        if (isRegistration) {
+          await usersDataRepo
+              .setUser(userData!.copyWith(uid: fireAuthService.getUser()!.uid));
         }
+        yield Authentificated();
       } catch (e) {
-        print('Verification error');
+        print('Code verification error');
         print(e);
-        yield VerificationCodeInvalid();
+        yield CodeSended(number: event.number, error: e.toString());
       }
     }
 
@@ -117,31 +126,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await fireAuthService.signOut();
       yield* mapCheckAuthStatus();
     }
-
-    // Add data to user if user dont register before or clic sign in instead of registration
-    if (event is AddData) {
-      try {
-        User fireuser = fireAuthService.getUser()!;
-
-        UserData newUserData = UserData(
-            uid: fireuser.uid,
-            fullName: event.name,
-            email: event.email,
-            phoneNumber: signPhoneNumber!,
-            photo: event.photo);
-
-        await usersDataRepo.setUser(newUserData);
-
-        yield* mapCheckAuthStatus();
-      } catch (e) {
-        print('error when update user data');
-        print(e);
-      }
-    }
   }
 
   // Check auth status and return state by result
   Stream<AuthState> mapCheckAuthStatus() async* {
+    print('asdsd');
     if (fireAuthService.isAuthenticated) {
       // The check
       yield Authentificated();

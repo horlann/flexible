@@ -3,6 +3,9 @@ import 'dart:typed_data';
 
 import 'package:flexible/authentification/terms_of_use.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/widgets/circular_snakbar.dart';
+import 'package:flexible/widgets/error_snakbar.dart';
+import 'package:flexible/widgets/message_snakbar.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,30 +53,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String phoneNumber = '';
   String countryCode = '';
   String email = '';
-  bool isSignButtonTimeout = false;
 
   bool get submitActive =>
       phoneNumber.isNotEmpty &&
       isUserAgree &&
       fullName.isNotEmpty &&
-      email.isNotEmpty &&
-      !isSignButtonTimeout;
+      email.isNotEmpty;
 
   onRegistration() {
     // Validate all
     if (_formKey.currentState!.validate()) {
-      // Prevent multiple click to submit button before captcha is show
-      setState(() {
-        isSignButtonTimeout = true;
-      });
-      Timer(Duration(seconds: 30), () {
-        if (this.mounted) {
-          setState(() {
-            isSignButtonTimeout = false;
-          });
-        }
-      });
-
       print(countryCode + phoneNumber);
       // Submit registration
       BlocProvider.of<AuthBloc>(context).add(CreateAccount(
@@ -109,13 +98,41 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         safeTopPadding -
                         safeBottomPadding),
                 child: IntrinsicHeight(
-                  child: buildBody(context),
+                  child: buildBlocListenr(context),
                 ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildBlocListenr(BuildContext context) {
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        print(state);
+        if (state.isBusy) {
+          ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
+            text: 'Processing',
+          ));
+        }
+
+        if (state.error.isNotEmpty) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
+            text: state.error,
+          ));
+        }
+
+        if (state.message.isNotEmpty) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
+            text: state.message,
+          ));
+        }
+      },
+      child: buildBody(context),
     );
   }
 
@@ -206,17 +223,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
         Column(
           children: [
-            Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: 60 * byWithScale(context)),
-              child: WideRoundedButton(
-                text: 'Continue',
-                enable: submitActive,
-                textColor: Colors.white,
-                enableColor: Color(0xffE24F4F),
-                disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                callback: () => onRegistration(),
-              ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 60 * byWithScale(context)),
+                  child: WideRoundedButton(
+                    text: 'Continue',
+                    // bloc submit button if processing or on all data passed
+                    enable: !state.isBusy ? submitActive : false,
+                    textColor: Colors.white,
+                    enableColor: Color(0xffE24F4F),
+                    disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                    callback: () => onRegistration(),
+                  ),
+                );
+              },
             ),
             SizedBox(
               height: 8,

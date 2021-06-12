@@ -24,13 +24,20 @@ class SignInByPhone extends AuthEvent {
   List<Object> get props => [phone];
 }
 
-class ResendCode extends AuthEvent {}
+class ResendCode extends AuthEvent {
+  final String number;
+  ResendCode({
+    required this.number,
+  });
+}
 
 class VerifyCode extends AuthEvent {
   final String smsCode;
+  final String number;
 
   VerifyCode({
     required this.smsCode,
+    required this.number,
   });
 
   @override
