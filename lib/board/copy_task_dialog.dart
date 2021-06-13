@@ -1,6 +1,6 @@
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/calendar_dialog.dart';
-import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';

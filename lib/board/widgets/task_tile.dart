@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
-import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/task_editor.dart';
 import 'package:flexible/board/widgets/mini_buttons_with_icon.dart';
@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:invert_colors/invert_colors.dart';
 
 class TaskTile extends StatefulWidget {
-  final Task task;
+  final RegularTask task;
   TaskTile({required this.task});
   @override
   _TaskTileState createState() => _TaskTileState();

@@ -1,9 +1,9 @@
-import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
+import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/task_editor.dart';
 import 'package:flexible/board/widgets/mini_buttons_with_icon.dart';
@@ -13,32 +13,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:invert_colors/invert_colors.dart';
 
-class PeriodicTaskTile extends StatefulWidget {
-  final RegularTask task;
-  PeriodicTaskTile({required this.task});
+class SuperTaskTile extends StatefulWidget {
+  final SuperTask task;
+  SuperTaskTile({required this.task});
   @override
-  _PeriodicTaskTileState createState() => _PeriodicTaskTileState();
+  _SuperTaskState createState() => _SuperTaskState();
 }
 
-class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
+class _SuperTaskState extends State<SuperTaskTile> {
   // DateTime currentTime = DateTime.now();
   bool showSubButtons = false;
 
   @override
   void initState() {
     super.initState();
-
-    updateUi();
-  }
-
-  // Start autoupdate cycle
-  // Uses for correct time showing
-  // Auto close if widget disposed
-  updateUi() {
-    if (this.mounted) {
-      setState(() {});
-      Timer(Duration(seconds: 10), () => updateUi());
-    }
   }
 
   onCheckClicked(BuildContext context) {
@@ -47,13 +35,13 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
   }
 
   onEditClicked(BuildContext context) {
-    Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => TaskEditor(task: widget.task),
-            ))
-        .then((value) =>
-            BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdate()));
+    // Navigator.push(
+    //         context,
+    //         CupertinoPageRoute(
+    //           builder: (context) => TaskEditor(task: widget.task),
+    //         ))
+    //     .then((value) =>
+    //         BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdate()));
   }
 
   onDeleteClicked(BuildContext context) {
@@ -78,25 +66,10 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
 
   String geTimeString(DateTime date) => date.toString().substring(11, 16);
 
-  // Calc differense between current time and task period
-  double timeDiffEquality() {
-    DateTime currt = DateTime.now();
-
-    if (currt.difference(widget.task.timeStart).inMinutes > 0) {
-      var dif = widget.task.timeStart
-          .add(widget.task.period)
-          .difference(widget.task.timeStart)
-          .inMinutes;
-      var currFromStart = currt.difference(widget.task.timeStart).inMinutes;
-      return currFromStart / dif;
-    }
-
-    return 0.0;
-  }
-
   @override
   Widget build(BuildContext context) {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -110,30 +83,8 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           child: Stack(
             children: [
               Positioned(
-                  top: 2,
+                  top: 16,
                   child: Text(geTimeString(widget.task.timeStart),
-                      style: TextStyle(
-                          color: Color(0xff545353),
-                          fontSize: 10 * byWithScale(context),
-                          fontWeight: FontWeight.w400))),
-              timeDiffEquality() > 1
-                  ? SizedBox()
-                  : (timeDiffEquality() == 0
-                      ? SizedBox()
-                      : Positioned(
-                          top: (110 * timeDiffEquality()) + 12,
-                          child: Text(
-                            geTimeString(DateTime.now()),
-                            style: TextStyle(
-                                fontSize: 10 * byWithScale(context),
-                                color: Color(0xff545353)),
-                          ),
-                        )),
-              Positioned(
-                  bottom: 0,
-                  child: Text(
-                      geTimeString(
-                          widget.task.timeStart.add(widget.task.period)),
                       style: TextStyle(
                           color: Color(0xff545353),
                           fontSize: 10 * byWithScale(context),
@@ -186,78 +137,76 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
     );
   }
 
-  Widget buildMainIcon() {
-    return Stack(
-      children: [
-        Container(
-          height: 150,
-          width: 50,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  color: widget.task.color.withOpacity(0.75), blurRadius: 10)
-            ],
-            color: Color(0xffCAC8C4),
-            borderRadius: BorderRadius.circular(25),
-          ),
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(25),
-          child: Container(
-            height: 150,
-            width: 50,
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ClipRect(
-                child: Align(
-                  heightFactor: timeDiffEquality(),
-                  child: Container(
-                    height: 150,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0xff707070).withOpacity(0.5),
-                            blurRadius: 10)
-                      ],
-                      color: widget.task.color,
-                    ),
-                  ),
+  Widget buildTimeLock() {
+    return AnimatedCrossFade(
+      crossFadeState:
+          showSubButtons ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+      duration: Duration(
+        milliseconds: 200,
+      ),
+      firstChild: GestureDetector(
+        onTap: () => onLockClicked(context),
+        child: Container(
+          margin: EdgeInsets.only(top: 14, right: 4),
+          child: widget.task.timeLock
+              ? Image.asset(
+                  'src/icons/locked.png',
+                  width: 18 * byWithScale(context),
+                  height: 18 * byWithScale(context),
+                )
+              : Image.asset(
+                  'src/icons/unlocked.png',
+                  width: 18 * byWithScale(context),
+                  height: 18 * byWithScale(context),
                 ),
-              ),
+        ),
+      ),
+      secondChild: SizedBox(
+        width: 26,
+        height: 22,
+      ),
+    );
+  }
+
+  Container buildMainIcon() {
+    return Container(
+        height: 50,
+        width: 50,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: widget.task.color.withOpacity(0.75),
+                blurRadius: 20,
+                offset: Offset(0, 10))
+          ],
+          color: widget.task.color,
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: InvertColors(
+          child: Center(
+            child: FutureBuilder(
+              future: RepositoryProvider.of<ImageRepoMock>(context)
+                  .imageById(widget.task.iconId),
+              builder: (context, AsyncSnapshot<Uint8List> snapshot) {
+                if (snapshot.hasData) {
+                  return Image.memory(
+                    snapshot.data!,
+                    width: 24,
+                    height: 24,
+                    gaplessPlayback: true,
+                  );
+                }
+
+                return Image.asset(
+                  'src/task_icons/noimage.png',
+                  width: 24,
+                  height: 24,
+                  gaplessPlayback: true,
+                );
+              },
             ),
           ),
-        ),
-        Container(
-            height: 150,
-            width: 50,
-            child: InvertColors(
-              child: Center(
-                child: FutureBuilder(
-                  future: RepositoryProvider.of<ImageRepoMock>(context)
-                      .imageById(widget.task.iconId),
-                  builder: (context, AsyncSnapshot<Uint8List> snapshot) {
-                    if (snapshot.hasData) {
-                      return Image.memory(
-                        snapshot.data!,
-                        width: 24,
-                        height: 24,
-                        gaplessPlayback: true,
-                      );
-                    }
-
-                    return Image.asset(
-                      'src/task_icons/noimage.png',
-                      width: 24,
-                      height: 24,
-                      gaplessPlayback: true,
-                    );
-                  },
-                ),
-              ),
-            )),
-      ],
-    );
+        ));
   }
 
   Column buildTextSection() {
@@ -268,7 +217,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           height: 4,
         ),
         Text(
-          '${geTimeString(widget.task.timeStart)} - ${geTimeString(widget.task.timeStart.add(widget.task.period))}',
+          '${geTimeString(widget.task.timeStart)}',
           style: TextStyle(
               color: Color(0xff545353),
               fontSize: 14 * byWithScale(context),
@@ -298,37 +247,6 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
     );
   }
 
-  Widget buildTimeLock() {
-    return AnimatedCrossFade(
-      crossFadeState:
-          showSubButtons ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-      duration: Duration(
-        milliseconds: 200,
-      ),
-      firstChild: GestureDetector(
-        onTap: () => onLockClicked(context),
-        child: Container(
-          margin: EdgeInsets.only(top: 14, right: 4),
-          child: widget.task.timeLock
-              ? Image.asset(
-                  'src/icons/locked.png',
-                  width: 22,
-                  height: 22,
-                )
-              : Image.asset(
-                  'src/icons/unlocked.png',
-                  width: 22,
-                  height: 22,
-                ),
-        ),
-      ),
-      secondChild: SizedBox(
-        width: 26,
-        height: 22,
-      ),
-    );
-  }
-
   // Button under task
   // Shows when user tap on task tile
   Widget buildSubButtons() {
@@ -355,46 +273,6 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
     );
   }
 
-  Widget miniWhiteBorderedButton(
-      {required String text,
-      required String iconAsset,
-      VoidCallback? callback}) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          if (callback != null) {
-            callback();
-          }
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.6),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Color(0xffF66868), width: 2)),
-          child: Row(
-            children: [
-              Image.asset(
-                iconAsset,
-                width: 8,
-                height: 8,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(
-                width: 2,
-              ),
-              Text(
-                text,
-                style: TextStyle(fontSize: 8, color: Color(0xffF66868)),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   GestureDetector buildCheckbox(BuildContext context) {
     return GestureDetector(
       onTap: () => onCheckClicked(context),
@@ -412,10 +290,12 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
             ? Image.asset(
                 'src/icons/checkbox_checked.png',
                 scale: 1.2,
+                width: 18 * byWithScale(context),
               )
             : Image.asset(
                 'src/icons/checkbox_unchecked.png',
                 scale: 1.2,
+                width: 18 * byWithScale(context),
               ),
       ),
     );

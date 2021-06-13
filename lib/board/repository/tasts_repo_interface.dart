@@ -1,4 +1,4 @@
-import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/models/tasks/task.dart';
 
 abstract class ITasksRepo {
   Stream? onChanges;

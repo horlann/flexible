@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/models/tasks/regular_taks.dart';
+import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/repository/tasts_repo_interface.dart';
 
 class FireBaseTasksRepo extends ITasksRepo {
@@ -31,7 +32,7 @@ class FireBaseTasksRepo extends ITasksRepo {
     QuerySnapshot tasks = await taskCollection().get();
 
     List<Task> taskList = tasks.docs
-        .map((e) => Task.fromMap(e.data() as Map<String, dynamic>))
+        .map((e) => RegularTask.fromMap(e.data() as Map<String, dynamic>))
         .toList();
 
     return taskList;
@@ -46,7 +47,7 @@ class FireBaseTasksRepo extends ITasksRepo {
         .get();
 
     List<Task> taskList = tasks.docs
-        .map((e) => Task.fromMap(e.data() as Map<String, dynamic>))
+        .map((e) => RegularTask.fromMap(e.data() as Map<String, dynamic>))
         .toList();
 
     return taskList;

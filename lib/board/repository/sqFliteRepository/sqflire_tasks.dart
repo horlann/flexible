@@ -1,4 +1,5 @@
-import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/models/tasks/regular_taks.dart';
+import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/repository/tasts_repo_interface.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -34,7 +35,7 @@ class SqfliteTasksRepo implements ITasksRepo {
   Future<List<Task>> allTasks() async {
     try {
       List data = await (await getDb).rawQuery('SELECT * FROM Tasks');
-      List<Task> tasks = data.map((e) => Task.fromSqfMap(e)).toList();
+      List<Task> tasks = data.map((e) => RegularTask.fromSqfMap(e)).toList();
       return tasks;
     } catch (e) {
       throw Exception('Load from sqflite failed' + e.toString());
@@ -47,7 +48,7 @@ class SqfliteTasksRepo implements ITasksRepo {
     try {
       List data = await (await getDb).rawQuery(
           'SELECT * FROM Tasks WHERE timeStart BETWEEN ${from.millisecondsSinceEpoch} AND ${to.millisecondsSinceEpoch} ORDER BY timeStart');
-      List<Task> tasks = data.map((e) => Task.fromSqfMap(e)).toList();
+      List<Task> tasks = data.map((e) => RegularTask.fromSqfMap(e)).toList();
       return tasks;
     } catch (e) {
       throw Exception('Load from sqflite failed' + e.toString());

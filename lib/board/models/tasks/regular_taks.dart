@@ -1,35 +1,31 @@
 import 'dart:convert';
 
+import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
-class Task {
-  String? uuid;
-  final String title;
-  final String subtitle;
-  final DateTime timeStart;
-  final Duration period;
-  final bool isDone;
-  final bool isDonable;
-  final bool timeLock;
-  final Color color;
-  final String iconId;
-  Task({
-    this.uuid,
-    required this.title,
-    required this.subtitle,
-    required this.timeStart,
-    required this.period,
-    required this.isDone,
-    required this.isDonable,
-    required this.timeLock,
-    required this.color,
-    required this.iconId,
-  }) {
-    if (uuid == null) {
-      this.uuid = Uuid().v1();
-    }
-  }
+class RegularTask extends Task {
+  RegularTask({
+    uuid,
+    required title,
+    required subtitle,
+    required timeStart,
+    required period,
+    required isDone,
+    required isDonable,
+    required timeLock,
+    required color,
+    required iconId,
+  }) : super(
+            uuid: uuid,
+            title: title,
+            subtitle: subtitle,
+            timeStart: timeStart,
+            period: period,
+            isDone: isDone,
+            isDonable: isDonable,
+            timeLock: timeLock,
+            color: color,
+            iconId: iconId);
 
   Map<String, dynamic> toMap() {
     return {
@@ -61,8 +57,8 @@ class Task {
     };
   }
 
-  factory Task.fromMap(Map<String, dynamic> map) {
-    return Task(
+  factory RegularTask.fromMap(Map<String, dynamic> map) {
+    return RegularTask(
       uuid: map['uuid'],
       title: map['title'],
       subtitle: map['subtitle'],
@@ -76,8 +72,8 @@ class Task {
     );
   }
 
-  factory Task.fromSqfMap(Map<String, dynamic> map) {
-    return Task(
+  factory RegularTask.fromSqfMap(Map<String, dynamic> map) {
+    return RegularTask(
       uuid: map['uuid'],
       title: map['title'],
       subtitle: map['subtitle'],
@@ -93,9 +89,10 @@ class Task {
 
   String toJson() => json.encode(toMap());
 
-  factory Task.fromJson(String source) => Task.fromMap(json.decode(source));
+  factory RegularTask.fromJson(String source) =>
+      RegularTask.fromMap(json.decode(source));
 
-  Task copyWith({
+  RegularTask copyWith({
     String? uuid,
     String? title,
     String? subtitle,
@@ -107,7 +104,7 @@ class Task {
     Color? color,
     String? iconId,
   }) {
-    return Task(
+    return RegularTask(
       uuid: uuid ?? this.uuid,
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
@@ -123,38 +120,7 @@ class Task {
 
   @override
   String toString() {
-    return 'Task(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, timeLock: $timeLock, color: $color, iconId: $iconId)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Task &&
-        other.uuid == uuid &&
-        other.title == title &&
-        other.subtitle == subtitle &&
-        other.timeStart == timeStart &&
-        other.period == period &&
-        other.isDone == isDone &&
-        other.isDonable == isDonable &&
-        other.timeLock == timeLock &&
-        other.color == color &&
-        other.iconId == iconId;
-  }
-
-  @override
-  int get hashCode {
-    return uuid.hashCode ^
-        title.hashCode ^
-        subtitle.hashCode ^
-        timeStart.hashCode ^
-        period.hashCode ^
-        isDone.hashCode ^
-        isDonable.hashCode ^
-        timeLock.hashCode ^
-        color.hashCode ^
-        iconId.hashCode;
+    return 'RegularTask(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, timeLock: $timeLock, color: $color, iconId: $iconId)';
   }
 }
 

@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
-import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/models/tasks/regular_taks.dart';
+import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/task_editor/new_task_editor.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +29,7 @@ class _AddingTileState extends State<AddingTile> {
   addBunchOfTasks(BuildContext context) {
     DateTime dayForAdd = BlocProvider.of<DailytasksBloc>(context).state.showDay;
 
-    var newtask2 = Task(
+    var newtask2 = RegularTask(
       uuid: null,
       isDone: false,
       title: 'Demo task ${++taskCount}',
@@ -47,7 +48,7 @@ class _AddingTileState extends State<AddingTile> {
     BlocProvider.of<DailytasksBloc>(context)
         .add(DailytasksAddTask(task: newtask2));
 
-    var newtask3 = Task(
+    var newtask3 = RegularTask(
       uuid: null,
       isDone: false,
       title: 'Duration task',
@@ -66,7 +67,7 @@ class _AddingTileState extends State<AddingTile> {
     BlocProvider.of<DailytasksBloc>(context)
         .add(DailytasksAddTask(task: newtask3));
 
-    var newtask4 = Task(
+    var newtask4 = RegularTask(
       uuid: null,
       isDone: true,
       title: 'Finished task',
@@ -85,7 +86,7 @@ class _AddingTileState extends State<AddingTile> {
     BlocProvider.of<DailytasksBloc>(context)
         .add(DailytasksAddTask(task: newtask4));
 
-    var newtask5 = Task(
+    var newtask5 = RegularTask(
       uuid: null,
       isDone: false,
       title: 'Forwarded task',

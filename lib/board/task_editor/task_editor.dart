@@ -14,13 +14,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
-import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 
 // This widget aссузе Task instanse then copy and edit copy
 // On edit done is send edited task to tasks bloc
 class TaskEditor extends StatefulWidget {
-  final Task task;
+  final RegularTask task;
   const TaskEditor({required this.task});
 
   @override
@@ -28,7 +28,7 @@ class TaskEditor extends StatefulWidget {
 }
 
 class _TaskEditorState extends State<TaskEditor> {
-  late Task editableTask;
+  late RegularTask editableTask;
 
   @override
   void initState() {
@@ -232,10 +232,10 @@ class _TaskEditorState extends State<TaskEditor> {
         textBaseline: TextBaseline.alphabetic,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          GestureDetector(
+          TaskIconInRound(
               onTap: () => openImgPicker(),
-              child: TaskIconInRound(
-                  taskColor: editableTask.color, iconId: editableTask.iconId)),
+              taskColor: editableTask.color,
+              iconId: editableTask.iconId),
           SizedBox(
             width: 4,
           ),

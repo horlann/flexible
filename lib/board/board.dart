@@ -1,5 +1,8 @@
 import 'dart:math';
+import 'package:flexible/board/models/tasks/regular_taks.dart';
+import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/turbo_sliver_sticky_scroll.dart';
+import 'package:flexible/board/widgets/supertask_tile..dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,13 +18,19 @@ class Board extends StatelessWidget {
         child: BlocBuilder<DailytasksBloc, DailytasksState>(
       builder: (context, state) {
         if (state is DailytasksCommon) {
-          List<Widget> tasks = state.tasks.map((e) {
-            if (e.period.inMilliseconds == 0) {
-              return TaskTile(task: e);
-            } else {
-              return PeriodicTaskTile(task: e);
-            }
-          }).toList();
+          List<Widget> tasks = state.tasks
+              .map((e) {
+                if (e is RegularTask) {
+                  if (e.period.inMilliseconds == 0) {
+                    return TaskTile(task: e);
+                  } else {
+                    return PeriodicTaskTile(task: e);
+                  }
+                }
+                return SuperTaskTile(task: e as SuperTask);
+              })
+              .cast<Widget>()
+              .toList();
           return TurboAnimatedScrollView(
             // key: Key(Random().nextInt(9999).toString()),
             tasks: tasks, dayOptions: state.dayOptions,

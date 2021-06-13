@@ -1,3 +1,5 @@
+import 'package:flexible/board/models/tasks/supertask.dart';
+import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/task_editor/color_picker_row.dart';
 import 'package:flexible/board/task_editor/icon_picker_page.dart';
 import 'package:flexible/board/task_editor/row_with_close_btn.dart';
@@ -11,8 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
-import 'package:flexible/board/models/task.dart';
+import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
+
+enum TaskType { Regular, Super }
 
 class NewTaskEditor extends StatefulWidget {
   @override
@@ -20,24 +24,58 @@ class NewTaskEditor extends StatefulWidget {
 }
 
 class _NewTaskEditorState extends State<NewTaskEditor> {
-  late Task editableTask;
+  PageController _pageController = PageController();
+  TaskType tasktype = TaskType.Regular;
+
+  late RegularTask editableRegularTask;
+  late SuperTask editableSuperTask;
 
   @override
   void initState() {
     super.initState();
     // Create New Task
+    createEditableTask();
+  }
 
-    ;
-    editableTask = Task(
-        title: 'New Task',
-        subtitle: '',
-        timeStart: BlocProvider.of<DailytasksBloc>(context).state.showDay,
-        period: Duration(),
-        isDone: false,
-        isDonable: true,
-        timeLock: false,
-        color: Colors.grey,
-        iconId: 'additional');
+  // Create new task for edit
+  createEditableTask() {
+    setState(() {
+      editableRegularTask = RegularTask(
+          title: 'New Task',
+          subtitle: '',
+          timeStart: BlocProvider.of<DailytasksBloc>(context).state.showDay,
+          period: Duration(),
+          isDone: false,
+          isDonable: true,
+          timeLock: false,
+          color: Colors.grey,
+          iconId: 'additional');
+      editableSuperTask = SuperTask(
+          title: 'New Task',
+          subtitle: '',
+          timeStart: BlocProvider.of<DailytasksBloc>(context).state.showDay,
+          period: Duration(),
+          isDone: false,
+          isDonable: true,
+          timeLock: false,
+          color: Colors.grey,
+          iconId: 'additional',
+          deadline: BlocProvider.of<DailytasksBloc>(context)
+              .state
+              .showDay
+              .add(Duration(days: 7)),
+          globalDuration: Duration(days: 30),
+          globalDurationLeft: Duration(),
+          priority: 1);
+    });
+  }
+
+  setTaskType(TaskType type) {
+    setState(() {
+      tasktype = type;
+    });
+    _pageController.animateToPage(type == TaskType.Regular ? 0 : 1,
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   // Open picker
@@ -50,7 +88,8 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
         )).then((iconId) {
       if (iconId != null) {
         setState(() {
-          editableTask = editableTask.copyWith(iconId: iconId);
+          editableRegularTask = editableRegularTask.copyWith(iconId: iconId);
+          editableSuperTask = editableSuperTask.copyWith(iconId: iconId);
         });
       }
     });
@@ -71,7 +110,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
             physics: BouncingScrollPhysics(),
             slivers: [
               SliverFillRemaining(
-                hasScrollBody: false,
+                hasScrollBody: true,
                 child: buildBody(context),
               ),
             ],
@@ -94,7 +133,6 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                 // fill uses for adopt is size
                 Positioned.fill(child: GlassmorphLayer()),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     RowWithCloseBtn(context: context),
                     Text(
@@ -105,46 +143,21 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                         color: Color(0xffE24F4F),
                       ),
                     ),
-                    buildTitleInputSection(),
-                    Text(
-                      'When do you want to do it...',
-                      style: TextStyle(
-                          fontSize: 12 * byWithScale(context),
-                          fontWeight: FontWeight.w600),
+                    buildTaskTypeSwitcher(context),
+                    Expanded(
+                      child: PageView(
+                        onPageChanged: (value) {
+                          value == 1
+                              ? setTaskType(TaskType.Super)
+                              : setTaskType(TaskType.Regular);
+                        },
+                        controller: _pageController,
+                        children: [
+                          RegularTaskEditorBody(context: context),
+                          // SuperTaskEditorBody(context: context)
+                        ],
+                      ),
                     ),
-                    buildTimePicker(),
-                    Text(
-                      '...once on ${editableTask.timeStart.toString().substring(0, 10)}',
-                      style: TextStyle(
-                          fontSize: 10 * byWithScale(context),
-                          fontWeight: FontWeight.w400),
-                    ),
-                    Text(
-                      '...and how long it will take',
-                      style: TextStyle(
-                          fontSize: 10 * byWithScale(context),
-                          fontWeight: FontWeight.w400),
-                    ),
-                    TimeSlider(
-                      period: editableTask.period,
-                      callback: (Duration newPeriod) {
-                        setState(() {
-                          editableTask =
-                              editableTask.copyWith(period: newPeriod);
-                        });
-                      },
-                    ),
-                    Text(
-                      'What color should you task be?',
-                      style: TextStyle(
-                          fontSize: 12 * byWithScale(context),
-                          fontWeight: FontWeight.w600),
-                    ),
-                    ColorPickerRow(callback: (color) {
-                      setState(() {
-                        editableTask = editableTask.copyWith(color: color);
-                      });
-                    }),
                   ],
                 )
               ],
@@ -152,6 +165,56 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
           ),
         ),
         buildUpdateDeleteButtons()
+      ],
+    );
+  }
+
+  Widget buildTaskTypeSwitcher(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => setTaskType(TaskType.Regular),
+            child: Container(
+                decoration: tasktype != TaskType.Regular
+                    ? null
+                    : BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: 4, color: Color(0xffE24F4F)))),
+                child: Text(
+                  'Regular task',
+                  style: TextStyle(
+                      fontSize: 12 * byWithScale(context),
+                      fontWeight: tasktype != TaskType.Regular
+                          ? FontWeight.w400
+                          : FontWeight.w600),
+                )),
+          ),
+        ),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => setTaskType(TaskType.Super),
+            child: Container(
+                decoration: tasktype != TaskType.Super
+                    ? null
+                    : BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: 4, color: Color(0xffE24F4F)))),
+                child: Text(
+                  'Super task',
+                  style: TextStyle(
+                      fontSize: 12 * byWithScale(context),
+                      fontWeight: tasktype != TaskType.Super
+                          ? FontWeight.w400
+                          : FontWeight.w600),
+                )),
+          ),
+        ),
       ],
     );
   }
@@ -168,8 +231,8 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
               enableColor: Color(0xffE24F4F),
               disableColor: Color(0xffE24F4F),
               callback: () {
-                BlocProvider.of<DailytasksBloc>(context)
-                    .add(DailytasksAddTask(task: editableTask));
+                // BlocProvider.of<DailytasksBloc>(context)
+                //     .add(DailytasksAddTask(task: editableTask));
                 Navigator.pop(context);
               },
               text: 'Create Task'),
@@ -180,77 +243,155 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
       ],
     );
   }
+}
 
-  SizedBox buildTimePicker() {
-    return SizedBox(
-      height: 120 * byWithScale(context),
-      child: FittedBox(
-        child: SizedBox(
-            height: 190,
-            child: CupertinoTimerPicker(
-                initialTimerDuration: editableTask.timeStart
-                    .difference(DateUtils.dateOnly(editableTask.timeStart)),
-                mode: CupertinoTimerPickerMode.hm,
-                onTimerDurationChanged: (v) {
-                  DateTime timeStart =
-                      DateUtils.dateOnly(editableTask.timeStart).add(v);
+class RegularTaskEditorBody extends StatelessWidget {
+  const RegularTaskEditorBody({
+    Key? key,
+    required this.context,
+  }) : super(key: key);
 
-                  setState(() {
-                    editableTask = editableTask.copyWith(timeStart: timeStart);
-                  });
-                })),
-      ),
-    );
-  }
+  final BuildContext context;
 
-  Container buildTitleInputSection() {
-    return Container(
-      decoration: BoxDecoration(
-          // color: Colors.red,
-          border:
-              Border(bottom: BorderSide(width: 1, color: Color(0xffB1B1B1)))),
-      padding: EdgeInsets.only(bottom: 2),
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        textBaseline: TextBaseline.alphabetic,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          GestureDetector(
-              onTap: () => openImgPicker(),
-              child: TaskIconInRound(
-                  taskColor: editableTask.color, iconId: editableTask.iconId)),
-          SizedBox(
-            width: 4,
-          ),
-          Expanded(
-            child: Container(
-                child: SizedBox(
-              height: 20 * byWithScale(context),
-              child: TextFormField(
-                // Change title
-                onChanged: (value) {
-                  setState(() {
-                    editableTask = editableTask.copyWith(title: value);
-                  });
-                },
-
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  // contentPadding: EdgeInsets.all(10),
-                ),
-                initialValue: editableTask.title,
-                style: TextStyle(
-                    color: Color(0xff373535),
-                    fontSize: 12 * byWithScale(context)),
-              ),
-            )),
-          )
-        ],
-      ),
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        buildTitleInputSection(),
+        Text(
+          'When do you want to do it...',
+          style: TextStyle(
+              fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
+        ),
+        buildTimePicker(),
+        Text(
+          '...once on ${editableTask.timeStart.toString().substring(0, 10)}',
+          style: TextStyle(
+              fontSize: 10 * byWithScale(context), fontWeight: FontWeight.w400),
+        ),
+        Text(
+          '...and how long it will take',
+          style: TextStyle(
+              fontSize: 10 * byWithScale(context), fontWeight: FontWeight.w400),
+        ),
+        TimeSlider(
+          period: editableTask.period,
+          callback: (Duration newPeriod) {
+            setState(() {
+              editableTask = editableTask.copyWith(period: newPeriod);
+            });
+          },
+        ),
+        Text(
+          'What color should you task be?',
+          style: TextStyle(
+              fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
+        ),
+        ColorPickerRow(callback: (color) {
+          setState(() {
+            editableTask = editableTask.copyWith(color: color);
+          });
+        }),
+      ],
     );
   }
 }
+
+// class SuperTaskEditorBody extends StatelessWidget {
+//   const SuperTaskEditorBody({
+//     Key? key,
+//     required this.context,
+//   }) : super(key: key);
+
+//   final BuildContext context;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       mainAxisSize: MainAxisSize.max,
+//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//       children: [
+//         buildTitleInputSection(),
+//         Text(
+//           'Choose deadline of your Supertask',
+//           style: TextStyle(
+//               fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
+//         ),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//           children: [
+//             GestureDetector(
+//               onTap: () => ,
+//                           child: Container(
+//                 padding: EdgeInsets.symmetric(
+//                     vertical: 4 * byWithScale(context),
+//                     horizontal: 6 * byWithScale(context)),
+//                 decoration: BoxDecoration(
+//                     color: Colors.white, borderRadius: BorderRadius.circular(4)),
+//                 child: Text('Week',
+//                     style: TextStyle(fontSize: 10 * byWithScale(context))),
+//               ),
+//             ),
+//             Container(
+//               padding: EdgeInsets.symmetric(
+//                   vertical: 4 * byWithScale(context),
+//                   horizontal: 6 * byWithScale(context)),
+//               decoration: BoxDecoration(
+//                   color: Colors.white, borderRadius: BorderRadius.circular(4)),
+//               child: Text('2 Weeks',
+//                   style: TextStyle(fontSize: 10 * byWithScale(context))),
+//             ),
+//             Container(
+//               padding: EdgeInsets.symmetric(
+//                   vertical: 4 * byWithScale(context),
+//                   horizontal: 6 * byWithScale(context)),
+//               decoration: BoxDecoration(
+//                   color: Colors.white, borderRadius: BorderRadius.circular(4)),
+//               child: Text('Month',
+//                   style: TextStyle(fontSize: 10 * byWithScale(context))),
+//             ),
+//             Container(
+//               padding: EdgeInsets.symmetric(
+//                   vertical: 4 * byWithScale(context),
+//                   horizontal: 6 * byWithScale(context)),
+//               decoration: BoxDecoration(
+//                   color: Colors.white, borderRadius: BorderRadius.circular(4)),
+//               child: Text('Choose',
+//                   style: TextStyle(fontSize: 10 * byWithScale(context))),
+//             )
+//           ],
+//         ),
+//         Text(
+//           '...once on ${editableTask.timeStart.toString().substring(0, 10)}',
+//           style: TextStyle(
+//               fontSize: 10 * byWithScale(context), fontWeight: FontWeight.w400),
+//         ),
+//         Text(
+//           '...and how long it will take',
+//           style: TextStyle(
+//               fontSize: 10 * byWithScale(context), fontWeight: FontWeight.w400),
+//         ),
+//         TimeSlider(
+//           period: editableTask.period,
+//           callback: (Duration newPeriod) {
+//             setState(() {
+//               editableTask = editableTask.copyWith(period: newPeriod);
+//             });
+//           },
+//         ),
+//         Text(
+//           'What color should you task be?',
+//           style: TextStyle(
+//               fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
+//         ),
+//         ColorPickerRow(callback: (color) {
+//           setState(() {
+//             editableTask = editableTask.copyWith(color: color);
+//           });
+//         }),
+//       ],
+//     );
+//   }
+// }
