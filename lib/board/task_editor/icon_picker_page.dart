@@ -29,7 +29,7 @@ class _IconPickerPageState extends State<IconPickerPage> {
             physics: BouncingScrollPhysics(),
             slivers: [
               SliverFillRemaining(
-                hasScrollBody: false,
+                hasScrollBody: true,
                 child: buildBody(context),
               ),
             ],
@@ -62,7 +62,10 @@ class _IconPickerPageState extends State<IconPickerPage> {
                 height: 16,
               ),
               buildImproveSwitch(),
-              buildImagesGrid(context)
+              Expanded(child: buildImagesGrid(context)),
+              SizedBox(
+                height: 16,
+              ),
             ],
           )
         ],
@@ -80,8 +83,9 @@ class _IconPickerPageState extends State<IconPickerPage> {
             // print(snapshot.data);
 
             return SizedBox(
-              height: 400,
+              // height: 400,
               child: GridView.count(
+                // shrinkWrap: true,
                 mainAxisSpacing: 8,
                 crossAxisSpacing: 8,
                 crossAxisCount: 5,
@@ -180,12 +184,12 @@ class _IconPickerPageState extends State<IconPickerPage> {
         Navigator.pop(context);
       },
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 16, top: 16),
+            padding: const EdgeInsets.only(right: 16, top: 16, left: 16),
             child: Image.asset(
-              'src/icons/close.png',
+              'src/icons/return.png',
               width: 24,
               fit: BoxFit.fitWidth,
             ),

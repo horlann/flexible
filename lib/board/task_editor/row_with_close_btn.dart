@@ -16,10 +16,11 @@ class RowWithCloseBtn extends StatelessWidget {
         Navigator.pop(context);
       },
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.only(
+                left: 16 * byWithScale(context),
                 right: 16 * byWithScale(context),
                 top: 12 * byWithScale(context)),
             child: Image.asset(
