@@ -121,6 +121,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     }
 
+    // Show if abort
+    if (event is CloseCodeVerification) {
+      if (state is! Authentificated) {
+        if (isRegistration) {
+          yield ShowRegistration();
+        } else {
+          yield ShowSignIn();
+        }
+      }
+    }
+
     // sign out
     if (event is SignOut) {
       await fireAuthService.signOut();

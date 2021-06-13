@@ -13,6 +13,8 @@ class GoToSignIn extends AuthEvent {}
 
 class GoToRegistration extends AuthEvent {}
 
+class CloseCodeVerification extends AuthEvent {}
+
 class SignInByPhone extends AuthEvent {
   final String phone;
 

@@ -89,7 +89,10 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
   Widget buildBlocListenr(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        print(state);
+        if (state is Authentificated) {
+          Navigator.pop(context);
+        }
+
         if (state.isBusy) {
           ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
             text: 'Processing',
