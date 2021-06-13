@@ -1,11 +1,14 @@
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 
-class TimeSlider extends StatelessWidget {
-  final Duration period;
-  final Function(Duration) callback;
+class SuperTaskGlobasDurationSlider extends StatelessWidget {
+  final Duration duration;
+  final Function(Duration duration) onChange;
 
-  const TimeSlider({required this.period, required this.callback});
+  final List<int> hours = [1, 5, 10, 30, 60, 90, 180];
+
+  SuperTaskGlobasDurationSlider(
+      {required this.duration, required this.onChange});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class TimeSlider extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${period.inHours.toString()} hours',
+                '${duration.inHours.toString()} hours',
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 10 * byWithScale(context)),
@@ -56,13 +59,12 @@ class TimeSlider extends StatelessWidget {
           child: SizedBox(
             height: 30 * byWithScale(context),
             child: Slider(
-              max: 4 * byWithScale(context),
+              divisions: 6,
+              max: 6,
               min: 0,
-              value: period.inHours.toDouble(),
-              // activeColor: Colors.grey,
-              // inactiveColor: Colors.grey,
-              onChanged: (v) => callback(
-                Duration(hours: v.toInt()),
+              value: hours.indexOf(duration.inHours).toDouble(),
+              onChanged: (v) => onChange(
+                Duration(hours: hours[v.toInt()]),
               ),
             ),
           ),
@@ -72,9 +74,9 @@ class TimeSlider extends StatelessWidget {
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(
-                  9,
+                  7,
                   (index) => Text(
-                        '$index h',
+                        '${hours[index]} h',
                         style: TextStyle(fontSize: 8 * byWithScale(context)),
                       ))),
         )

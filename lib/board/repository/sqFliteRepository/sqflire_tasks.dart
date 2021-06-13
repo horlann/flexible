@@ -1,4 +1,5 @@
 import 'package:flexible/board/models/tasks/regular_taks.dart';
+import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/repository/tasts_repo_interface.dart';
 import 'package:sqflite/sqflite.dart';
@@ -8,10 +9,10 @@ class SqfliteTasksRepo implements ITasksRepo {
 
   // Init new db and create table
   Future _init() async {
-    db = await openDatabase('tasks.db', version: 1,
+    db = await openDatabase('tasks28.db', version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
-          'CREATE TABLE Tasks (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER, timeLock INTEGER , color TEXT, iconId TEXT )');
+          'CREATE TABLE Tasks (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER, timeLock INTEGER , color TEXT, iconId TEXT,deadline INTEGER, globalDuration INTEGER, globalDurationLeft INTEGER, priority INTEGER, isSuperTask INTEGER)');
     });
   }
 
@@ -35,7 +36,13 @@ class SqfliteTasksRepo implements ITasksRepo {
   Future<List<Task>> allTasks() async {
     try {
       List data = await (await getDb).rawQuery('SELECT * FROM Tasks');
-      List<Task> tasks = data.map((e) => RegularTask.fromSqfMap(e)).toList();
+      List<Task> tasks = data.map((e) {
+        if (e['isSuperTask'] != null) {
+          return SuperTask.fromSqfMap(e);
+        } else {
+          return RegularTask.fromSqfMap(e);
+        }
+      }).toList();
       return tasks;
     } catch (e) {
       throw Exception('Load from sqflite failed' + e.toString());
@@ -48,7 +55,13 @@ class SqfliteTasksRepo implements ITasksRepo {
     try {
       List data = await (await getDb).rawQuery(
           'SELECT * FROM Tasks WHERE timeStart BETWEEN ${from.millisecondsSinceEpoch} AND ${to.millisecondsSinceEpoch} ORDER BY timeStart');
-      List<Task> tasks = data.map((e) => RegularTask.fromSqfMap(e)).toList();
+      List<Task> tasks = data.map((e) {
+        if (e['isSuperTask'] != null) {
+          return SuperTask.fromSqfMap(e);
+        } else {
+          return RegularTask.fromSqfMap(e);
+        }
+      }).toList();
       return tasks;
     } catch (e) {
       throw Exception('Load from sqflite failed' + e.toString());

@@ -22,7 +22,7 @@ class TaskIconInRound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap,
+      onTap: () => onTap(),
       child: Container(
         width: 24 * byWithScale(context),
         height: 24 * byWithScale(context),

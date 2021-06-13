@@ -3,12 +3,14 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flexible/board/models/day_options.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
+import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/repository/combined_repository/combined_tasks_repo.dart';
 import 'package:flexible/board/repository/day_options_interface.dart';
 import 'package:flexible/board/repository/tasts_repo_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:uuid/uuid.dart';
 
 part 'dailytasks_event.dart';
 part 'dailytasks_state.dart';
@@ -128,6 +130,30 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
     if (event is DailytasksUpdateDayOptions) {
       // update in db
       await dayOptionsRepo.updateDayOptions(event.dayOptions);
+
+      // Update
+      this.add(DailytasksUpdate());
+    }
+
+    if (event is DailytasksSuperTaskIteration) {
+      SuperTask task = event.task.copyWith(
+          globalDurationLeft: event.task.globalDurationLeft + event.task.period,
+          // isDonable: false,
+          isDone: true);
+
+      await tasksRepo.setTask(task);
+      if (!((task.globalDuration - task.globalDurationLeft).isNegative)) {
+        print(task.globalDuration);
+        print(task.globalDurationLeft);
+        print(task.deadline);
+        if (task.deadline.difference(task.timeStart).isNegative) {
+          await tasksRepo.setTask(task.copyWith(
+              uuid: Uuid().v1(),
+              isDonable: true,
+              isDone: false,
+              timeStart: task.timeStart.add(Duration(days: 1))));
+        }
+      }
 
       // Update
       this.add(DailytasksUpdate());

@@ -1,20 +1,27 @@
-import 'package:flexible/board/models/tasks/supertask.dart';
-import 'package:flexible/board/models/tasks/task.dart';
-import 'package:flexible/board/task_editor/color_picker_row.dart';
-import 'package:flexible/board/task_editor/icon_picker_page.dart';
-import 'package:flexible/board/task_editor/row_with_close_btn.dart';
-import 'package:flexible/board/task_editor/task_icon_in_round.dart';
-import 'package:flexible/board/task_editor/time_slider.dart';
-import 'package:flexible/board/widgets/glassmorph_layer.dart';
-import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/widgets/wide_rounded_button.dart';
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
+import 'package:flexible/board/models/tasks/supertask.dart';
+import 'package:flexible/board/models/tasks/task.dart';
+import 'package:flexible/board/task_editor/color_picker_row.dart';
+import 'package:flexible/board/task_editor/deadline_chooser.dart';
+import 'package:flexible/board/task_editor/icon_picker_page.dart';
+import 'package:flexible/board/task_editor/row_with_close_btn.dart';
+import 'package:flexible/board/task_editor/supertask_daily_duration_slider.dart';
+import 'package:flexible/board/task_editor/supertask_global_duration_slider.dart';
+import 'package:flexible/board/task_editor/task_icon_in_round.dart';
+import 'package:flexible/board/task_editor/task_period_slider.dart';
+import 'package:flexible/board/task_editor/time_picker.dart';
+import 'package:flexible/board/task_editor/title_input_section.dart';
+import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flexible/widgets/wide_rounded_button.dart';
 
 enum TaskType { Regular, Super }
 
@@ -26,48 +33,23 @@ class NewTaskEditor extends StatefulWidget {
 class _NewTaskEditorState extends State<NewTaskEditor> {
   PageController _pageController = PageController();
   TaskType tasktype = TaskType.Regular;
-
-  late RegularTask editableRegularTask;
-  late SuperTask editableSuperTask;
+  StreamController onSubmitCR = StreamController();
+  late Stream submitR;
+  StreamController onSubmitCS = StreamController();
+  late Stream submitS;
 
   @override
   void initState() {
     super.initState();
-    // Create New Task
-    createEditableTask();
+    submitR = onSubmitCR.stream.asBroadcastStream();
+    submitS = onSubmitCS.stream.asBroadcastStream();
   }
 
-  // Create new task for edit
-  createEditableTask() {
-    setState(() {
-      editableRegularTask = RegularTask(
-          title: 'New Task',
-          subtitle: '',
-          timeStart: BlocProvider.of<DailytasksBloc>(context).state.showDay,
-          period: Duration(),
-          isDone: false,
-          isDonable: true,
-          timeLock: false,
-          color: Colors.grey,
-          iconId: 'additional');
-      editableSuperTask = SuperTask(
-          title: 'New Task',
-          subtitle: '',
-          timeStart: BlocProvider.of<DailytasksBloc>(context).state.showDay,
-          period: Duration(),
-          isDone: false,
-          isDonable: true,
-          timeLock: false,
-          color: Colors.grey,
-          iconId: 'additional',
-          deadline: BlocProvider.of<DailytasksBloc>(context)
-              .state
-              .showDay
-              .add(Duration(days: 7)),
-          globalDuration: Duration(days: 30),
-          globalDurationLeft: Duration(),
-          priority: 1);
-    });
+  @override
+  void dispose() {
+    super.dispose();
+    onSubmitCR.close();
+    onSubmitCS.close();
   }
 
   setTaskType(TaskType type) {
@@ -76,23 +58,6 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
     });
     _pageController.animateToPage(type == TaskType.Regular ? 0 : 1,
         duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
-
-  // Open picker
-  // Picker should return icon id as string
-  openImgPicker() {
-    Navigator.push(
-        context,
-        CupertinoPageRoute(
-          builder: (context) => IconPickerPage(),
-        )).then((iconId) {
-      if (iconId != null) {
-        setState(() {
-          editableRegularTask = editableRegularTask.copyWith(iconId: iconId);
-          editableSuperTask = editableSuperTask.copyWith(iconId: iconId);
-        });
-      }
-    });
   }
 
   @override
@@ -153,8 +118,22 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                         },
                         controller: _pageController,
                         children: [
-                          RegularTaskEditorBody(context: context),
-                          // SuperTaskEditorBody(context: context)
+                          RegularTaskEditorBody(
+                            submitChanel: submitR,
+                            onSubmit: (task) {
+                              BlocProvider.of<DailytasksBloc>(context)
+                                  .add(DailytasksAddTask(task: task));
+                              Navigator.pop(context);
+                            },
+                          ),
+                          SuperTaskEditorBody(
+                            submitChanel: submitS,
+                            onSubmit: (task) {
+                              BlocProvider.of<DailytasksBloc>(context)
+                                  .add(DailytasksAddTask(task: task));
+                              Navigator.pop(context);
+                            },
+                          )
                         ],
                       ),
                     ),
@@ -231,9 +210,16 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
               enableColor: Color(0xffE24F4F),
               disableColor: Color(0xffE24F4F),
               callback: () {
+                if (tasktype == TaskType.Regular) {
+                  onSubmitCR.add('submit');
+                }
+                if (tasktype == TaskType.Super) {
+                  onSubmitCS.add('submit');
+                }
+
                 // BlocProvider.of<DailytasksBloc>(context)
                 //     .add(DailytasksAddTask(task: editableTask));
-                Navigator.pop(context);
+                // Navigator.pop(context);
               },
               text: 'Create Task'),
         ),
@@ -245,13 +231,62 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   }
 }
 
-class RegularTaskEditorBody extends StatelessWidget {
+class RegularTaskEditorBody extends StatefulWidget {
+  final RegularTask? task;
+  final Stream submitChanel;
+  final Function(Task task) onSubmit;
   const RegularTaskEditorBody({
     Key? key,
-    required this.context,
+    this.task,
+    required this.submitChanel,
+    required this.onSubmit,
   }) : super(key: key);
 
-  final BuildContext context;
+  @override
+  _RegularTaskEditorBodyState createState() => _RegularTaskEditorBodyState();
+}
+
+class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
+  late RegularTask editableRegularTask;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Create new task if task not passed
+    if (widget.task != null) {
+      editableRegularTask = widget.task!;
+    } else {
+      editableRegularTask = RegularTask(
+          title: 'New Task',
+          subtitle: '',
+          timeStart: BlocProvider.of<DailytasksBloc>(context).state.showDay,
+          period: Duration(),
+          isDone: false,
+          isDonable: true,
+          timeLock: false,
+          color: Colors.grey,
+          iconId: 'additional');
+    }
+
+    widget.submitChanel.listen((event) {
+      widget.onSubmit(editableRegularTask);
+    });
+  }
+
+  openImgPicker() {
+    Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => IconPickerPage(),
+        )).then((iconId) {
+      if (iconId != null) {
+        setState(() {
+          editableRegularTask = editableRegularTask.copyWith(iconId: iconId);
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -259,15 +294,35 @@ class RegularTaskEditorBody extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        buildTitleInputSection(),
+        TitleInputSection(
+          initValue: editableRegularTask.title,
+          onChange: (String text) {
+            setState(() {
+              editableRegularTask = editableRegularTask.copyWith(title: text);
+            });
+          },
+          child: TaskIconInRound(
+            iconId: editableRegularTask.iconId,
+            taskColor: editableRegularTask.color,
+            onTap: () => openImgPicker(),
+          ),
+        ),
         Text(
           'When do you want to do it...',
           style: TextStyle(
               fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
         ),
-        buildTimePicker(),
+        TimePicker(
+          timeStart: editableRegularTask.timeStart,
+          callback: (time) {
+            setState(() {
+              editableRegularTask =
+                  editableRegularTask.copyWith(timeStart: time);
+            });
+          },
+        ),
         Text(
-          '...once on ${editableTask.timeStart.toString().substring(0, 10)}',
+          '...once on ${editableRegularTask.timeStart.toString().substring(0, 10)}',
           style: TextStyle(
               fontSize: 10 * byWithScale(context), fontWeight: FontWeight.w400),
         ),
@@ -276,11 +331,12 @@ class RegularTaskEditorBody extends StatelessWidget {
           style: TextStyle(
               fontSize: 10 * byWithScale(context), fontWeight: FontWeight.w400),
         ),
-        TimeSlider(
-          period: editableTask.period,
+        TaskPeriodSlider(
+          period: editableRegularTask.period,
           callback: (Duration newPeriod) {
             setState(() {
-              editableTask = editableTask.copyWith(period: newPeriod);
+              editableRegularTask =
+                  editableRegularTask.copyWith(period: newPeriod);
             });
           },
         ),
@@ -291,7 +347,7 @@ class RegularTaskEditorBody extends StatelessWidget {
         ),
         ColorPickerRow(callback: (color) {
           setState(() {
-            editableTask = editableTask.copyWith(color: color);
+            editableRegularTask = editableRegularTask.copyWith(color: color);
           });
         }),
       ],
@@ -299,99 +355,135 @@ class RegularTaskEditorBody extends StatelessWidget {
   }
 }
 
-// class SuperTaskEditorBody extends StatelessWidget {
-//   const SuperTaskEditorBody({
-//     Key? key,
-//     required this.context,
-//   }) : super(key: key);
+class SuperTaskEditorBody extends StatefulWidget {
+  final SuperTask? task;
+  final Stream submitChanel;
+  final Function(Task task) onSubmit;
+  const SuperTaskEditorBody({
+    Key? key,
+    this.task,
+    required this.submitChanel,
+    required this.onSubmit,
+  }) : super(key: key);
 
-//   final BuildContext context;
+  @override
+  _SuperTaskEditorBodyState createState() => _SuperTaskEditorBodyState();
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       mainAxisSize: MainAxisSize.max,
-//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//       children: [
-//         buildTitleInputSection(),
-//         Text(
-//           'Choose deadline of your Supertask',
-//           style: TextStyle(
-//               fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
-//         ),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//           children: [
-//             GestureDetector(
-//               onTap: () => ,
-//                           child: Container(
-//                 padding: EdgeInsets.symmetric(
-//                     vertical: 4 * byWithScale(context),
-//                     horizontal: 6 * byWithScale(context)),
-//                 decoration: BoxDecoration(
-//                     color: Colors.white, borderRadius: BorderRadius.circular(4)),
-//                 child: Text('Week',
-//                     style: TextStyle(fontSize: 10 * byWithScale(context))),
-//               ),
-//             ),
-//             Container(
-//               padding: EdgeInsets.symmetric(
-//                   vertical: 4 * byWithScale(context),
-//                   horizontal: 6 * byWithScale(context)),
-//               decoration: BoxDecoration(
-//                   color: Colors.white, borderRadius: BorderRadius.circular(4)),
-//               child: Text('2 Weeks',
-//                   style: TextStyle(fontSize: 10 * byWithScale(context))),
-//             ),
-//             Container(
-//               padding: EdgeInsets.symmetric(
-//                   vertical: 4 * byWithScale(context),
-//                   horizontal: 6 * byWithScale(context)),
-//               decoration: BoxDecoration(
-//                   color: Colors.white, borderRadius: BorderRadius.circular(4)),
-//               child: Text('Month',
-//                   style: TextStyle(fontSize: 10 * byWithScale(context))),
-//             ),
-//             Container(
-//               padding: EdgeInsets.symmetric(
-//                   vertical: 4 * byWithScale(context),
-//                   horizontal: 6 * byWithScale(context)),
-//               decoration: BoxDecoration(
-//                   color: Colors.white, borderRadius: BorderRadius.circular(4)),
-//               child: Text('Choose',
-//                   style: TextStyle(fontSize: 10 * byWithScale(context))),
-//             )
-//           ],
-//         ),
-//         Text(
-//           '...once on ${editableTask.timeStart.toString().substring(0, 10)}',
-//           style: TextStyle(
-//               fontSize: 10 * byWithScale(context), fontWeight: FontWeight.w400),
-//         ),
-//         Text(
-//           '...and how long it will take',
-//           style: TextStyle(
-//               fontSize: 10 * byWithScale(context), fontWeight: FontWeight.w400),
-//         ),
-//         TimeSlider(
-//           period: editableTask.period,
-//           callback: (Duration newPeriod) {
-//             setState(() {
-//               editableTask = editableTask.copyWith(period: newPeriod);
-//             });
-//           },
-//         ),
-//         Text(
-//           'What color should you task be?',
-//           style: TextStyle(
-//               fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
-//         ),
-//         ColorPickerRow(callback: (color) {
-//           setState(() {
-//             editableTask = editableTask.copyWith(color: color);
-//           });
-//         }),
-//       ],
-//     );
-//   }
-// }
+class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
+  late SuperTask editableSuperTask;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Create new task if task not passed
+    if (widget.task != null) {
+      editableSuperTask = widget.task!;
+    } else {
+      editableSuperTask = SuperTask(
+          title: 'New Task',
+          subtitle: '',
+          timeStart: BlocProvider.of<DailytasksBloc>(context).state.showDay,
+          period: Duration(hours: 1),
+          isDone: false,
+          isDonable: true,
+          timeLock: false,
+          color: Colors.grey,
+          iconId: 'additional',
+          deadline: BlocProvider.of<DailytasksBloc>(context)
+              .state
+              .showDay
+              .add(Duration(days: 7)),
+          globalDuration: Duration(hours: 10),
+          globalDurationLeft: Duration(),
+          priority: 1);
+    }
+    widget.submitChanel.listen((event) {
+      widget.onSubmit(editableSuperTask);
+    });
+  }
+
+  openImgPicker() {
+    Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => IconPickerPage(),
+        )).then((iconId) {
+      if (iconId != null) {
+        setState(() {
+          editableSuperTask = editableSuperTask.copyWith(iconId: iconId);
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        TitleInputSection(
+          initValue: editableSuperTask.title,
+          onChange: (String text) {
+            setState(() {
+              editableSuperTask = editableSuperTask.copyWith(title: text);
+            });
+          },
+          child: TaskIconInRound(
+            iconId: editableSuperTask.iconId,
+            taskColor: editableSuperTask.color,
+            onTap: () => openImgPicker(),
+          ),
+        ),
+        Text(
+          'Choose deadline of your Supertask',
+          style: TextStyle(
+              fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
+        ),
+        DeadLineChooser(
+          initialDeadline: editableSuperTask.deadline,
+          timeStart: editableSuperTask.timeStart,
+          onChange: (date) {
+            setState(() {
+              editableSuperTask = editableSuperTask.copyWith(deadline: date);
+            });
+          },
+        ),
+        Text(
+          'What is your task Duration',
+          style: TextStyle(
+              fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
+        ),
+        SuperTaskGlobasDurationSlider(
+          duration: editableSuperTask.globalDuration,
+          onChange: (Duration duration) {
+            setState(() {
+              editableSuperTask =
+                  editableSuperTask.copyWith(globalDuration: duration);
+            });
+          },
+        ),
+        Text(
+          'Daily Task Time?',
+          style: TextStyle(
+              fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
+        ),
+        SuperTaskDailyDurationSlider(
+          duration: editableSuperTask.period,
+          onChange: (Duration duration) {
+            setState(() {
+              editableSuperTask = editableSuperTask.copyWith(period: duration);
+            });
+          },
+        ),
+        ColorPickerRow(callback: (color) {
+          setState(() {
+            editableSuperTask = editableSuperTask.copyWith(color: color);
+          });
+        }),
+      ],
+    );
+  }
+}

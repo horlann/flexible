@@ -68,3 +68,13 @@ class DailytasksDeleteTask extends DailytasksEvent {
   @override
   List<Object?> get props => [task.toString()];
 }
+
+class DailytasksSuperTaskIteration extends DailytasksEvent {
+  final SuperTask task;
+  DailytasksSuperTaskIteration({
+    required this.task,
+  });
+
+  @override
+  List<Object?> get props => [task.toString()];
+}

@@ -5,7 +5,7 @@ import 'package:flexible/board/task_editor/icon_picker_page.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/row_with_close_btn.dart';
 import 'package:flexible/board/task_editor/task_icon_in_round.dart';
-import 'package:flexible/board/task_editor/time_slider.dart';
+import 'package:flexible/board/task_editor/task_period_slider.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
@@ -122,7 +122,7 @@ class _TaskEditorState extends State<TaskEditor> {
                           fontSize: 10 * byWithScale(context),
                           fontWeight: FontWeight.w400),
                     ),
-                    TimeSlider(
+                    TaskPeriodSlider(
                       period: editableTask.period,
                       callback: (Duration newPeriod) {
                         setState(() {
