@@ -40,6 +40,8 @@ class TitleInputSection extends StatelessWidget {
                 },
 
                 decoration: InputDecoration(
+                  labelText: 'Task name',
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,

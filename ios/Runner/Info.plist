@@ -63,5 +63,10 @@
 		<string>This app requires access to the photo library for upload images to profile</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>Using a location to search weather</string>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+  			<key>NSAllowsArbitraryLoads</key>
+  		<true/>
+		</dict>
 	</dict>
 </plist>

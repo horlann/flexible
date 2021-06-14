@@ -22,7 +22,7 @@ class TaskPeriodSlider extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     fontSize: 10 * byWithScale(context)),
               ),
-              Text('Edit',
+              Text('',
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 10 * byWithScale(context)))

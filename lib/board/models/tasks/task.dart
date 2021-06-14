@@ -48,4 +48,35 @@ abstract class Task {
     String? iconId,
   });
   String toString();
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Task &&
+        other.uuid == uuid &&
+        other.title == title &&
+        other.subtitle == subtitle &&
+        other.timeStart == timeStart &&
+        other.period == period &&
+        other.isDone == isDone &&
+        other.isDonable == isDonable &&
+        other.timeLock == timeLock &&
+        other.color == color &&
+        other.iconId == iconId;
+  }
+
+  @override
+  int get hashCode {
+    return uuid.hashCode ^
+        title.hashCode ^
+        subtitle.hashCode ^
+        timeStart.hashCode ^
+        period.hashCode ^
+        isDone.hashCode ^
+        isDonable.hashCode ^
+        timeLock.hashCode ^
+        color.hashCode ^
+        iconId.hashCode;
+  }
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/repository/firebaseRepository/fire_tasks.dart';
 import 'package:flexible/board/repository/sqFliteRepository/sqflire_tasks.dart';

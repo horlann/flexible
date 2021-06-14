@@ -59,7 +59,8 @@ class FlexibleApp extends StatelessWidget {
           create: (context) => DailytasksBloc(
               dayOptionsRepo:
                   RepositoryProvider.of<SqfliteDayOptionsRepo>(context),
-              tasksRepo: RepositoryProvider.of<SqfliteTasksRepo>(context)),
+              tasksRepo:
+                  RepositoryProvider.of<CombinedTasksRepository>(context)),
           child: MaterialApp(
             theme: ThemeData(fontFamily: 'Mikado'),
             home: WillPopScope(

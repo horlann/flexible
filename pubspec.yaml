@@ -44,6 +44,7 @@ dependencies:
   country_pickers: ^2.0.0
   image_picker: ^0.8.0+1
   move_to_background: ^1.0.2
+  video_player: ^2.1.6
   flutter:
     sdk: flutter
 
@@ -88,6 +89,7 @@ flutter:
       - src/icons/
       - src/task_icons/
       - src/helper/
+      - src/videobg/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

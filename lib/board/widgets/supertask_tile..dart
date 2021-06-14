@@ -340,11 +340,11 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
       secondChild: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          MiniButtonWithIcon(
-              color: Color(0xff4077C1).withOpacity(0.75),
-              text: 'Edit Task',
-              iconAsset: 'src/icons/edit.png',
-              callback: () => onEditClicked(context)),
+          // MiniButtonWithIcon(
+          //     color: Color(0xff4077C1).withOpacity(0.75),
+          //     text: 'Edit Task',
+          //     iconAsset: 'src/icons/edit.png',
+          //     callback: () => onEditClicked(context)),
           // MiniButtonWithIcon(
           //     color: Color(0xffF4D700).withOpacity(0.75),
           //     text: 'Copy Task',

@@ -138,19 +138,18 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
     if (event is DailytasksSuperTaskIteration) {
       SuperTask task = event.task.copyWith(
           globalDurationLeft: event.task.globalDurationLeft + event.task.period,
-          // isDonable: false,
+          isDonable: false,
+          timeLock: true,
           isDone: true);
 
       await tasksRepo.setTask(task);
       if (!((task.globalDuration - task.globalDurationLeft).isNegative)) {
-        print(task.globalDuration);
-        print(task.globalDurationLeft);
-        print(task.deadline);
-        if (task.deadline.difference(task.timeStart).isNegative) {
+        if (!task.deadline.difference(task.timeStart).isNegative) {
           await tasksRepo.setTask(task.copyWith(
               uuid: Uuid().v1(),
               isDonable: true,
               isDone: false,
+              timeLock: false,
               timeStart: task.timeStart.add(Duration(days: 1))));
         }
       }

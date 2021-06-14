@@ -258,9 +258,11 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
       editableRegularTask = widget.task!;
     } else {
       editableRegularTask = RegularTask(
-          title: 'New Task',
+          title: '',
           subtitle: '',
-          timeStart: BlocProvider.of<DailytasksBloc>(context).state.showDay,
+          timeStart: DateUtils.dateOnly(
+                  BlocProvider.of<DailytasksBloc>(context).state.showDay)
+              .add(Duration(hours: DateTime.now().hour)),
           period: Duration(),
           isDone: false,
           isDonable: true,
@@ -382,9 +384,11 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
       editableSuperTask = widget.task!;
     } else {
       editableSuperTask = SuperTask(
-          title: 'New Task',
+          title: '',
           subtitle: '',
-          timeStart: BlocProvider.of<DailytasksBloc>(context).state.showDay,
+          timeStart: DateUtils.dateOnly(
+                  BlocProvider.of<DailytasksBloc>(context).state.showDay)
+              .add(Duration(hours: DateTime.now().hour)),
           period: Duration(hours: 1),
           isDone: false,
           isDonable: true,
