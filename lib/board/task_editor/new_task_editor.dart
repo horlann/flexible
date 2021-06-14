@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flexible/board/task_editor/priority_chooser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -479,6 +480,20 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
           onChange: (Duration duration) {
             setState(() {
               editableSuperTask = editableSuperTask.copyWith(period: duration);
+            });
+          },
+        ),
+        Text(
+          'Priority',
+          style: TextStyle(
+              fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
+        ),
+        PriorityChooser(
+          initialPriority: editableSuperTask.priority,
+          onChange: (priority) {
+            setState(() {
+              editableSuperTask =
+                  editableSuperTask.copyWith(priority: priority);
             });
           },
         ),
