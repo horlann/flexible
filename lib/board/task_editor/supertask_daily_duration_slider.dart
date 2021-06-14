@@ -80,31 +80,31 @@ class SuperTaskDailyDurationSlider extends StatelessWidget {
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(
-              '15min',
+              '15m',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             ),
             Text(
-              '30min',
+              '30m',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             ),
             Text(
-              '1h',
+              '1h  ',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             ),
             Text(
-              '2h',
+              '2h  ',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             ),
             Text(
-              '3h',
+              '3h  ',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             ),
             Text(
-              '4h',
+              '4h  ',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             ),
             Text(
-              '5h',
+              '5h ',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             )
           ]),
