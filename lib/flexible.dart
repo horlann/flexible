@@ -19,6 +19,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:move_to_background/move_to_background.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class FlexibleApp extends StatelessWidget {
   @override
@@ -123,6 +124,8 @@ class AuthBlocWrapper extends StatelessWidget {
 
         if (state is Authentificated) {
           // RepositoryProvider.of<FireAuthService>(context).signOut();
+          RemoteConfig remoteConfig = RemoteConfig.instance..fetchAndActivate();
+          print(remoteConfig.getString('asdasd'));
 
           return BoardPage();
         }
