@@ -69,11 +69,11 @@ class HelperPage extends StatelessWidget {
               height: 16 * byWithScale(context),
             ),
             Text(
-              'fleXible',
+              'Flexible',
               style: TextStyle(
-                  color: Color(0xffE24F4F),
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700),
+                  color: Color(0xffFF0000),
+                  fontSize: 48,
+                  fontWeight: FontWeight.w900),
             ),
             Expanded(
               child: Padding(

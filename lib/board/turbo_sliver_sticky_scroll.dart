@@ -1,4 +1,5 @@
 import 'package:flexible/board/day_options_editor.dart';
+import 'package:flexible/board/widgets/morning_tile.dart';
 import 'package:flexible/board/widgets/system_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -153,7 +154,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
               // Good morning
               SliverList(
                   delegate: SliverChildListDelegate([
-                SystemTile(
+                MorningTile(
                     showTime: widget.dayOptions.wakeUpTime,
                     title: 'Good morning',
                     subtitle: 'Have a nice day',

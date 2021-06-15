@@ -8,6 +8,8 @@ import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/task_editor.dart';
 import 'package:flexible/board/widgets/mini_buttons_with_icon.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/weather/bloc/weather_bloc.dart';
+import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -109,35 +111,53 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           margin: EdgeInsets.symmetric(vertical: 16),
           child: Stack(
             children: [
-              Positioned(
-                  top: 2,
-                  child: Text(geTimeString(widget.task.timeStart),
-                      style: TextStyle(
-                          color: Color(0xff545353),
-                          fontSize: 10 * byWithScale(context),
-                          fontWeight: FontWeight.w400))),
+              BlocBuilder<WeatherBloc, WeatherState>(
+                builder: (context, state) {
+                  return Positioned(
+                      top: 2,
+                      child: Text(geTimeString(widget.task.timeStart),
+                          style: TextStyle(
+                              color: state.daylight == DayLight.dark
+                                  ? Colors.white
+                                  : Color(0xff545353),
+                              fontSize: 10 * byWithScale(context),
+                              fontWeight: FontWeight.w400)));
+                },
+              ),
               timeDiffEquality() > 1
                   ? SizedBox()
                   : (timeDiffEquality() == 0
                       ? SizedBox()
                       : Positioned(
                           top: (110 * timeDiffEquality()) + 12,
-                          child: Text(
-                            geTimeString(DateTime.now()),
-                            style: TextStyle(
-                                fontSize: 10 * byWithScale(context),
-                                color: Color(0xff545353)),
+                          child: BlocBuilder<WeatherBloc, WeatherState>(
+                            builder: (context, state) {
+                              return Text(
+                                geTimeString(DateTime.now()),
+                                style: TextStyle(
+                                    fontSize: 10 * byWithScale(context),
+                                    color: state.daylight == DayLight.dark
+                                        ? Colors.white
+                                        : Color(0xff545353)),
+                              );
+                            },
                           ),
                         )),
-              Positioned(
-                  bottom: 0,
-                  child: Text(
-                      geTimeString(
-                          widget.task.timeStart.add(widget.task.period)),
-                      style: TextStyle(
-                          color: Color(0xff545353),
-                          fontSize: 10 * byWithScale(context),
-                          fontWeight: FontWeight.w400))),
+              BlocBuilder<WeatherBloc, WeatherState>(
+                builder: (context, state) {
+                  return Positioned(
+                      bottom: 0,
+                      child: Text(
+                          geTimeString(
+                              widget.task.timeStart.add(widget.task.period)),
+                          style: TextStyle(
+                              color: state.daylight == DayLight.dark
+                                  ? Colors.white
+                                  : Color(0xff545353),
+                              fontSize: 10 * byWithScale(context),
+                              fontWeight: FontWeight.w400)));
+                },
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -260,41 +280,51 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
     );
   }
 
-  Column buildTextSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 4,
-        ),
-        Text(
-          '${geTimeString(widget.task.timeStart)} - ${geTimeString(widget.task.timeStart.add(widget.task.period))}',
-          style: TextStyle(
-              color: Color(0xff545353),
-              fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w400),
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        Text(
-          widget.task.title,
-          style: TextStyle(
-              color: Color(0xff545353),
-              fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w400,
-              decoration: widget.task.isDone
-                  ? TextDecoration.lineThrough
-                  : TextDecoration.none),
-        ),
-        Text(
-          widget.task.subtitle,
-          style: TextStyle(
-              color: Color(0xff545353),
-              fontSize: 12 * byWithScale(context),
-              fontWeight: FontWeight.w400),
-        ),
-      ],
+  Widget buildTextSection() {
+    return BlocBuilder<WeatherBloc, WeatherState>(
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              '${geTimeString(widget.task.timeStart)} - ${geTimeString(widget.task.timeStart.add(widget.task.period))}',
+              style: TextStyle(
+                  color: state.daylight == DayLight.dark
+                      ? Colors.white
+                      : Color(0xff545353),
+                  fontSize: 14 * byWithScale(context),
+                  fontWeight: FontWeight.w400),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              widget.task.title,
+              style: TextStyle(
+                  color: state.daylight == DayLight.dark
+                      ? Colors.white
+                      : Color(0xff545353),
+                  fontSize: 14 * byWithScale(context),
+                  fontWeight: FontWeight.w400,
+                  decoration: widget.task.isDone
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none),
+            ),
+            Text(
+              widget.task.subtitle,
+              style: TextStyle(
+                  color: state.daylight == DayLight.dark
+                      ? Colors.white
+                      : Color(0xff545353),
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w400),
+            ),
+          ],
+        );
+      },
     );
   }
 

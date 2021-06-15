@@ -1,6 +1,9 @@
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/weather/bloc/weather_bloc.dart';
+import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:invert_colors/invert_colors.dart';
 
 class SystemTile extends StatefulWidget {
@@ -45,11 +48,24 @@ class _TaskTileState extends State<SystemTile> {
             children: [
               Positioned(
                   top: 16,
-                  child: Text(geTimeString(widget.showTime),
-                      style: TextStyle(
-                          color: Color(0xff545353),
-                          fontSize: 10 * byWithScale(context),
-                          fontWeight: FontWeight.w400))),
+                  child: BlocBuilder<WeatherBloc, WeatherState>(
+                    builder: (context, state) {
+                      if (state is WeatherLoaded) {
+                        return Text(geTimeString(widget.showTime),
+                            style: TextStyle(
+                                color: state.daylight == DayLight.dark
+                                    ? Colors.white
+                                    : Color(0xff545353),
+                                fontSize: 10 * byWithScale(context),
+                                fontWeight: FontWeight.w400));
+                      }
+                      return Text(geTimeString(widget.showTime),
+                          style: TextStyle(
+                              color: Color(0xff545353),
+                              fontSize: 10 * byWithScale(context),
+                              fontWeight: FontWeight.w400));
+                    },
+                  )),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -91,42 +107,52 @@ class _TaskTileState extends State<SystemTile> {
         child: InvertColors(child: widget.image));
   }
 
-  Column buildTextSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 4,
-        ),
-        Text(
-          '${geTimeString(widget.showTime)}',
-          style: TextStyle(
-              color: Color(0xff545353),
-              fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w400),
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        Text(
-          widget.title,
-          style: TextStyle(
-            color: Color(0xff545353),
-            fontSize: 14 * byWithScale(context),
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        Text(
-          widget.subtitle,
-          style: TextStyle(
-              color: Color(0xff545353),
-              fontSize: 12 * byWithScale(context),
-              fontWeight: FontWeight.w400),
-        ),
-        SizedBox(
-          height: 16,
-        ),
-      ],
+  Widget buildTextSection() {
+    return BlocBuilder<WeatherBloc, WeatherState>(
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              '${geTimeString(widget.showTime)}',
+              style: TextStyle(
+                  color: state.daylight == DayLight.dark
+                      ? Colors.white
+                      : Color(0xff545353),
+                  fontSize: 14 * byWithScale(context),
+                  fontWeight: FontWeight.w400),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              widget.title,
+              style: TextStyle(
+                color: state.daylight == DayLight.dark
+                    ? Colors.white
+                    : Color(0xff545353),
+                fontSize: 14 * byWithScale(context),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Text(
+              widget.subtitle,
+              style: TextStyle(
+                  color: state.daylight == DayLight.dark
+                      ? Colors.white
+                      : Color(0xff545353),
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w400),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
+        );
+      },
     );
   }
 

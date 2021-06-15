@@ -15,6 +15,7 @@ import 'package:flexible/board/repository/sqFliteRepository/sqflire_tasks.dart';
 import 'package:flexible/board/repository/sqFliteRepository/sqflite_day_options.dart';
 import 'package:flexible/helper/helper_wrapper.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,15 +63,18 @@ class FlexibleApp extends StatelessWidget {
                   RepositoryProvider.of<SqfliteDayOptionsRepo>(context),
               tasksRepo:
                   RepositoryProvider.of<CombinedTasksRepository>(context)),
-          child: MaterialApp(
-            theme: ThemeData(fontFamily: 'Mikado'),
-            home: WillPopScope(
-              onWillPop: () async {
-                MoveToBackground.moveTaskToBack();
-                return false;
-              },
-              child: HelperWrapper(
-                child: AuthBlocWrapper(),
+          child: BlocProvider(
+            create: (context) => WeatherBloc()..add(WeatherUpdate()),
+            child: MaterialApp(
+              theme: ThemeData(fontFamily: 'Mikado'),
+              home: WillPopScope(
+                onWillPop: () async {
+                  MoveToBackground.moveTaskToBack();
+                  return false;
+                },
+                child: HelperWrapper(
+                  child: AuthBlocWrapper(),
+                ),
               ),
             ),
           ),

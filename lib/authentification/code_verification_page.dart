@@ -124,11 +124,11 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
           height: 16 * byWithScale(context),
         ),
         Text(
-          'fleXible',
+          'Flexible',
           style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 24 * byWithScale(context),
-              fontWeight: FontWeight.w700),
+              color: Color(0xffFF0000),
+              fontSize: 28 * byWithScale(context),
+              fontWeight: FontWeight.w900),
         ),
         Expanded(
           child: Padding(
