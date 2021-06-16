@@ -1,8 +1,11 @@
 import 'package:flexible/board/day_options_editor.dart';
 import 'package:flexible/board/widgets/morning_tile.dart';
 import 'package:flexible/board/widgets/system_tile.dart';
+import 'package:flexible/weather/bloc/weather_bloc.dart';
+import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import 'package:flexible/board/models/day_options.dart';
@@ -88,16 +91,24 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
         children: [
           // This is line under widgets
           // Its size grows with list size
-          Positioned.fill(
-              child: Padding(
-            padding: EdgeInsets.only(
-                left: isLessThen350() ? 64 : 82,
-                top: topOverscroll,
-                bottom: bottomLinePadding),
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(width: 3, color: Color(0xff707070))),
-          )),
+          BlocBuilder<WeatherBloc, WeatherState>(
+            builder: (context, state) {
+              return Positioned.fill(
+                  child: Padding(
+                padding: EdgeInsets.only(
+                    left: isLessThen350() ? 64 : 82,
+                    top: topOverscroll,
+                    bottom: bottomLinePadding),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                        width: 3,
+                        color: state.daylight == DayLight.dark
+                            ? Colors.white
+                            : Color(0xff707070))),
+              ));
+            },
+          ),
           // The sliver
           CustomScrollView(
             cacheExtent: 200,

@@ -3,6 +3,8 @@ import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/repository/sqFliteRepository/sqflire_tasks.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/weather/bloc/weather_bloc.dart';
+import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -18,14 +20,6 @@ class WeekCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // RepositoryProvider.of<DailytasksBloc>(context);
-    TextStyle calTextStyle = TextStyle(
-      fontSize: 10 * byWithScale(context),
-      fontWeight: FontWeight.w400,
-      color: Color(0xff716D6E),
-      height: 0,
-    );
-    TextStyle daysTextStyle =
-        TextStyle(fontSize: 10, color: Color(0xff7D8388), height: 2);
 
     return BlocBuilder<DailytasksBloc, DailytasksState>(
       builder: (context, state) {
@@ -51,59 +45,82 @@ class WeekCalendar extends StatelessWidget {
                         return [];
                       }
 
-                      return TableCalendar(
-                        selectedDayPredicate: (day) {
-                          return isSameDay(state.showDay, day);
-                        },
-                        onDaySelected: (selectedDay, focusedDay) {
-                          RepositoryProvider.of<DailytasksBloc>(context)
-                              .add(DailytasksSetDay(day: selectedDay));
-                        },
+                      return BlocBuilder<WeatherBloc, WeatherState>(
+                        builder: (context, weatherState) {
+                          TextStyle calTextStyle = TextStyle(
+                            fontSize: 10 * byWithScale(context),
+                            fontWeight: FontWeight.w400,
+                            color: weatherState.daylight == DayLight.dark
+                                ? Colors.white
+                                : Color(0xff716D6E),
+                            height: 0,
+                          );
+                          TextStyle daysTextStyle = TextStyle(
+                              fontSize: 10,
+                              color: weatherState.daylight == DayLight.dark
+                                  ? Colors.white
+                                  : Color(0xff716D6E),
+                              height: 2);
 
-                        calendarStyle: CalendarStyle(
-                          selectedDecoration:
-                              BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                            BoxShadow(
-                                color: Color(0xffE24F4F).withOpacity(0.3),
-                                spreadRadius: 10,
-                                offset: Offset(0, -5))
-                          ]),
-                          // markerSizeScale: 1,
-                          markerDecoration: BoxDecoration(
-                            color: Color(0xffE24F4F).withOpacity(0.8),
-                            shape: BoxShape.circle,
-                          ),
-                          isTodayHighlighted: false,
-                          // todayDecoration: Decor,
-                          defaultTextStyle: calTextStyle,
-                          holidayTextStyle: calTextStyle,
-                          todayTextStyle: calTextStyle,
-                          weekendTextStyle: calTextStyle,
-                          outsideTextStyle: calTextStyle,
-                          disabledTextStyle: calTextStyle,
-                          rangeEndTextStyle: calTextStyle,
-                          selectedTextStyle: calTextStyle,
-                          rangeStartTextStyle: calTextStyle,
-                          withinRangeTextStyle: calTextStyle,
-                        ),
-                        daysOfWeekStyle: DaysOfWeekStyle(
-                          weekdayStyle: daysTextStyle,
-                          weekendStyle: daysTextStyle,
-                        ),
+                          return TableCalendar(
+                            selectedDayPredicate: (day) {
+                              return isSameDay(state.showDay, day);
+                            },
+                            onDaySelected: (selectedDay, focusedDay) {
+                              RepositoryProvider.of<DailytasksBloc>(context)
+                                  .add(DailytasksSetDay(day: selectedDay));
+                            },
 
-                        // dayHitTestBehavior: HitTestBehavior.deferToChild,
+                            calendarStyle: CalendarStyle(
+                              selectedDecoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color:
+                                            Color(0xffE24F4F).withOpacity(0.3),
+                                        spreadRadius: 10,
+                                        offset: Offset(0, -5))
+                                  ]),
+                              // markerSizeScale: 1,
+                              markerDecoration: BoxDecoration(
+                                color: weatherState.daylight == DayLight.dark
+                                    ? Colors.white
+                                    : Color(0xffE24F4F).withOpacity(0.8),
+                                shape: BoxShape.circle,
+                              ),
+                              isTodayHighlighted: false,
+                              // todayDecoration: Decor,
+                              defaultTextStyle: calTextStyle,
+                              holidayTextStyle: calTextStyle,
+                              todayTextStyle: calTextStyle,
+                              weekendTextStyle: calTextStyle,
+                              outsideTextStyle: calTextStyle,
+                              disabledTextStyle: calTextStyle,
+                              rangeEndTextStyle: calTextStyle,
+                              selectedTextStyle: calTextStyle,
+                              rangeStartTextStyle: calTextStyle,
+                              withinRangeTextStyle: calTextStyle,
+                            ),
+                            daysOfWeekStyle: DaysOfWeekStyle(
+                              weekdayStyle: daysTextStyle,
+                              weekendStyle: daysTextStyle,
+                            ),
 
-                        startingDayOfWeek: StartingDayOfWeek.monday,
-                        rowHeight: 40,
-                        headerVisible: false,
-                        calendarFormat: CalendarFormat.week,
-                        firstDay: DateTime.utc(2010, 10, 16),
-                        lastDay: DateTime.utc(2030, 3, 14),
-                        focusedDay: state.showDay,
-                        eventLoader: (day) {
-                          // Mask good morning and good night
-                          List events = getEventByDay(day);
-                          return events;
+                            // dayHitTestBehavior: HitTestBehavior.deferToChild,
+
+                            startingDayOfWeek: StartingDayOfWeek.monday,
+                            rowHeight: 40,
+                            headerVisible: false,
+                            calendarFormat: CalendarFormat.week,
+                            firstDay: DateTime.utc(2010, 10, 16),
+                            lastDay: DateTime.utc(2030, 3, 14),
+                            focusedDay: state.showDay,
+                            eventLoader: (day) {
+                              // Mask good morning and good night
+                              List events = getEventByDay(day);
+                              return events;
+                            },
+                          );
                         },
                       );
                     }),

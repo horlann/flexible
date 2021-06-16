@@ -123,7 +123,9 @@ class _AddingTileState extends State<AddingTile> {
                   child: Container(
                     height: 3,
                     width: isLessThen350() ? 15 : 25,
-                    color: Color(0xff707070),
+                    color: state.daylight == DayLight.dark
+                        ? Colors.white
+                        : Color(0xff545353),
                   ),
                 ),
                 Positioned(
@@ -133,7 +135,9 @@ class _AddingTileState extends State<AddingTile> {
                     height: 10,
                     width: 10,
                     decoration: BoxDecoration(
-                        color: Color(0xffEE7579),
+                        color: state.daylight == DayLight.dark
+                            ? Colors.white
+                            : Color(0xff545353),
                         borderRadius: BorderRadius.circular(5)),
                   ),
                 ),

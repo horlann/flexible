@@ -97,9 +97,9 @@ class _BoardPageState extends State<BoardPage> {
 
 Color colorByType(DayLight type) {
   if (type == DayLight.light) {
-    return Color(0xff90e0ef);
+    return Color(0xff90e0ef).withOpacity(0.5);
   } else if (type == DayLight.medium) {
-    return Color(0xff0096c7);
+    return Color(0xff0096c7).withOpacity(0.50);
   } else {
     return Color(0xff023e8a);
   }

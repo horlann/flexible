@@ -42,6 +42,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     } else {
       return DayLight.light;
     }
+    // return DayLight.medium;
   }
 
   @override

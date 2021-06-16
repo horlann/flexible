@@ -6,6 +6,8 @@ import 'package:flexible/board/calendar_dialog.dart';
 import 'package:flexible/board/week_calendar.dart';
 import 'package:flexible/board/widgets/mini_red_button.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/weather/bloc/weather_bloc.dart';
+import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -99,12 +101,18 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                           showCalendar = !showCalendar;
                         });
                       },
-                      child: Text(
-                        currentDate(state.showDay),
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20 * byWithScale(context),
-                            color: Color(0xffF66868)),
+                      child: BlocBuilder<WeatherBloc, WeatherState>(
+                        builder: (context, weatherState) {
+                          return Text(
+                            currentDate(state.showDay),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 20 * byWithScale(context),
+                                color: weatherState.daylight == DayLight.dark
+                                    ? Colors.white
+                                    : Color(0xffF66868)),
+                          );
+                        },
                       ),
                     ),
                     AnimatedCrossFade(
