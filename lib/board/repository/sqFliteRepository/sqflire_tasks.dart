@@ -9,10 +9,12 @@ class SqfliteTasksRepo implements ITasksRepo {
 
   // Init new db and create table
   Future _init() async {
-    db = await openDatabase('tasks28.db', version: 1,
+    db = await openDatabase('tasks34.db', version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
           'CREATE TABLE Tasks (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER, timeLock INTEGER , color TEXT, iconId TEXT,deadline INTEGER, globalDuration INTEGER, globalDurationLeft INTEGER, priority INTEGER, isSuperTask INTEGER)');
+      await db.execute(
+          'CREATE TABLE SuperTasksQueue (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER, timeLock INTEGER , color TEXT, iconId TEXT,deadline INTEGER, globalDuration INTEGER, globalDurationLeft INTEGER, priority INTEGER, isSuperTask INTEGER)');
     });
   }
 
@@ -72,6 +74,29 @@ class SqfliteTasksRepo implements ITasksRepo {
   Future deleteTask(Task task) async {
     await (await getDb)
         .rawDelete('DELETE FROM Tasks WHERE uuid = ?', ['${task.uuid}']);
+  }
+
+  @override
+  Future setSuperTaskToQueue(SuperTask task) async {
+    await (await getDb).insert('SuperTasksQueue', task.toSqfMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  @override
+  Future<List<SuperTask>> superTaskQueue() async {
+    try {
+      List data = await (await getDb).rawQuery('SELECT * FROM SuperTasksQueue');
+      List<SuperTask> tasks = data.map((e) => SuperTask.fromSqfMap(e)).toList();
+      return tasks;
+    } catch (e) {
+      throw Exception('Load from sqflite failed' + e.toString());
+    }
+  }
+
+  @override
+  Future deleteSuperTaskfromQueue(SuperTask task) async {
+    await (await getDb).rawDelete(
+        'DELETE FROM SuperTasksQueue WHERE uuid = ?', ['${task.uuid}']);
   }
 
   @override

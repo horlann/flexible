@@ -19,12 +19,29 @@ class FireBaseTasksRepo extends ITasksRepo {
         .collection('tasks');
   }
 
+  // Return tasks collection by user id
+  CollectionReference superTaskQueueCollection() {
+    return _firestore
+        .collection('users')
+        .doc(fireAuth.currentUser!.uid)
+        .collection('superTaskQueue');
+  }
+
   // Return stream tasks collection by user id
   Stream taskCollectionChanges() {
     return _firestore
         .collection('users')
         .doc(fireAuth.currentUser!.uid)
         .collection('tasks')
+        .snapshots();
+  }
+
+  // Return stream tasks collection by user id
+  Stream superTaskQueueChanges() {
+    return _firestore
+        .collection('users')
+        .doc(fireAuth.currentUser!.uid)
+        .collection('superTaskQueue')
         .snapshots();
   }
 
@@ -78,4 +95,27 @@ class FireBaseTasksRepo extends ITasksRepo {
 
   @override
   Stream? onChanges;
+
+  @override
+  Future deleteSuperTaskfromQueue(SuperTask task) async {
+    await superTaskQueueCollection().doc(task.uuid).delete();
+  }
+
+  @override
+  Future setSuperTaskToQueue(SuperTask task) async {
+    await superTaskQueueCollection().doc(task.uuid).set(task.toMap());
+  }
+
+  @override
+  Future<List<SuperTask>> superTaskQueue() async {
+    QuerySnapshot tasks = await superTaskQueueCollection().get();
+
+    List<SuperTask> taskList = tasks.docs.map((e) {
+      Map<String, dynamic> taskMap = e.data() as Map<String, dynamic>;
+
+      return SuperTask.fromMap(taskMap);
+    }).toList();
+
+    return taskList;
+  }
 }

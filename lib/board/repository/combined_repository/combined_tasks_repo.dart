@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/repository/firebaseRepository/fire_tasks.dart';
 import 'package:flexible/board/repository/sqFliteRepository/sqflire_tasks.dart';
@@ -33,6 +34,10 @@ class CombinedTasksRepository extends ITasksRepo {
   subscribeToFire() {
     if (fireBaseTasksRepo.authenticated && fireListener == null) {
       fireListener = fireBaseTasksRepo.taskCollectionChanges().listen((event) {
+        print('Something changes on firebase');
+        syncDatabases();
+      });
+      fireListener = fireBaseTasksRepo.superTaskQueueChanges().listen((event) {
         print('Something changes on firebase');
         syncDatabases();
       });
@@ -101,5 +106,30 @@ class CombinedTasksRepository extends ITasksRepo {
       // Notify subscriber
       changesController.add('changes');
     }
+  }
+
+  @override
+  Future deleteSuperTaskfromQueue(SuperTask task) async {
+    await sqfliteTasksRepo.deleteSuperTaskfromQueue(task);
+
+    // Only if authenticated
+    if (fireBaseTasksRepo.authenticated) {
+      fireBaseTasksRepo.deleteSuperTaskfromQueue(task);
+    }
+  }
+
+  @override
+  Future setSuperTaskToQueue(SuperTask task) async {
+    await sqfliteTasksRepo.setSuperTaskToQueue(task);
+
+    // Only if authenticated
+    if (fireBaseTasksRepo.authenticated) {
+      fireBaseTasksRepo.setSuperTaskToQueue(task);
+    }
+  }
+
+  @override
+  Future<List<SuperTask>> superTaskQueue() async {
+    return await sqfliteTasksRepo.superTaskQueue();
   }
 }
