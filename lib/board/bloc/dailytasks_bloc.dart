@@ -17,6 +17,7 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
   DailytasksBloc({required this.tasksRepo, required this.dayOptionsRepo})
       : super(DailytasksInitial(showDay: DateTime.now())) {
     add(DailytasksUpdate());
+    add(DailytasksAskForInsert());
 
     // Listen to changes and update ui
     if (tasksRepo.onChanges != null) {
@@ -135,20 +136,95 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
 
     if (event is DailytasksSuperTaskIteration) {
       SuperTask task = event.task.copyWith(
-          globalDurationLeft: event.task.globalDurationLeft + event.task.period,
+          // globalDurationLeft: event.task.globalDurationLeft + event.task.period,
           isDonable: false,
           timeLock: true,
           isDone: true);
 
       await tasksRepo.setTask(task);
-      if (!((task.globalDuration - task.globalDurationLeft).isNegative)) {
-        if (!task.deadline.difference(task.timeStart).isNegative) {
-          await tasksRepo.setTask(task.copyWith(
-              uuid: Uuid().v1(),
-              isDonable: true,
-              isDone: false,
-              timeLock: false,
-              timeStart: task.timeStart.add(Duration(days: 1))));
+
+      // Update
+      this.add(DailytasksUpdate());
+    }
+    if (event is DailytasksSuperTaskAdd) {
+      await tasksRepo.setSuperTaskToQueue(event.task);
+
+      this.add(DailytasksAskForInsert());
+    }
+
+    // Ask user for supertask insertion
+    if (event is DailytasksAskForInsert) {
+      DailytasksState cstate = this.state;
+
+      if (cstate is DailytasksCommon) {
+        yield cstate.copyWith(askForSuperInsert: true);
+      }
+    }
+
+    if (event is DailytasksSuperInsert) {
+      DayOptions dayOptions = await dayOptionsRepo.getDayOptionsByDate(showDay);
+
+      List<Task> currentTasks = await tasksRepo.tasksByPeriod(
+          from: startOfaDay(showDay), to: endOfaDay(showDay));
+
+      List<SuperTask> superTasks = await tasksRepo.superTaskQueue();
+
+      // Insert super tasks in gaps by priority
+      for (var i = 1; i <= 3; i++) {
+        // Iterate by priority
+        superTasks.forEach((superTask) {
+          // print(i);
+          if (superTask.priority == i) {
+            // Search gap by duration
+            bool finded = false;
+            calcGaps(currentTasks: currentTasks, dayOptions: dayOptions)
+                .forEach((gap) async {
+              // Search only if not finded before
+              if (!finded) {
+                if (superTask.period < gap.last.difference(gap.first)) {
+                  // Mark as finded
+                  finded = true;
+                  // insert task in the gap
+                  currentTasks.add(superTask.copyWith(
+                      uuid: Uuid().v1(),
+                      timeStart: gap.first.add(Duration(seconds: 5)),
+                      globalDurationLeft:
+                          superTask.globalDurationLeft + superTask.period));
+                  await tasksRepo.setTask(superTask.copyWith(
+                      globalDurationLeft:
+                          superTask.globalDurationLeft + superTask.period,
+                      uuid: Uuid().v1(),
+                      timeStart: gap.first.add(Duration(seconds: 5))));
+
+                  // Check if supertask global complete
+                  if (superTask.globalDurationLeft + superTask.period <
+                      superTask.globalDuration) {
+                    await tasksRepo.setSuperTaskToQueue(superTask.copyWith(
+                        timeStart: gap.first.add(Duration(seconds: 5)),
+                        globalDurationLeft:
+                            superTask.globalDurationLeft + superTask.period));
+                  } else {
+                    await tasksRepo.deleteSuperTaskfromQueue(superTask);
+                  }
+
+                  return;
+                }
+              }
+            });
+          }
+        });
+      }
+
+      // Notify user on complete
+
+      DailytasksState cstate = this.state;
+
+      if (cstate is DailytasksCommon) {
+        if (superTasks.isEmpty) {
+          yield cstate.copyWith(
+              message: 'You have no Super Tasks', askForSuperInsert: false);
+        } else {
+          yield cstate.copyWith(message: 'Complete', askForSuperInsert: false);
         }
       }
 
@@ -156,4 +232,53 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
       this.add(DailytasksUpdate());
     }
   }
+}
+
+List<List<DateTime>> calcGaps(
+    {required DayOptions dayOptions, required List<Task> currentTasks}) {
+  List<List<DateTime>> freeTimeGaps = [];
+
+  currentTasks.sort((a, b) => a.timeStart.compareTo(b.timeStart));
+
+  // If no tasks add gap between day start and stop
+  if (currentTasks.isEmpty) {
+    freeTimeGaps.add([dayOptions.wakeUpTime, dayOptions.goToSleepTime]);
+  }
+
+  // Add gap between day start and first task
+  if (currentTasks.isNotEmpty) {
+    if (!currentTasks.first.timeStart
+        .difference(dayOptions.wakeUpTime)
+        .isNegative) {
+      freeTimeGaps.add([dayOptions.wakeUpTime, currentTasks.first.timeStart]);
+    }
+  }
+
+  // Add gaps between tasks
+  for (var i = 0; i < currentTasks.length - 1; i++) {
+    // get prev task
+    Task t = currentTasks[i];
+
+    // get next task
+    Task nt = currentTasks[i + 1];
+
+    DateTime timeendCurrent = t.timeStart.add(t.period);
+
+    DateTime timeStartNext = nt.timeStart;
+
+    // add gap
+    freeTimeGaps.add([timeendCurrent, timeStartNext]);
+  }
+
+  // Add gap between last task and day end
+  if (currentTasks.isNotEmpty) {
+    DateTime timeEndLast =
+        currentTasks.last.timeStart.add(currentTasks.last.period);
+
+    if (!dayOptions.goToSleepTime.difference(timeEndLast).isNegative) {
+      freeTimeGaps.add([timeEndLast, dayOptions.goToSleepTime]);
+    }
+  }
+
+  return freeTimeGaps;
 }

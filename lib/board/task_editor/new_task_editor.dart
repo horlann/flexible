@@ -131,7 +131,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                             submitChanel: submitS,
                             onSubmit: (task) {
                               BlocProvider.of<DailytasksBloc>(context)
-                                  .add(DailytasksAddTask(task: task));
+                                  .add(DailytasksSuperTaskAdd(task: task));
                               Navigator.pop(context);
                             },
                           )
@@ -361,7 +361,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
 class SuperTaskEditorBody extends StatefulWidget {
   final SuperTask? task;
   final Stream submitChanel;
-  final Function(Task task) onSubmit;
+  final Function(SuperTask task) onSubmit;
   const SuperTaskEditorBody({
     Key? key,
     this.task,

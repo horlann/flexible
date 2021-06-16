@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
-import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/task_editor/new_task_editor.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
@@ -28,84 +27,8 @@ class _AddingTileState extends State<AddingTile> {
         ));
   }
 
-  addBunchOfTasks(BuildContext context) {
-    DateTime dayForAdd = BlocProvider.of<DailytasksBloc>(context).state.showDay;
-
-    var newtask2 = RegularTask(
-      uuid: null,
-      isDone: false,
-      title: 'Demo task ${++taskCount}',
-      subtitle: 'Nice turbo day',
-      // add task to showed date with current time
-      timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
-          hours: DateTime.now().hour, minutes: DateTime.now().minute - 25)),
-      period: Duration(),
-      isDonable: true, timeLock: false,
-      // generate random color
-      color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
-          Random().nextInt(256), 1),
-      iconId: 'presentation',
-    );
-
-    BlocProvider.of<DailytasksBloc>(context)
-        .add(DailytasksAddTask(task: newtask2));
-
-    var newtask3 = RegularTask(
-      uuid: null,
-      isDone: false,
-      title: 'Duration task',
-      subtitle: 'Happy birthday',
-      // add task to showed date with current time
-      timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
-          hours: DateTime.now().hour, minutes: DateTime.now().minute - 20)),
-      period: Duration(hours: 1),
-      isDonable: true, timeLock: false,
-      // generate random color
-      color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
-          Random().nextInt(256), 1),
-      iconId: 'meeting',
-    );
-
-    BlocProvider.of<DailytasksBloc>(context)
-        .add(DailytasksAddTask(task: newtask3));
-
-    var newtask4 = RegularTask(
-      uuid: null,
-      isDone: true,
-      title: 'Finished task',
-      subtitle: 'Ultra bright day',
-      // add task to showed date with current time
-      timeStart: DateUtils.dateOnly(dayForAdd).add(Duration(
-          hours: DateTime.now().hour, minutes: DateTime.now().minute - 10)),
-      period: Duration(),
-      isDonable: true, timeLock: false,
-      // generate random color
-      color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
-          Random().nextInt(256), 1),
-      iconId: 'burger',
-    );
-
-    BlocProvider.of<DailytasksBloc>(context)
-        .add(DailytasksAddTask(task: newtask4));
-
-    var newtask5 = RegularTask(
-      uuid: null,
-      isDone: false,
-      title: 'Forwarded task',
-      subtitle: 'Nice may day',
-      // add task to showed date with current time
-      timeStart:
-          DateUtils.dateOnly(dayForAdd).add(Duration(hours: 21, minutes: 58)),
-      period: Duration(),
-      isDonable: true, timeLock: false,
-      // generate random color
-      color: Color.fromRGBO(Random().nextInt(256), Random().nextInt(256),
-          Random().nextInt(256), 1),
-      iconId: 'meditation',
-    );
-
-    BlocProvider.of<DailytasksBloc>(context)
-        .add(DailytasksAddTask(task: newtask5));
+  insertSuperTasks() {
+    BlocProvider.of<DailytasksBloc>(context).add(DailytasksAskForInsert());
   }
 
   @override
@@ -166,7 +89,7 @@ class _AddingTileState extends State<AddingTile> {
                       ),
                       GestureDetector(
                         onTap: () => addNewTask(context),
-                        onLongPressEnd: (v) => addBunchOfTasks(context),
+                        onLongPressEnd: (v) => insertSuperTasks(),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24),

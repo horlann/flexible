@@ -103,6 +103,27 @@ class CombinedTasksRepository extends ITasksRepo {
         }
       });
 
+      // Same operation for super task queue
+
+      // Get current records
+      List<SuperTask> fireSRecords = await fireBaseTasksRepo.superTaskQueue();
+      List<SuperTask> sqlSRecords = await sqfliteTasksRepo.superTaskQueue();
+
+      // Update local records
+      fireSRecords.forEach((task) {
+        sqfliteTasksRepo.setSuperTaskToQueue(task);
+      });
+
+      // update then
+      sqlSRecords = await sqfliteTasksRepo.superTaskQueue();
+
+      // Delete local records that been deleted on firestore
+      sqlSRecords.forEach((task) {
+        if (!fireSRecords.contains(task)) {
+          sqfliteTasksRepo.deleteSuperTaskfromQueue(task);
+        }
+      });
+
       // Notify subscriber
       changesController.add('changes');
     }

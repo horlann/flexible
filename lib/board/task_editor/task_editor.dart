@@ -1,8 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:flexible/board/task_editor/color_picker_row.dart';
 import 'package:flexible/board/task_editor/icon_picker_page.dart';
-import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/row_with_close_btn.dart';
 import 'package:flexible/board/task_editor/task_icon_in_round.dart';
 import 'package:flexible/board/task_editor/task_period_slider.dart';
@@ -12,7 +9,6 @@ import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';

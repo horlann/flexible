@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:typed_data';
-
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
-import 'package:flexible/board/task_editor/task_editor.dart';
-import 'package:flexible/board/widgets/mini_buttons_with_icon.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
@@ -314,7 +311,7 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                       : TextDecoration.none),
             ),
             Text(
-              widget.task.subtitle,
+              '${widget.task.globalDurationLeft.inHours}h/${widget.task.globalDuration.inHours}h',
               style: TextStyle(
                   color: Color(0xff545353),
                   fontSize: 12 * byWithScale(context),

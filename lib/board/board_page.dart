@@ -1,18 +1,11 @@
-import 'package:flexible/board/video_layer_fitted.dart';
-import 'package:flexible/board/weather_widget.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:video_player/video_player.dart';
-import 'package:weather/weather.dart';
-
 import 'package:flexible/board/board.dart';
 import 'package:flexible/board/bottom_date_picker.dart';
-import 'package:flexible/geolocation/geolocation_service.dart';
 
 class BoardPage extends StatefulWidget {
   @override

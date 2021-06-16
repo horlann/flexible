@@ -155,7 +155,7 @@ class SuperTask extends Task {
 
   @override
   String toString() {
-    return 'RegularTask(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, timeLock: $timeLock, color: $color, iconId: $iconId)';
+    return 'SuperTask(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, timeLock: $timeLock, color: $color, iconId: $iconId, deadline: $deadline, globalDuration: $globalDuration, globalDurationLeft: $globalDurationLeft, priority: $priority)';
   }
 }
 

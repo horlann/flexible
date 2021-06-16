@@ -78,3 +78,23 @@ class DailytasksSuperTaskIteration extends DailytasksEvent {
   @override
   List<Object?> get props => [task.toString()];
 }
+
+class DailytasksSuperTaskAdd extends DailytasksEvent {
+  final SuperTask task;
+  DailytasksSuperTaskAdd({
+    required this.task,
+  });
+
+  @override
+  List<Object?> get props => [task.toString()];
+}
+
+class DailytasksSuperInsert extends DailytasksEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class DailytasksAskForInsert extends DailytasksEvent {
+  @override
+  List<Object?> get props => [];
+}
