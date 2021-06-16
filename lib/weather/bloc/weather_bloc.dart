@@ -11,7 +11,12 @@ part 'weather_event.dart';
 part 'weather_state.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
-  WeatherBloc() : super(WeatherLoading());
+  WeatherBloc() : super(WeatherLoading()) {
+    // Auto update weather
+    Timer.periodic(Duration(hours: 1), (t) {
+      this.add(WeatherUpdate());
+    });
+  }
 
   WeatherFactory wf = WeatherFactory('3634c96c808f11aff43c536ee9abeb05');
   GeolocationService geolocationService = GeolocationService();
@@ -42,7 +47,6 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     } else {
       return DayLight.light;
     }
-    // return DayLight.medium;
   }
 
   @override
