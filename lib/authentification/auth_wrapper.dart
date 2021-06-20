@@ -1,17 +1,17 @@
-import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/code_verification_page.dart';
 import 'package:flexible/authentification/registration_page.dart';
 import 'package:flexible/authentification/sign_in_page.dart';
-import 'package:flexible/board/board_page.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthBlocWrapper extends StatelessWidget {
+  final Widget child;
   const AuthBlocWrapper({
     Key? key,
+    required this.child,
   }) : super(key: key);
 
   @override
@@ -46,11 +46,7 @@ class AuthBlocWrapper extends StatelessWidget {
         }
 
         if (state is Authentificated) {
-          // RepositoryProvider.of<FireAuthService>(context).signOut();
-          RemoteConfig remoteConfig = RemoteConfig.instance..fetchAndActivate();
-          print(remoteConfig.getString('asdasd'));
-
-          return BoardPage();
+          return child;
         }
 
         return SizedBox.expand(

@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:flexible/board/task_editor/priority_chooser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/models/tasks/supertask.dart';

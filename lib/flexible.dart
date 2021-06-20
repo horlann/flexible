@@ -14,6 +14,8 @@ import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/repository/sqFliteRepository/sqflire_tasks.dart';
 import 'package:flexible/board/repository/sqFliteRepository/sqflite_day_options.dart';
 import 'package:flexible/helper/helper_wrapper.dart';
+import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
+import 'package:flexible/subscription/subscription_wrapper.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -65,6 +67,9 @@ class FlexibleApp extends StatelessWidget {
                       RepositoryProvider.of<SqfliteDayOptionsRepo>(context),
                   tasksRepo:
                       RepositoryProvider.of<CombinedTasksRepository>(context))),
+          BlocProvider(
+            create: (context) => SubscribeBloc(),
+          ),
           BlocProvider(create: (context) => WeatherBloc()..add(WeatherUpdate()))
         ],
         child: MaterialApp(
@@ -75,7 +80,9 @@ class FlexibleApp extends StatelessWidget {
               return false;
             },
             child: HelperWrapper(
-              child: AuthBlocWrapper(),
+              child: AuthBlocWrapper(
+                child: SubscriptionWrapper(child: BoardPage()),
+              ),
             ),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 
@@ -11,7 +12,7 @@ class GlassmorphLayer extends StatelessWidget {
     return GlassmorphicContainer(
       width: double.maxFinite,
       height: double.maxFinite,
-      borderRadius: 40,
+      borderRadius: 80 / pRatio(context),
       blur: 5,
       border: 2,
       linearGradient: LinearGradient(
