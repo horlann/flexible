@@ -1,8 +1,8 @@
-import 'dart:math';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/turbo_sliver_sticky_scroll.dart';
 import 'package:flexible/board/widgets/supertask_tile..dart';
+import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/widgets/message_snakbar.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,22 @@ import 'package:flexible/board/widgets/glassmorphic_bg_shifted.dart';
 import 'package:flexible/board/widgets/periodic_task_tile..dart';
 import 'package:flexible/board/widgets/task_tile.dart';
 
-class Board extends StatelessWidget {
+class Board extends StatefulWidget {
+  @override
+  _BoardState createState() => _BoardState();
+}
+
+class _BoardState extends State<Board> {
+  @override
+  void initState() {
+    super.initState();
+
+    // If user subscribed ask for supertask insertion
+    if (BlocProvider.of<SubscribeBloc>(context).state is! UnSubscribed) {
+      BlocProvider.of<DailytasksBloc>(context).add(DailytasksAskForInsert());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GlassmorphicBackgroundShifted(
@@ -58,7 +73,6 @@ class Board extends StatelessWidget {
     ));
   }
 
-  // Ask user for insert supertask into current day
   SnackBar buildSuperAsk(BuildContext context) {
     return SnackBar(
         duration: Duration(seconds: 60),

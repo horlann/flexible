@@ -11,6 +11,8 @@ class SubscribeInitial extends SubscribeState {}
 
 class SubscribtionDeactivated extends SubscribeState {}
 
+class AskSubscribe extends SubscribeState {}
+
 class Subscribed extends SubscribeState {}
 
 class UnSubscribed extends SubscribeState {}

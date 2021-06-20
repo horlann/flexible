@@ -17,7 +17,6 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
   DailytasksBloc({required this.tasksRepo, required this.dayOptionsRepo})
       : super(DailytasksInitial(showDay: DateTime.now())) {
     add(DailytasksUpdate());
-    add(DailytasksAskForInsert());
 
     // Listen to changes and update ui
     if (tasksRepo.onChanges != null) {
@@ -161,6 +160,8 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
       }
     }
 
+    // Insert supertask in selected day
+    // Insert by priority from 1 to 3
     if (event is DailytasksSuperInsert) {
       DayOptions dayOptions = await dayOptionsRepo.getDayOptionsByDate(showDay);
 
@@ -234,6 +235,9 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
   }
 }
 
+// Uses for supertask insertion
+// Calc gaps weetween tasks and daytimes
+// Return pairs of gap start and end
 List<List<DateTime>> calcGaps(
     {required DayOptions dayOptions, required List<Task> currentTasks}) {
   List<List<DateTime>> freeTimeGaps = [];

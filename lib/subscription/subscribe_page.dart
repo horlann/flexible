@@ -52,9 +52,14 @@ class SubscribePage extends StatelessWidget {
                     EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
                 child: Row(
                   children: [
-                    Image.asset(
-                      'src/icons/return.png',
-                      width: 20 * byWithScale(context),
+                    GestureDetector(
+                      onTap: () {
+                        BlocProvider.of<SubscribeBloc>(context).add(Decline());
+                      },
+                      child: Image.asset(
+                        'src/icons/return.png',
+                        width: 20 * byWithScale(context),
+                      ),
                     )
                   ],
                 ),
@@ -90,23 +95,22 @@ class SubscribePage extends StatelessWidget {
                 flex: 1,
               ),
               buildTip(context,
-                  title: 'Stay on track with reminders',
+                  title: 'Import calendar events',
                   subtitle:
-                      'Get notifications when a task starts and ends. You can even complete tasks without opening the app.'),
+                      'Automatically add your calendar events to your day plan.'),
               Spacer(
                 flex: 1,
               ),
               buildTip(context,
-                  title: 'Stay on track with reminders',
+                  title: 'Plan recurring events',
                   subtitle:
-                      'Get notifications when a task starts and ends. You can even complete tasks without opening the app.'),
+                      'Repeat events daily , on certain weekdays, weekly or monthly.'),
               Spacer(
                 flex: 1,
               ),
               buildTip(context,
-                  title: 'Stay on track with reminders',
-                  subtitle:
-                      'Get notifications when a task starts and ends. You can even complete tasks without opening the app.'),
+                  title: 'Support the development',
+                  subtitle: 'Help me continue working on improving Flexible.'),
               Spacer(
                 flex: 1,
               ),
@@ -117,29 +121,37 @@ class SubscribePage extends StatelessWidget {
               Spacer(
                 flex: 1,
               ),
-              WideRoundedButton(
-                enable: true,
-                enableColor: Color(0xffE24F4F),
-                textColor: Colors.white,
-                text: 'Subscribe',
-                disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                callback: () {
-                  BlocProvider.of<SubscribeBloc>(context).add(Decline());
-                },
+              Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
+                child: WideRoundedButton(
+                  enable: true,
+                  enableColor: Color(0xffE24F4F),
+                  textColor: Colors.white,
+                  text: 'Subscribe',
+                  disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                  callback: () {
+                    BlocProvider.of<SubscribeBloc>(context).add(Subscribe());
+                  },
+                ),
               ),
               SizedBox(
                 height: 10 * byWithScale(context),
               ),
-              WideRoundedButton(
-                enable: true,
-                enableColor: Colors.transparent,
-                borderColor: Color(0xffE24F4F),
-                textColor: Color(0xffE24F4F),
-                text: 'No thanks',
-                disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                callback: () {
-                  BlocProvider.of<SubscribeBloc>(context).add(Decline());
-                },
+              Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
+                child: WideRoundedButton(
+                  enable: true,
+                  enableColor: Colors.transparent,
+                  borderColor: Color(0xffE24F4F),
+                  textColor: Color(0xffE24F4F),
+                  text: 'No thanks',
+                  disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                  callback: () {
+                    BlocProvider.of<SubscribeBloc>(context).add(Decline());
+                  },
+                ),
               ),
               Spacer(
                 flex: 1,
@@ -156,7 +168,7 @@ class SubscribePage extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
+          padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
           child: Row(
             children: [
               Image.asset(
@@ -168,6 +180,7 @@ class SubscribePage extends StatelessWidget {
               ),
               Text(
                 title,
+                textAlign: TextAlign.left,
                 style: TextStyle(
                     fontSize: 10 * byWithScale(context),
                     fontWeight: FontWeight.w600,
@@ -180,13 +193,17 @@ class SubscribePage extends StatelessWidget {
           height: 2 * byWithScale(context),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Text(
-            subtitle,
-            style: TextStyle(
-                fontSize: 8 * byWithScale(context),
-                fontWeight: FontWeight.w400,
-                color: Color(0xff373535)),
+          padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              subtitle,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  fontSize: 8 * byWithScale(context),
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xff373535)),
+            ),
           ),
         )
       ],

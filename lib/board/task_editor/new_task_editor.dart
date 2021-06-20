@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flexible/board/task_editor/priority_chooser.dart';
+import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,6 +60,9 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
         duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
+  bool isUnSubscribed() =>
+      (BlocProvider.of<SubscribeBloc>(context).state is UnSubscribed);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,7 +111,9 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                         color: Color(0xffE24F4F),
                       ),
                     ),
-                    buildTaskTypeSwitcher(context),
+                    isUnSubscribed()
+                        ? SizedBox()
+                        : buildTaskTypeSwitcher(context),
                     Expanded(
                       child: PageView(
                         onPageChanged: (value) {
@@ -127,16 +133,19 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                               Navigator.pop(context);
                             },
                           ),
-                          SuperTaskEditorBody(
-                            submitChanel: submitS,
-                            key: Key('sup'),
-                            onSubmit: (task) {
-                              print('su ask submit');
-                              BlocProvider.of<DailytasksBloc>(context)
-                                  .add(DailytasksSuperTaskAdd(task: task));
-                              Navigator.pop(context);
-                            },
-                          )
+
+                          // Remove this screen if user unsubscribed
+                          if (!isUnSubscribed())
+                            SuperTaskEditorBody(
+                              submitChanel: submitS,
+                              key: Key('sup'),
+                              onSubmit: (task) {
+                                print('su ask submit');
+                                BlocProvider.of<DailytasksBloc>(context)
+                                    .add(DailytasksSuperTaskAdd(task: task));
+                                Navigator.pop(context);
+                              },
+                            )
                         ],
                       ),
                     ),

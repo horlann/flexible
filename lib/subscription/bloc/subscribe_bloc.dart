@@ -37,11 +37,15 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
       if (!subEnabled) {
         yield SubscribtionDeactivated();
       } else {
-        yield UnSubscribed();
+        yield AskSubscribe();
       }
     }
 
     if (event is Decline) {
+      yield UnSubscribed();
+    }
+
+    if (event is Subscribe) {
       yield Subscribed();
     }
   }

@@ -14,8 +14,9 @@ class SubscriptionWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SubscribeBloc, SubscribeState>(
       builder: (context, state) {
+        print(state);
         if (state is UnSubscribed) {
-          return SubscribePage();
+          return child;
         }
 
         if (state is Subscribed) {
@@ -24,6 +25,10 @@ class SubscriptionWrapper extends StatelessWidget {
 
         if (state is SubscribtionDeactivated) {
           return child;
+        }
+
+        if (state is AskSubscribe) {
+          return SubscribePage();
         }
 
         return Scaffold(

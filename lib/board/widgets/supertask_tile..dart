@@ -4,6 +4,7 @@ import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
+import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
@@ -26,7 +27,6 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
   @override
   void initState() {
     super.initState();
-
     updateUi();
   }
 
@@ -39,6 +39,9 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
       Timer(Duration(seconds: 10), () => updateUi());
     }
   }
+
+  bool isUnSubscribed() =>
+      (BlocProvider.of<SubscribeBloc>(context).state is UnSubscribed);
 
   onCheckClicked(BuildContext context) {
     BlocProvider.of<DailytasksBloc>(context)
@@ -324,34 +327,37 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
   }
 
   Widget buildTimeLock() {
-    return AnimatedCrossFade(
-      crossFadeState:
-          showSubButtons ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-      duration: Duration(
-        milliseconds: 200,
-      ),
-      firstChild: GestureDetector(
-        onTap: () => onLockClicked(context),
-        child: Container(
-          margin: EdgeInsets.only(top: 14, right: 4),
-          child: widget.task.timeLock
-              ? Image.asset(
-                  'src/icons/locked.png',
-                  width: 22,
-                  height: 22,
-                )
-              : Image.asset(
-                  'src/icons/unlocked.png',
-                  width: 22,
-                  height: 22,
-                ),
-        ),
-      ),
-      secondChild: SizedBox(
-        width: 26,
-        height: 22,
-      ),
-    );
+    return isUnSubscribed()
+        ? SizedBox()
+        : AnimatedCrossFade(
+            crossFadeState: showSubButtons
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: Duration(
+              milliseconds: 200,
+            ),
+            firstChild: GestureDetector(
+              onTap: () => onLockClicked(context),
+              child: Container(
+                margin: EdgeInsets.only(top: 14, right: 4),
+                child: widget.task.timeLock
+                    ? Image.asset(
+                        'src/icons/locked.png',
+                        width: 22,
+                        height: 22,
+                      )
+                    : Image.asset(
+                        'src/icons/unlocked.png',
+                        width: 22,
+                        height: 22,
+                      ),
+              ),
+            ),
+            secondChild: SizedBox(
+              width: 26,
+              height: 22,
+            ),
+          );
   }
 
   // Button under task

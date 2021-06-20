@@ -10,3 +10,5 @@ abstract class SubscribeEvent extends Equatable {
 class Update extends SubscribeEvent {}
 
 class Decline extends SubscribeEvent {}
+
+class Subscribe extends SubscribeEvent {}
