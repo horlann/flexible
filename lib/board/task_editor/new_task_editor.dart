@@ -121,7 +121,9 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                         children: [
                           RegularTaskEditorBody(
                             submitChanel: submitR,
+                            key: Key('reg'),
                             onSubmit: (task) {
+                              print('reg ask submit');
                               BlocProvider.of<DailytasksBloc>(context)
                                   .add(DailytasksAddTask(task: task));
                               Navigator.pop(context);
@@ -129,7 +131,9 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                           ),
                           SuperTaskEditorBody(
                             submitChanel: submitS,
+                            key: Key('sup'),
                             onSubmit: (task) {
+                              print('su ask submit');
                               BlocProvider.of<DailytasksBloc>(context)
                                   .add(DailytasksSuperTaskAdd(task: task));
                               Navigator.pop(context);
@@ -249,6 +253,7 @@ class RegularTaskEditorBody extends StatefulWidget {
 
 class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
   late RegularTask editableRegularTask;
+  late StreamSubscription onSubmit;
 
   @override
   void initState() {
@@ -272,9 +277,15 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           iconId: 'additional');
     }
 
-    widget.submitChanel.listen((event) {
+    onSubmit = widget.submitChanel.listen((event) {
       widget.onSubmit(editableRegularTask);
     });
+  }
+
+  dispose() {
+    super.dispose();
+    onSubmit.cancel();
+    print('Reg task creator dispose');
   }
 
   openImgPicker() {
@@ -375,6 +386,7 @@ class SuperTaskEditorBody extends StatefulWidget {
 
 class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
   late SuperTask editableSuperTask;
+  late StreamSubscription onSubmit;
 
   @override
   void initState() {
@@ -404,7 +416,7 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
           globalDurationLeft: Duration(),
           priority: 1);
     }
-    widget.submitChanel.listen((event) {
+    onSubmit = widget.submitChanel.listen((event) {
       widget.onSubmit(editableSuperTask);
     });
   }
@@ -421,6 +433,12 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
         });
       }
     });
+  }
+
+  dispose() {
+    super.dispose();
+    onSubmit.cancel();
+    print('Sup task creator dispose');
   }
 
   @override
