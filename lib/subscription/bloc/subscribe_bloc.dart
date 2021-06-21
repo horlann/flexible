@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flexible/subscription/subscribe_service.dart';
 
 part 'subscribe_event.dart';
 part 'subscribe_state.dart';
@@ -13,6 +14,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
   }
 
   RemoteConfig remoteConfig = RemoteConfig.instance;
+  SubscribeService subscribeService = SubscribeService();
 
   Future<bool> syncRemote() async {
     late bool updated;
@@ -46,7 +48,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
     }
 
     if (event is Subscribe) {
-      yield Subscribed();
+      yield RegisterAndPay();
     }
   }
 }

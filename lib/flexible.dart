@@ -15,6 +15,7 @@ import 'package:flexible/board/repository/sqFliteRepository/sqflire_tasks.dart';
 import 'package:flexible/board/repository/sqFliteRepository/sqflite_day_options.dart';
 import 'package:flexible/helper/helper_wrapper.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
+import 'package:flexible/subscription/subscribe_page.dart';
 import 'package:flexible/subscription/subscription_wrapper.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
@@ -80,13 +81,85 @@ class FlexibleApp extends StatelessWidget {
               return false;
             },
             child: HelperWrapper(
-              child: AuthBlocWrapper(
-                child: SubscriptionWrapper(child: BoardPage()),
-              ),
+              child: SubAndAuthChooser(),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class SubAndAuthChooser extends StatelessWidget {
+  const SubAndAuthChooser({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SubscribeBloc, SubscribeState>(
+      builder: (context, state) {
+        print(state);
+        if (state is UnSubscribed) {
+          // BlocProvider.of<AuthBloc>(context).add(SignOut());
+          return BoardPage();
+        }
+
+        if (state is RegisterAndPay) {
+          return AuthBlocWrapper(
+            child: PaymentPage(),
+          );
+        }
+
+        if (state is Subscribed) {
+          return AuthBlocWrapper(
+            child: BoardPage(),
+          );
+        }
+
+        if (state is SubscribtionDeactivated) {
+          return BoardPage();
+        }
+
+        if (state is AskSubscribe) {
+          return SubscribePage();
+        }
+
+        return Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class PaymentPage extends StatelessWidget {
+  const PaymentPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Container(
+      decoration: BoxDecoration(
+        gradient: mainBackgroundGradient,
+      ),
+      child: SafeArea(
+        child: CustomScrollView(
+          physics: BouncingScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: true,
+              child: buildBody(context),
+            ),
+          ],
+        ),
+      ),
+    ));
+  }
+
+  Widget buildBody(BuildContext context) {
+    return Center(
+      child: Text('payment'),
     );
   }
 }

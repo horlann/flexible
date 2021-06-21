@@ -19,8 +19,10 @@ class CombinedTasksRepository extends ITasksRepo {
     // If user autorize subscribe to changes
     fireBaseTasksRepo.fireAuth.authStateChanges().listen((event) {
       if (event == null) {
-        fireListener!.cancel();
-        fireListener = null;
+        if (fireListener != null) {
+          fireListener!.cancel();
+          fireListener = null;
+        }
       } else {
         subscribeToFire();
       }

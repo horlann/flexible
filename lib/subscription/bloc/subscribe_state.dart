@@ -13,6 +13,8 @@ class SubscribtionDeactivated extends SubscribeState {}
 
 class AskSubscribe extends SubscribeState {}
 
+class RegisterAndPay extends SubscribeState {}
+
 class Subscribed extends SubscribeState {}
 
 class UnSubscribed extends SubscribeState {}
