@@ -79,10 +79,10 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
             .first;
 
         // // Calc time shifting beetwen old and new task version
-        // Duration timeShift = event.task.timeStart.difference(oldTask.timeStart);
+        Duration timeShift = event.task.timeStart.difference(oldTask.timeStart);
 
         // Calc time Shift by task teriod
-        Duration timeShift = event.task.period - oldTask.period;
+        // Duration timeShift = event.task.period - oldTask.period;
 
         // Select only infront tssks with unlocked shift
         List<Task> infrontUnlockedTasks = statee.tasks
