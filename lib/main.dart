@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   if (defaultTargetPlatform == TargetPlatform.android) {
     InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
   }
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(FlexibleApp());
 }
