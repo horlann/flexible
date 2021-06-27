@@ -46,7 +46,7 @@ dependencies:
   image_picker: ^0.8.0+1
   move_to_background: ^1.0.2
   video_player: ^2.1.6
-  in_app_purchase: ^1.0.5
+  purchases_flutter: ^3.0.0
   flutter:
     sdk: flutter
 

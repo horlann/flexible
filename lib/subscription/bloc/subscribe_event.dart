@@ -12,3 +12,5 @@ class Update extends SubscribeEvent {}
 class Decline extends SubscribeEvent {}
 
 class Subscribe extends SubscribeEvent {}
+
+class Restore extends SubscribeEvent {}

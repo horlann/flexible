@@ -143,6 +143,23 @@ class SubscribePage extends StatelessWidget {
                     EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
                 child: WideRoundedButton(
                   enable: true,
+                  enableColor: Color(0xffE24F4F),
+                  textColor: Colors.white,
+                  text: 'Restore purchashes',
+                  disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                  callback: () {
+                    BlocProvider.of<SubscribeBloc>(context).add(Restore());
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 10 * byWithScale(context),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
+                child: WideRoundedButton(
+                  enable: true,
                   enableColor: Colors.transparent,
                   borderColor: Color(0xffE24F4F),
                   textColor: Color(0xffE24F4F),

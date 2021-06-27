@@ -11,6 +11,7 @@ part 'subscribe_state.dart';
 class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
   SubscribeBloc() : super(SubscribeInitial()) {
     add(Update());
+    // print(subscribeService.getOfferings());
   }
 
   RemoteConfig remoteConfig = RemoteConfig.instance;
@@ -48,7 +49,11 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
     }
 
     if (event is Subscribe) {
-      yield RegisterAndPay();
+      subscribeService.makeSubscribe();
+    }
+
+    if (event is Restore) {
+      subscribeService.restorePurchashes();
     }
   }
 }

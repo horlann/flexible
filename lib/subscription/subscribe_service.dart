@@ -1,40 +1,64 @@
 import 'dart:async';
-import 'package:in_app_purchase/in_app_purchase.dart';
+
+import 'package:flutter/services.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 class SubscribeService {
-  final InAppPurchase _inAppPurchase = InAppPurchase.instance;
-  final Stream purchaseUpdated = InAppPurchase.instance.purchaseStream;
-  late StreamSubscription _subscription;
-
-  SubscribeService() {
-    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-      _listenToPurchaseUpdated(purchaseDetailsList);
-    }, onDone: () {
-      print('purchase stream done');
-      _subscription.cancel();
-    }, onError: (error) {
-      print('purchase stream error');
-      // handle error here.
-    });
-    test();
+  Future<Offerings?> getOfferings() async {
+    try {
+      Offerings offerings = await Purchases.getOfferings();
+      if (offerings.current != null &&
+          offerings.current!.availablePackages.isNotEmpty) {
+        return offerings;
+      }
+    } on PlatformException catch (e) {
+      print(e);
+      // optional error handling
+    }
   }
 
-  Future test() async {
-    // _inAppPurchase.
-    print(await _inAppPurchase.isAvailable());
+  Future isSubActive() async {
+    try {
+      PurchaserInfo purchaserInfo = await Purchases.getPurchaserInfo();
+      if (purchaserInfo.entitlements.all["sub_month"]!.isActive) {
+        print('User has month sub');
+      }
+    } on PlatformException catch (e) {
+      print(e);
+      // Error fetching purchaser info
+    }
   }
 
-  void _listenToPurchaseUpdated(purchaseDetailsList) {
-    print('purchase stream new data');
-    print(purchaseDetailsList);
+  Future restorePurchashes() async {
+    try {
+      PurchaserInfo restoredInfo = await Purchases.restoreTransactions();
+      print('Restored purshes');
+      // ... check restored purchaserInfo to see if entitlement is now active
+    } on PlatformException catch (e) {
+      print(e);
+      // Error restoring purchases
+    }
   }
 
-  Future productsCheck() async {
-    ProductDetailsResponse purchasein = await InAppPurchase.instance
-        .queryProductDetails(['sub_monthly_test'].toSet());
+  Future makeSubscribe() async {
+    Offerings? offs = await getOfferings();
+    if (offs != null) {
+      Offering? off = offs.getOffering('sub_month_off');
 
-    ProductDetails det = purchasein.productDetails.first;
+      if (off != null) {
+        Package? pack = off.getPackage('Monthly');
 
-    print(PurchaseParam(productDetails: det).applicationUserName);
+        if (pack != null) {
+          try {
+            PurchaserInfo purchaserInfo = await Purchases.purchasePackage(pack);
+            if (purchaserInfo.entitlements.all["sub_month"]!.isActive) {
+              print('Purshase sucess');
+            }
+          } on PlatformException catch (e) {
+            print(e);
+          }
+        }
+      }
+    }
   }
 }
