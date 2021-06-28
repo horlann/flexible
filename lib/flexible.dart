@@ -119,7 +119,7 @@ class SubAndAuthChooser extends StatelessWidget {
           return BoardPage();
         }
 
-        if (state is AskSubscribe) {
+        if (state is AskForSubscribe) {
           return SubscribePage();
         }
 

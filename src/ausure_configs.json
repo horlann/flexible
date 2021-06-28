@@ -1,0 +1,64 @@
+[
+    {
+      "id": 0,
+      "are-you-sure-title-text": {
+        "en": "Are you sure you want to lose this One Time Offer?",
+        "de": "",
+        "pt": "",
+        "ru": "",
+        "es": "",
+        "it": "",
+        "tr": "",
+        "fr": "",
+        "zh": "",
+        "jp": "",
+        "kr": "",
+        "ar": ""
+      },
+      "back-to-oto-enabled": true,
+      "back-to-oto-screen-text": {
+        "en": "Back to offer details",
+        "de": "",
+        "pt": "",
+        "ru": "",
+        "es": "",
+        "it": "",
+        "tr": "",
+        "fr": "",
+        "zh": "",
+        "jp": "",
+        "kr": "",
+        "ar": ""
+      },
+      "purchase-offer-enabled": true,
+      "purchase-offer-text": {
+        "en": "Unlock full app now!",
+        "de": "",
+        "pt": "",
+        "ru": "",
+        "es": "",
+        "it": "",
+        "tr": "",
+        "fr": "",
+        "zh": "",
+        "jp": "",
+        "kr": "",
+        "ar": ""
+      },
+      "skip-to-app-enabled": true,
+      "skip-to-app-text": {
+        "en": "Lose this offer",
+        "de": "",
+        "pt": "",
+        "ru": "",
+        "es": "",
+        "it": "",
+        "tr": "",
+        "fr": "",
+        "zh": "",
+        "jp": "",
+        "kr": "",
+        "ar": ""
+      }
+    }
+  ]

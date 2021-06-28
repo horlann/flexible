@@ -27,7 +27,7 @@ class SubscriptionWrapper extends StatelessWidget {
           return child;
         }
 
-        if (state is AskSubscribe) {
+        if (state is AskForSubscribe) {
           return SubscribePage();
         }
 

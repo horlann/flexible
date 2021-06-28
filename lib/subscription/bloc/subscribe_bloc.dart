@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flexible/subscription/remoteconf_repository.dart';
 import 'package:flexible/subscription/subscribe_service.dart';
 
 part 'subscribe_event.dart';
@@ -14,33 +14,24 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
     // print(subscribeService.getOfferings());
   }
 
-  RemoteConfig remoteConfig = RemoteConfig.instance;
+  RemoteConfigRepository remoteConfigRepository = RemoteConfigRepository();
   SubscribeService subscribeService = SubscribeService();
-
-  Future<bool> syncRemote() async {
-    late bool updated;
-    try {
-      remoteConfig.setConfigSettings(RemoteConfigSettings(
-          fetchTimeout: Duration(seconds: 10),
-          minimumFetchInterval: Duration(seconds: 10)));
-      updated = await remoteConfig.fetchAndActivate();
-    } catch (e) {}
-
-    return updated;
-  }
 
   @override
   Stream<SubscribeState> mapEventToState(
     SubscribeEvent event,
   ) async* {
     if (event is Update) {
-      await syncRemote();
-      bool subEnabled = remoteConfig.getBool('subscribtion');
-
-      if (!subEnabled) {
+      // Show sub page if oto enabled
+      await remoteConfigRepository.syncRemote();
+      bool hideOTO = remoteConfigRepository.hideOTO;
+      if (hideOTO) {
         yield SubscribtionDeactivated();
       } else {
-        yield AskSubscribe();
+        yield AskForSubscribe(
+            showInfoPopup: remoteConfigRepository.showInfoPopup,
+            showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
+            noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF);
       }
     }
 
@@ -53,7 +44,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
     }
 
     if (event is Restore) {
-      subscribeService.restorePurchashes();
+      print('restore');
     }
   }
 }
