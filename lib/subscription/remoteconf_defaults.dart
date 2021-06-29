@@ -1,5 +1,5 @@
 Map<String, dynamic> remoConfDefaults = {
-  'HideOTO': true,
+  'HideOTO': false,
   'show_Info_popup': true,
   'Offer_Type': 'OTON',
   'showOTOOnAppStart': false,

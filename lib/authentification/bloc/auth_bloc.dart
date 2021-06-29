@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flexible/authentification/models/user_data_model.dart';
 import 'package:flexible/authentification/services/firebase_auth.dart';
 import 'package:flexible/authentification/services/users_data_repository.dart';
+import 'package:qonversion_flutter/qonversion_flutter.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -113,6 +114,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await usersDataRepo
               .setUser(userData!.copyWith(uid: fireAuthService.getUser()!.uid));
         }
+        // Set id to conversion
+        Qonversion.setUserId(fireAuthService.getUser()!.uid);
         yield Authentificated();
       } catch (e) {
         print('Code verification error');

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flexible/subscription/remoteconf_repository.dart';
-import 'package:flexible/subscription/subscribe_service.dart';
+import 'package:flexible/subscription/subscribe_service_qon.dart';
 
 part 'subscribe_event.dart';
 part 'subscribe_state.dart';
@@ -15,7 +15,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
   }
 
   RemoteConfigRepository remoteConfigRepository = RemoteConfigRepository();
-  SubscribeService subscribeService = SubscribeService();
+  SubscribeServiceQon subscribeService = SubscribeServiceQon();
 
   @override
   Stream<SubscribeState> mapEventToState(
@@ -40,7 +40,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
     }
 
     if (event is Subscribe) {
-      subscribeService.makeSubscribe();
+      subscribeService.makeSubMonth();
     }
 
     if (event is Restore) {

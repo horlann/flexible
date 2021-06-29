@@ -317,6 +317,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.1"
   matcher:
     dependency: transitive
     description:
@@ -422,13 +429,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
-  purchases_flutter:
+  qonversion_flutter:
     dependency: "direct main"
     description:
-      name: purchases_flutter
+      name: qonversion_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.0"
+    version: "3.2.1"
   shared_preferences:
     dependency: "direct main"
     description:
