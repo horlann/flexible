@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flexible/authentification/services/firebase_auth.dart';
 import 'package:flexible/subscription/remoteconf_repository.dart';
 import 'package:flexible/subscription/subscribe_service_qon.dart';
 
@@ -9,13 +10,13 @@ part 'subscribe_event.dart';
 part 'subscribe_state.dart';
 
 class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
-  SubscribeBloc() : super(SubscribeInitial()) {
+  SubscribeBloc({required this.fireAuthService}) : super(SubscribeInitial()) {
     add(Update());
-    // print(subscribeService.getOfferings());
   }
 
   RemoteConfigRepository remoteConfigRepository = RemoteConfigRepository();
   SubscribeServiceQon subscribeService = SubscribeServiceQon();
+  late FireAuthService fireAuthService;
 
   @override
   Stream<SubscribeState> mapEventToState(
@@ -28,10 +29,16 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
       if (hideOTO) {
         yield SubscribtionDeactivated();
       } else {
-        yield AskForSubscribe(
-            showInfoPopup: remoteConfigRepository.showInfoPopup,
-            showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
-            noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF);
+        bool isAuthed = fireAuthService.isAuthenticated;
+        if (isAuthed) {
+          await subscribeService.setUserId(fireAuthService.getUser()!.uid);
+          yield* mapCheckForSub();
+        } else {
+          yield AskForSubscribe(
+              showInfoPopup: remoteConfigRepository.showInfoPopup,
+              showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
+              noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF);
+        }
       }
     }
 
@@ -40,11 +47,38 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
     }
 
     if (event is Subscribe) {
-      subscribeService.makeSubMonth();
+      bool isAuthed = fireAuthService.isAuthenticated;
+      if (isAuthed) {
+        await subscribeService.setUserId(fireAuthService.getUser()!.uid);
+        await subscribeService.makeSubMonth();
+        yield* mapCheckForSub();
+      } else {
+        // Start auth and continue then
+        yield RegisterAndProcess(continueSubscribe: true);
+      }
     }
 
     if (event is Restore) {
-      print('restore');
+      bool isAuthed = fireAuthService.isAuthenticated;
+      if (isAuthed) {
+        await subscribeService.setUserId(fireAuthService.getUser()!.uid);
+        yield* mapCheckForSub();
+      } else {
+        // Start auth and continue then
+        yield RegisterAndProcess(continueRestore: true);
+      }
+    }
+  }
+
+  Stream<SubscribeState> mapCheckForSub() async* {
+    bool isActive = await subscribeService.checkSubMonth();
+    if (isActive) {
+      yield Subscribed();
+    } else {
+      yield AskForSubscribe(
+          showInfoPopup: remoteConfigRepository.showInfoPopup,
+          showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
+          noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF);
     }
   }
 }

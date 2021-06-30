@@ -7,19 +7,14 @@ import 'package:flexible/authentification/registration_page.dart';
 import 'package:flexible/authentification/sign_in_page.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 
-// Wrap widget three with auth
-// When user authed return child else return auth
-class AuthBlocWrapper extends StatelessWidget {
-  final Widget child;
-  const AuthBlocWrapper({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
+// Push auth over current widget three
+// On user authed pop back
+class AuthBlocPusher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
+        // Push code verification page
         if (state is CodeSended) {
           Navigator.push(
                   context,
@@ -29,6 +24,10 @@ class AuthBlocWrapper extends StatelessWidget {
                   ))
               .then((value) => BlocProvider.of<AuthBloc>(context)
                   .add(CloseCodeVerification()));
+        }
+        // Push true if auth complete
+        if (state is Authentificated) {
+          Navigator.pop(context, true);
         }
       },
       listenWhen: (previous, current) {
@@ -45,10 +44,6 @@ class AuthBlocWrapper extends StatelessWidget {
 
         if (state is ShowRegistration) {
           return RegistrationPage();
-        }
-
-        if (state is Authentificated) {
-          return child;
         }
 
         return SizedBox.expand(

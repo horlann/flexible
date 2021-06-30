@@ -114,8 +114,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await usersDataRepo
               .setUser(userData!.copyWith(uid: fireAuthService.getUser()!.uid));
         }
-        // Set id to conversion
-        Qonversion.setUserId(fireAuthService.getUser()!.uid);
         yield Authentificated();
       } catch (e) {
         print('Code verification error');

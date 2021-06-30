@@ -25,7 +25,14 @@ class AskForSubscribe extends SubscribeState {
       [showInfoPopup, noThanksBtnOFF, showAreYouSurePopup];
 }
 
-class RegisterAndPay extends SubscribeState {}
+class RegisterAndProcess extends SubscribeState {
+  final bool continueRestore;
+  final bool continueSubscribe;
+  RegisterAndProcess({
+    this.continueRestore = false,
+    this.continueSubscribe = false,
+  });
+}
 
 class Subscribed extends SubscribeState {}
 
