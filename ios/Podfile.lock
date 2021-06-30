@@ -395,6 +395,10 @@ PODS:
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
   - PromisesObjC (1.2.12)
+  - Qonversion (2.13.4)
+  - qonversion_flutter (3.1.1):
+    - Flutter
+    - Qonversion (= 2.13.4)
   - shared_preferences (0.0.1):
     - Flutter
   - sqflite (0.0.2):
@@ -414,6 +418,8 @@ DEPENDENCIES:
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - move_to_background (from `.symlinks/plugins/move_to_background/ios`)
+  - Qonversion
+  - qonversion_flutter (from `.symlinks/plugins/qonversion_flutter/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
@@ -441,6 +447,7 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - PromisesObjC
+    - Qonversion
 
 EXTERNAL SOURCES:
   cloud_firestore:
@@ -461,6 +468,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker/ios"
   move_to_background:
     :path: ".symlinks/plugins/move_to_background/ios"
+  qonversion_flutter:
+    :path: ".symlinks/plugins/qonversion_flutter/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sqflite:
@@ -499,10 +508,12 @@ SPEC CHECKSUMS:
   move_to_background: 39a5b79b26d577b0372cbe8a8c55e7aa9fcd3a2d
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  Qonversion: daafce021a90b6d5f8f340e3b68431f89f25ab8f
+  qonversion_flutter: dd90e4e5ed7f8957003b8e1c18c3ab9d0c710dab
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
 
-PODFILE CHECKSUM: d8c94f0e42032ee8ff3f218e95608132eb70711f
+PODFILE CHECKSUM: 492f0bb9fcc07d17a5c59794ab2d42a52c05fcdc
 
 COCOAPODS: 1.10.1
