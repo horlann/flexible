@@ -93,6 +93,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // return SizedBox();
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: Stack(
@@ -106,7 +107,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                   return Center(child: Text(state.error));
                 }
                 if (state is WeatherLoaded) {
-                  return VideoLayerFitted(
+                  return VideoLayerFittedToWidget(
                       key: Key(
                           getWeatherAssetByCode(state.wCode, state.daylight)),
                       videoAsset:

@@ -99,6 +99,7 @@ flutter:
       - src/task_icons/
       - src/helper/
       - src/videobg/
+      - src/videobg_vertical/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

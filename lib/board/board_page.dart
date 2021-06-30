@@ -1,3 +1,4 @@
+import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
@@ -42,18 +43,28 @@ class _BoardPageState extends State<BoardPage> {
         ),
         child: Stack(
           children: [
-            BlocBuilder<WeatherBloc, WeatherState>(
-              builder: (context, state) {
-                if (state is WeatherLoaded) {
-                  print(state.daylight);
-                  return Container(
-                    color: colorByType(state.daylight),
-                  );
-                }
+            //
+            // Provide simple colored bg by weather
+            //
+            // BlocBuilder<WeatherBloc, WeatherState>(
+            //   builder: (context, state) {
+            //     if (state is WeatherLoaded) {
+            //       print(state.daylight);
+            //       return Container(
+            //         color: colorByType(state.daylight),
+            //       );
+            //     }
 
-                return SizedBox();
-              },
-            ),
+            //     return SizedBox();
+            //   },
+            // ),
+            //
+            // Provide video bg by weather
+            //
+            Container(
+                width: double.maxFinite,
+                height: double.maxFinite,
+                child: WeatherBg()),
             SafeArea(
               child: Column(
                 children: [

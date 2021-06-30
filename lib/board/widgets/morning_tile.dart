@@ -1,4 +1,4 @@
-import 'package:flexible/board/weather_widget.dart';
+import 'package:flexible/board/widgets/weather_widget.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
