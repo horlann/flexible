@@ -50,8 +50,10 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
       bool isAuthed = fireAuthService.isAuthenticated;
       if (isAuthed) {
         await subscribeService.setUserId(fireAuthService.getUser()!.uid);
-        await subscribeService.makeSubMonth();
-        yield* mapCheckForSub();
+        bool isActive = await subscribeService.makeSubMonth();
+        if (isActive) {
+          yield Subscribed();
+        }
       } else {
         // Start auth and continue then
         yield RegisterAndProcess(continueSubscribe: true);

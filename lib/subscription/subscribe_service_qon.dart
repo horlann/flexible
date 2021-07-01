@@ -37,19 +37,43 @@ class SubscribeServiceQon {
   // }
 
   // Start monthly subscribe purchase process
-  makeSubMonth() async {
+  Future<bool> makeSubMonth() async {
     Map<String, QPermission> permissions =
         await Qonversion.purchase('monthly_sub');
+    final monSub = permissions['month_sub_perm'];
     print(permissions);
+    if (monSub != null && monSub.isActive) {
+      print(monSub.renewState);
+      switch (monSub.renewState) {
+        case QProductRenewState.willRenew:
+        case QProductRenewState.nonRenewable:
+          // .willRenew is the state of an auto-renewable subscription
+          // .nonRenewable is the state of consumable/non-consumable IAPs that could unlock lifetime access
+          break;
+        case QProductRenewState.billingIssue:
+          // Grace period: permission is active, but there was some billing issue.
+          // Prompt the user to update the payment method.
+          break;
+        case QProductRenewState.canceled:
+          // The user has turned off auto-renewal for the subscription, but the subscription has not expired yet.
+          // Prompt the user to resubscribe with a special offer.
+          break;
+        default:
+          break;
+      }
+      return true;
+    }
+    return false;
   }
 
   Future<bool> checkSubMonth() async {
     final Map<String, QPermission> permissions =
         await Qonversion.checkPermissions();
-    final main = permissions['month_sub_perm'];
+    final monSub = permissions['month_sub_perm'];
     print(permissions);
-    if (main != null && main.isActive) {
-      switch (main.renewState) {
+    if (monSub != null && monSub.isActive) {
+      print(monSub.renewState);
+      switch (monSub.renewState) {
         case QProductRenewState.willRenew:
         case QProductRenewState.nonRenewable:
           // .willRenew is the state of an auto-renewable subscription
