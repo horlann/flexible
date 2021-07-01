@@ -107,7 +107,7 @@ class _WeatherBgState extends State<WeatherBg> {
           return VideoLayerFittedToBG(
               key: Key(getWeatherAssetByCode(state.wCode, state.daylight)),
               videoAsset: getWeatherAssetByCode(state.wCode, state.daylight),
-              backgroundColor: colorByType(DayLight.dark));
+              backgroundColor: colorByType(state.daylight));
         }
 
         return Center(child: Text('Loading'));
