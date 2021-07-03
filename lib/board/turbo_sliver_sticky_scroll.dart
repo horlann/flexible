@@ -1,6 +1,6 @@
 import 'package:flexible/board/day_options_editor.dart';
-import 'package:flexible/board/widgets/morning_tile.dart';
-import 'package:flexible/board/widgets/system_tile.dart';
+import 'package:flexible/board/widgets/task_tiles/morning_tile.dart';
+import 'package:flexible/board/widgets/task_tiles/system_tile.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import 'package:flexible/board/models/day_options.dart';
-import 'package:flexible/board/widgets/adding_tile.dart';
+import 'package:flexible/board/widgets/task_tiles/adding_tile.dart';
 import 'package:flexible/board/widgets/sliver_persistant_header.dart';
 
 class TurboAnimatedScrollView extends StatefulWidget {

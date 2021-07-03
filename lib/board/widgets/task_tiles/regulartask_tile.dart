@@ -5,7 +5,10 @@ import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/task_editor.dart';
-import 'package:flexible/board/widgets/mini_buttons_with_icon.dart';
+import 'package:flexible/board/widgets/task_tiles/components/hidable_btns_wrapper.dart';
+import 'package:flexible/board/widgets/task_tiles/components/hidable_lock.dart';
+import 'package:flexible/board/widgets/task_tiles/components/mini_buttons_with_icon.dart';
+import 'package:flexible/board/widgets/task_tiles/components/done_checkbox.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
@@ -15,14 +18,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:invert_colors/invert_colors.dart';
 
-class TaskTile extends StatefulWidget {
+class RegularTaskTile extends StatefulWidget {
   final RegularTask task;
-  TaskTile({required this.task});
+  RegularTaskTile({required this.task});
   @override
-  _TaskTileState createState() => _TaskTileState();
+  _RegularTaskTileState createState() => _RegularTaskTileState();
 }
 
-class _TaskTileState extends State<TaskTile> {
+class _RegularTaskTileState extends State<RegularTaskTile> {
   // DateTime currentTime = DateTime.now();
   bool showSubButtons = false;
 
@@ -123,9 +126,17 @@ class _TaskTileState extends State<TaskTile> {
                             Expanded(child: buildTextSection()),
                             Row(
                               children: [
-                                buildTimeLock(),
+                                isUnSubscribed()
+                                    ? SizedBox()
+                                    : HidableTimeLock(
+                                        locked: widget.task.timeLock,
+                                        showLock: showSubButtons,
+                                        onTap: () => onLockClicked(context),
+                                      ),
                                 widget.task.isDonable
-                                    ? buildCheckbox(context)
+                                    ? DoneCheckbox(
+                                        checked: widget.task.isDone,
+                                        onClick: () => onCheckClicked(context))
                                     : SizedBox(),
                               ],
                             ),
@@ -134,7 +145,20 @@ class _TaskTileState extends State<TaskTile> {
                         SizedBox(
                           height: 16,
                         ),
-                        buildSubButtons(),
+                        HidableButtonsWrapper(
+                            showSubButtons: showSubButtons,
+                            children: [
+                              MiniButtonWithIcon(
+                                  color: Color(0xff4077C1).withOpacity(0.75),
+                                  text: 'Edit Task',
+                                  iconAsset: 'src/icons/edit.png',
+                                  callback: () => onEditClicked(context)),
+                              MiniButtonWithIcon(
+                                  color: Color(0xffF4D700).withOpacity(0.75),
+                                  text: 'Copy Task',
+                                  iconAsset: 'src/icons/copy.png',
+                                  callback: () => showCopyDialog()),
+                            ]),
                       ],
                     ),
                   ),
@@ -148,40 +172,6 @@ class _TaskTileState extends State<TaskTile> {
         ),
       ),
     );
-  }
-
-  Widget buildTimeLock() {
-    return isUnSubscribed()
-        ? SizedBox()
-        : AnimatedCrossFade(
-            crossFadeState: showSubButtons
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond,
-            duration: Duration(
-              milliseconds: 200,
-            ),
-            firstChild: GestureDetector(
-              onTap: () => onLockClicked(context),
-              child: Container(
-                margin: EdgeInsets.only(top: 14, right: 4),
-                child: widget.task.timeLock
-                    ? Image.asset(
-                        'src/icons/locked.png',
-                        width: 18 * byWithScale(context),
-                        height: 18 * byWithScale(context),
-                      )
-                    : Image.asset(
-                        'src/icons/unlocked.png',
-                        width: 18 * byWithScale(context),
-                        height: 18 * byWithScale(context),
-                      ),
-              ),
-            ),
-            secondChild: SizedBox(
-              width: 26,
-              height: 22,
-            ),
-          );
   }
 
   Container buildMainIcon() {
@@ -270,60 +260,6 @@ class _TaskTileState extends State<TaskTile> {
           ],
         );
       },
-    );
-  }
-
-  // Button under task
-  // Shows when user tap on task tile
-  Widget buildSubButtons() {
-    return AnimatedCrossFade(
-      duration: Duration(milliseconds: 200),
-      crossFadeState:
-          showSubButtons ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-      firstChild: SizedBox(),
-      secondChild: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          MiniButtonWithIcon(
-              color: Color(0xff4077C1).withOpacity(0.75),
-              text: 'Edit Task',
-              iconAsset: 'src/icons/edit.png',
-              callback: () => onEditClicked(context)),
-          MiniButtonWithIcon(
-              color: Color(0xffF4D700).withOpacity(0.75),
-              text: 'Copy Task',
-              iconAsset: 'src/icons/copy.png',
-              callback: () => showCopyDialog()),
-        ],
-      ),
-    );
-  }
-
-  GestureDetector buildCheckbox(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onCheckClicked(context),
-      child: Container(
-        margin: EdgeInsets.only(top: 12),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Color(0xff6E6B6B).withOpacity(0.75),
-                blurRadius: 20,
-                offset: Offset(0, 10))
-          ],
-        ),
-        child: widget.task.isDone
-            ? Image.asset(
-                'src/icons/checkbox_checked.png',
-                scale: 1.2,
-                width: 18 * byWithScale(context),
-              )
-            : Image.asset(
-                'src/icons/checkbox_unchecked.png',
-                scale: 1.2,
-                width: 18 * byWithScale(context),
-              ),
-      ),
     );
   }
 }

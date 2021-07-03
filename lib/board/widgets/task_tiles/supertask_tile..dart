@@ -4,6 +4,8 @@ import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
+import 'package:flexible/board/widgets/task_tiles/components/done_checkbox.dart';
+import 'package:flexible/board/widgets/task_tiles/components/hidable_lock.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
@@ -179,9 +181,16 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                             Expanded(child: buildTextSection()),
                             Row(
                               children: [
-                                buildTimeLock(),
+                                isUnSubscribed()
+                                    ? SizedBox()
+                                    : HidableTimeLock(
+                                        locked: widget.task.timeLock,
+                                        showLock: showSubButtons,
+                                        onTap: () => onLockClicked(context)),
                                 widget.task.isDonable
-                                    ? buildCheckbox(context)
+                                    ? DoneCheckbox(
+                                        checked: widget.task.isDone,
+                                        onClick: () => onCheckClicked(context))
                                     : SizedBox(),
                               ],
                             ),
@@ -190,7 +199,6 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                         SizedBox(
                           height: 16,
                         ),
-                        buildSubButtons(),
                       ],
                     ),
                   ),
@@ -323,132 +331,6 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
           ],
         );
       },
-    );
-  }
-
-  Widget buildTimeLock() {
-    return isUnSubscribed()
-        ? SizedBox()
-        : AnimatedCrossFade(
-            crossFadeState: showSubButtons
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond,
-            duration: Duration(
-              milliseconds: 200,
-            ),
-            firstChild: GestureDetector(
-              onTap: () => onLockClicked(context),
-              child: Container(
-                margin: EdgeInsets.only(top: 14, right: 4),
-                child: widget.task.timeLock
-                    ? Image.asset(
-                        'src/icons/locked.png',
-                        width: 22,
-                        height: 22,
-                      )
-                    : Image.asset(
-                        'src/icons/unlocked.png',
-                        width: 22,
-                        height: 22,
-                      ),
-              ),
-            ),
-            secondChild: SizedBox(
-              width: 26,
-              height: 22,
-            ),
-          );
-  }
-
-  // Button under task
-  // Shows when user tap on task tile
-  Widget buildSubButtons() {
-    return AnimatedCrossFade(
-      duration: Duration(milliseconds: 200),
-      crossFadeState:
-          showSubButtons ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-      firstChild: SizedBox(),
-      secondChild: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          // MiniButtonWithIcon(
-          //     color: Color(0xff4077C1).withOpacity(0.75),
-          //     text: 'Edit Task',
-          //     iconAsset: 'src/icons/edit.png',
-          //     callback: () => onEditClicked(context)),
-          // MiniButtonWithIcon(
-          //     color: Color(0xffF4D700).withOpacity(0.75),
-          //     text: 'Copy Task',
-          //     iconAsset: 'src/icons/copy.png',
-          //     callback: () => showCopyDialog()),
-        ],
-      ),
-    );
-  }
-
-  Widget miniWhiteBorderedButton(
-      {required String text,
-      required String iconAsset,
-      VoidCallback? callback}) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          if (callback != null) {
-            callback();
-          }
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.6),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Color(0xffF66868), width: 2)),
-          child: Row(
-            children: [
-              Image.asset(
-                iconAsset,
-                width: 8,
-                height: 8,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(
-                width: 2,
-              ),
-              Text(
-                text,
-                style: TextStyle(fontSize: 8, color: Color(0xffF66868)),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  GestureDetector buildCheckbox(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onCheckClicked(context),
-      child: Container(
-        margin: EdgeInsets.only(top: 12),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Color(0xff6E6B6B).withOpacity(0.75),
-                blurRadius: 20,
-                offset: Offset(0, 10))
-          ],
-        ),
-        child: widget.task.isDone
-            ? Image.asset(
-                'src/icons/checkbox_checked.png',
-                scale: 1.2,
-              )
-            : Image.asset(
-                'src/icons/checkbox_unchecked.png',
-                scale: 1.2,
-              ),
-      ),
     );
   }
 }

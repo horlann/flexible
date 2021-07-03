@@ -1,7 +1,9 @@
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/models/tasks/supertask.dart';
+import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/turbo_sliver_sticky_scroll.dart';
-import 'package:flexible/board/widgets/supertask_tile..dart';
+import 'package:flexible/board/widgets/task_tiles/grouped_task_tile.dart';
+import 'package:flexible/board/widgets/task_tiles/supertask_tile..dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/widgets/message_snakbar.dart';
@@ -10,8 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/widgets/glassmorphic_bg_shifted.dart';
-import 'package:flexible/board/widgets/periodic_task_tile..dart';
-import 'package:flexible/board/widgets/task_tile.dart';
+import 'package:flexible/board/widgets/task_tiles/periodic_task_tile..dart';
+import 'package:flexible/board/widgets/task_tiles/regulartask_tile.dart';
 
 class Board extends StatefulWidget {
   @override
@@ -49,19 +51,41 @@ class _BoardState extends State<Board> {
       builder: (context, state) {
         print(state);
         if (state is DailytasksCommon) {
-          List<Widget> tasks = state.tasks
-              .map((e) {
-                if (e is RegularTask) {
-                  if (e.period.inMilliseconds == 0) {
-                    return TaskTile(task: e);
-                  } else {
-                    return PeriodicTaskTile(task: e);
-                  }
+          // List<Widget> tasks = state.tasks
+          //     .map((e) {
+          //       if (e is RegularTask) {
+          //         if (e.period.inMilliseconds == 0) {
+          //           return TaskTile(task: e);
+          //         } else {
+          //           return PeriodicTaskTile(task: e);
+          //         }
+          //       }
+          //       return SuperTaskTile(task: e as SuperTask);
+          //     })
+          //     .cast<Widget>()
+          //     .toList();
+
+          List<List<Task>> taskGrouped = turboSortAlgorithm(tasks: state.tasks);
+
+          List<Widget> tasks = [];
+
+          taskGrouped.forEach((element) {
+            if (element.length > 1) {
+              tasks.add(GroupedTaskTile(tasks: element));
+            } else {
+              var task = element.first;
+              if (task is RegularTask) {
+                if (task.period.inMilliseconds == 0) {
+                  tasks.add(RegularTaskTile(task: task));
+                } else {
+                  tasks.add(PeriodicTaskTile(task: task));
                 }
-                return SuperTaskTile(task: e as SuperTask);
-              })
-              .cast<Widget>()
-              .toList();
+              } else {
+                tasks.add(SuperTaskTile(task: task as SuperTask));
+              }
+            }
+          });
+
           return TurboAnimatedScrollView(
             // key: Key(Random().nextInt(9999).toString()),
             tasks: tasks, dayOptions: state.dayOptions,
@@ -127,4 +151,42 @@ class _BoardState extends State<Board> {
           ),
         ));
   }
+}
+
+List<List<Task>> turboSortAlgorithm({required List<Task> tasks}) {
+  List<List<Task>> taskGroups = [];
+
+  List<Task> tasksCopy = List.from(tasks);
+
+  // Sort time start
+  tasksCopy.sort((a, b) => a.timeStart.compareTo(b.timeStart));
+
+  // Sort to groups
+  // Cros-timed task add to one group
+  int endTime = 0;
+  for (var i = 0; i < tasksCopy.length; i++) {
+    Task cTask = tasksCopy[i];
+    if (endTime == 0) {
+      endTime = cTask.timeStart.add(cTask.period).millisecondsSinceEpoch;
+      taskGroups.add([cTask]);
+      // taskGroups
+      //     .add([cTask.timeStart, cTask.timeStart.add(cTask.period)]);
+    } else {
+      if (cTask.timeStart.millisecondsSinceEpoch < endTime) {
+        taskGroups.last.add(cTask);
+        // taskGroups.last.add(cTask.timeStart);
+        // taskGroups.last.add(cTask.timeStart.add(cTask.period));
+        if (cTask.timeStart.add(cTask.period).millisecondsSinceEpoch >
+            endTime) {
+          endTime = cTask.timeStart.add(cTask.period).millisecondsSinceEpoch;
+        }
+      } else {
+        taskGroups.add([cTask]);
+        // taskGroups
+        //     .add([cTask.timeStart, cTask.timeStart.add(cTask.period)]);
+        endTime = cTask.timeStart.add(cTask.period).millisecondsSinceEpoch;
+      }
+    }
+  }
+  return taskGroups;
 }
