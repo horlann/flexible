@@ -63,10 +63,15 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
               curPos.latitude, curPos.longitude);
 
           // parse and go
+          // yield WeatherLoaded(
+          //     wTemp: getWeatherTemp(weather),
+          //     wCode: getWeatherCondition(weather),
+          //     daylight: getDayLight(weather));
+
           yield WeatherLoaded(
               wTemp: getWeatherTemp(weather),
-              wCode: getWeatherCondition(weather),
-              daylight: getDayLight(weather));
+              wCode: 232,
+              daylight: DayLight.dark);
         } catch (e) {
           yield WeatherError(error: 'Service unevaliable');
         }

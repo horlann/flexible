@@ -158,18 +158,18 @@ class _TaskTileState extends State<MorningTile> {
                 },
               ),
             ),
-            showSubButtons
-                ? InkWell(
-                    child: showWeather
-                        ? Icon(Icons.close)
-                        : Icon(Icons.add_rounded),
-                    onTap: () {
-                      setState(() {
-                        showWeather = !showWeather;
-                      });
-                    },
-                  )
-                : SizedBox(),
+            // showSubButtons
+            //     ? InkWell(
+            //         child: showWeather
+            //             ? Icon(Icons.close)
+            //             : Icon(Icons.add_rounded),
+            //         onTap: () {
+            //           setState(() {
+            //             showWeather = !showWeather;
+            //           });
+            //         },
+            //       )
+            //     : SizedBox(),
           ],
         ),
         // Padding(
@@ -185,13 +185,13 @@ class _TaskTileState extends State<MorningTile> {
         SizedBox(
           height: 4,
         ),
-        AnimatedCrossFade(
-            firstChild: SizedBox(),
-            secondChild: WeatherWidget(),
-            crossFadeState: !showWeather
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond,
-            duration: Duration(milliseconds: 200)),
+        // AnimatedCrossFade(
+        //     firstChild: SizedBox(),
+        //     secondChild: WeatherWidget(),
+        //     crossFadeState: !showWeather
+        //         ? CrossFadeState.showFirst
+        //         : CrossFadeState.showSecond,
+        //     duration: Duration(milliseconds: 200)),
         SizedBox(
           height: 16,
         ),

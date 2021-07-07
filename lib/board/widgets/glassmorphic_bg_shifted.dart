@@ -24,15 +24,15 @@ class GlassmorphicBackgroundShifted extends StatelessWidget {
                   width: double.maxFinite,
                   height: double.maxFinite,
                   borderRadius: 30,
-                  blur: 5,
+                  blur: 2,
                   border: 2,
                   linearGradient: LinearGradient(
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
                       colors: [
-                        Color(0xFFffffff).withOpacity(0.6),
-                        Color(0xfff4f3f3).withOpacity(0.2),
-                        Color(0xFFffffff).withOpacity(0.6),
+                        Color(0xFFffffff).withOpacity(0.2),
+                        Color(0xfff4f3f3).withOpacity(0.0),
+                        Color(0xFFffffff).withOpacity(0.2),
                       ],
                       stops: [
                         0,
