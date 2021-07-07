@@ -8,3 +8,7 @@ abstract class WeatherEvent extends Equatable {
 }
 
 class WeatherUpdate extends WeatherEvent {}
+
+class WeatherManualSwitch extends WeatherEvent {}
+
+class LightManualSwitch extends WeatherEvent {}

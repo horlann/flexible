@@ -97,9 +97,10 @@ class _WeatherBgState extends State<WeatherBg> {
     return buildBG();
   }
 
-  BlocBuilder<WeatherBloc, WeatherState> buildBG() {
+  Widget buildBG() {
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
+        print(state);
         if (state is WeatherError) {
           return Center(child: Text(state.error));
         }

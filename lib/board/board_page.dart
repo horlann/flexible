@@ -77,6 +77,36 @@ class _BoardPageState extends State<BoardPage> {
                   SizedBox(
                     height: 16,
                   ),
+                  Container(
+                    color: Colors.white.withOpacity(0.7),
+                    child: BlocBuilder<WeatherBloc, WeatherState>(
+                      builder: (context, state) {
+                        if (state is WeatherLoaded) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              TextButton(
+                                  onPressed: () {
+                                    BlocProvider.of<WeatherBloc>(context)
+                                        .add(WeatherManualSwitch());
+                                  },
+                                  child: Text(state.wCode.toString(),
+                                      style: TextStyle(color: Colors.black))),
+                              TextButton(
+                                  onPressed: () {
+                                    BlocProvider.of<WeatherBloc>(context)
+                                        .add(LightManualSwitch());
+                                  },
+                                  child: Text(state.daylight.toString(),
+                                      style: TextStyle(color: Colors.black))),
+                            ],
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      },
+                    ),
+                  ),
                   BottomDatePicker(),
                   // Container(
                   //   color: Colors.white,

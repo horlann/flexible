@@ -79,5 +79,59 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         yield WeatherError(error: 'Location unevaliable');
       }
     }
+
+    if (event is LightManualSwitch) {
+      WeatherState state2 = state;
+      if (state2 is WeatherLoaded) {
+        if (state2.daylight == DayLight.light) {
+          yield state2.copyWith(daylight: DayLight.medium);
+        }
+        if (state2.daylight == DayLight.medium) {
+          yield state2.copyWith(daylight: DayLight.dark);
+        }
+        if (state2.daylight == DayLight.dark) {
+          yield state2.copyWith(daylight: DayLight.light);
+        }
+      }
+    }
+
+    if (event is WeatherManualSwitch) {
+      WeatherState state2 = state;
+      if (state2 is WeatherLoaded) {
+        if (state2.wCode > 802) {
+          yield state2.copyWith(wCode: 802);
+          return;
+        }
+        if (state2.wCode > 800) {
+          yield state2.copyWith(wCode: 800);
+          return;
+        }
+        if (state2.wCode > 700) {
+          yield state2.copyWith(wCode: 700);
+          return;
+        }
+        if (state2.wCode > 600) {
+          yield state2.copyWith(wCode: 600);
+          return;
+        }
+        if (state2.wCode > 500) {
+          yield state2.copyWith(wCode: 500);
+          return;
+        }
+        if (state2.wCode > 300) {
+          yield state2.copyWith(wCode: 300);
+          return;
+        }
+        if (state2.wCode > 200) {
+          yield state2.copyWith(wCode: 200);
+          return;
+        }
+
+        if (state2.wCode == 200) {
+          yield state2.copyWith(wCode: 803);
+          return;
+        }
+      }
+    }
   }
 }

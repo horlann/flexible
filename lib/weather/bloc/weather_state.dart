@@ -39,5 +39,17 @@ class WeatherLoaded extends WeatherState {
   });
 
   @override
-  List<Object> get props => [wTemp, wCode];
+  List<Object> get props => [wTemp, wCode, daylight];
+
+  WeatherLoaded copyWith({
+    String? wTemp,
+    int? wCode,
+    DayLight? daylight,
+  }) {
+    return WeatherLoaded(
+      wTemp: wTemp ?? this.wTemp,
+      wCode: wCode ?? this.wCode,
+      daylight: daylight ?? this.daylight,
+    );
+  }
 }
