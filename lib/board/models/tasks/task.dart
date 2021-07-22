@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class Task {
+  GlobalKey? key;
   String? uuid;
   final String title;
   final String subtitle;
@@ -14,6 +15,7 @@ abstract class Task {
   final String iconId;
 
   Task({
+    this.key,
     this.uuid,
     required this.title,
     required this.subtitle,

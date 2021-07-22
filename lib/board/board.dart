@@ -6,7 +6,9 @@ import 'package:flexible/board/widgets/task_tiles/grouped_task_tile.dart';
 import 'package:flexible/board/widgets/task_tiles/supertask_tile..dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/utils/modal.dart';
 import 'package:flexible/widgets/message_snakbar.dart';
+import 'package:flexible/widgets/modals/regular_task_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -71,9 +73,14 @@ class _BoardState extends State<Board> {
 
           taskGrouped.forEach((element) {
             if (element.length > 1) {
+              for(var e in element)
+                if(e.key == null)
+                  e.key = GlobalKey();
               tasks.add(GroupedTaskTile(tasks: element));
             } else {
               var task = element.first;
+              if(task.key == null)
+                task.key = GlobalKey();
               if (task is RegularTask) {
                 if (task.period.inMilliseconds == 0) {
                   tasks.add(RegularTaskTile(task: task));

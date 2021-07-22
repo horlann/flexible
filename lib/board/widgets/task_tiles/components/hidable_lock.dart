@@ -5,12 +5,16 @@ class HidableTimeLock extends StatelessWidget {
       {Key? key,
       required this.showLock,
       required this.onTap,
-      required this.locked})
+      required this.locked,
+      this.color,
+      this.size = 22})
       : super(key: key);
 
   final bool showLock;
   final bool locked;
   final Function onTap;
+  final Color? color;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +31,15 @@ class HidableTimeLock extends StatelessWidget {
           child: locked
               ? Image.asset(
                   'src/icons/locked.png',
-                  width: 22,
-                  height: 22,
+                  width: size,
+                  height: size,
+                  color: color
                 )
               : Image.asset(
                   'src/icons/unlocked.png',
-                  width: 22,
-                  height: 22,
+                  width: size,
+                  height: size,
+                color: color
                 ),
         ),
       ),

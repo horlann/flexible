@@ -12,8 +12,11 @@ import 'package:flexible/board/widgets/task_tiles/components/mini_buttons_with_i
 import 'package:flexible/board/widgets/task_tiles/components/done_checkbox.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/utils/modal.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
+import 'package:flexible/widgets/modals/periodic_task_modal.dart';
+import 'package:flexible/widgets/modals/regular_task_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -102,16 +105,33 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
     return 0.0;
   }
 
+  Rect? _getOffset(GlobalKey? key) {
+    if(key == null) return null;
+    final renderObject = key.currentContext?.findRenderObject();
+    var translation = renderObject?.getTransformTo(null).getTranslation();
+    if (translation != null && renderObject?.paintBounds != null) {
+      return renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
     return Material(
+      key: widget.task.key,
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          setState(() {
-            showSubButtons = !showSubButtons;
-          });
+          showModal(context, PeriodicTaskModal(
+              widget.task,
+              _getOffset(widget.task.key)?.top ?? 0,
+                  () => onLockClicked(context))
+          );
+          // setState(() {
+          //   showSubButtons = !showSubButtons;
+          // });
         },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 16),

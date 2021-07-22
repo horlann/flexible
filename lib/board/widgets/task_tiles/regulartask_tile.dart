@@ -11,8 +11,10 @@ import 'package:flexible/board/widgets/task_tiles/components/mini_buttons_with_i
 import 'package:flexible/board/widgets/task_tiles/components/done_checkbox.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/utils/modal.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
+import 'package:flexible/widgets/modals/regular_task_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +31,11 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
   // DateTime currentTime = DateTime.now();
   bool showSubButtons = false;
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   bool isUnSubscribed() =>
       (BlocProvider.of<SubscribeBloc>(context).state is UnSubscribed);
 
@@ -43,8 +50,7 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
             CupertinoPageRoute(
               builder: (context) => TaskEditor(task: widget.task),
             ))
-        .then((value) =>
-            BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdate()));
+        .then((value) => BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdate()));
   }
 
   onDeleteClicked(BuildContext context) {
@@ -69,17 +75,36 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
 
   String geTimeString(DateTime date) => date.toString().substring(11, 16);
 
+  Rect? _getOffset(GlobalKey? key) {
+    if(key == null) return null;
+    final renderObject = key.currentContext?.findRenderObject();
+    var translation = renderObject?.getTransformTo(null).getTranslation();
+    if (translation != null && renderObject?.paintBounds != null) {
+      return renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
 
     return Material(
+      key: widget.task.key,
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          setState(() {
-            showSubButtons = !showSubButtons;
-          });
+          showModal(context, RegularTaskModal(
+              widget.task,
+              _getOffset(widget.task.key)?.top ?? 0,
+                  () => onEditClicked(context),
+                  () => onLockClicked(context),
+                  () => showCopyDialog())
+          );
+          // setState(() {
+          //   showSubButtons = !showSubButtons;
+          // });
         },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 16),
@@ -117,7 +142,6 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
                   ),
                   Expanded(
                     child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

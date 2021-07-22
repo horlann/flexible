@@ -38,9 +38,10 @@ class _TaskTileState extends State<SystemTile> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          setState(() {
-            showSubButtons = !showSubButtons;
-          });
+          widget.callback.call();
+          // setState(() {
+          //   showSubButtons = !showSubButtons;
+          // });
         },
         child: Container(
           margin: EdgeInsets.only(top: 16),

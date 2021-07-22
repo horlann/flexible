@@ -1,8 +1,10 @@
 import 'package:flexible/board/day_options_editor.dart';
 import 'package:flexible/board/widgets/task_tiles/morning_tile.dart';
 import 'package:flexible/board/widgets/task_tiles/system_tile.dart';
+import 'package:flexible/utils/modal.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
+import 'package:flexible/widgets/modals/daily_task_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +33,19 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
   double topOverscroll = 16;
   double bottomOverscroll = 0;
   double bottomLinePadding = 48;
+  GlobalKey morningKey = GlobalKey();
+  GlobalKey nightKey = GlobalKey();
+
+  Rect? _getOffset(GlobalKey? key) {
+    if(key == null) return null;
+    final renderObject = key.currentContext?.findRenderObject();
+    var translation = renderObject?.getTransformTo(null).getTranslation();
+    if (translation != null && renderObject?.paintBounds != null) {
+      return renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
+    } else {
+      return null;
+    }
+  }
 
   @override
   void initState() {
@@ -130,6 +145,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
               SliverList(
                   delegate: SliverChildListDelegate([
                 SystemTile(
+                    key: nightKey,
                     showTime: widget.dayOptions.goToSleepTime,
                     title: 'Good night',
                     subtitle: 'Sleep well',
@@ -138,12 +154,14 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                       scale: 1.1,
                     ),
                     callback: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) =>
-                                DayOptionsEditor(dayOptions: widget.dayOptions),
-                          ));
+                      showModal(context, DailyTaskModal(widget.dayOptions, _getOffset(nightKey)?.top ?? 0, () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) =>
+                                  DayOptionsEditor(dayOptions: widget.dayOptions),
+                            ));
+                      }));
                     })
               ])),
               // Adding section with last tile
@@ -166,6 +184,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
               SliverList(
                   delegate: SliverChildListDelegate([
                 MorningTile(
+                    key: morningKey,
                     showTime: widget.dayOptions.wakeUpTime,
                     title: 'Good morning',
                     subtitle: 'Have a nice day',
@@ -174,12 +193,14 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                       scale: 1.1,
                     ),
                     callback: () {
-                      Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) =>
-                                DayOptionsEditor(dayOptions: widget.dayOptions),
-                          ));
+                      showModal(context, DailyTaskModal(widget.dayOptions, _getOffset(morningKey)?.top ?? 0, () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) =>
+                                  DayOptionsEditor(dayOptions: widget.dayOptions),
+                            ));
+                      }));
                     })
               ])),
             ],

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:flexible/utils/modal.dart';
+import 'package:flexible/widgets/modals/regular_task_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -157,6 +159,17 @@ class TileBody extends StatefulWidget {
 }
 
 class _TileBodyState extends State<TileBody> {
+
+  Rect? _getOffset(GlobalKey? key) {
+    if(key == null) return null;
+    final renderObject = key.currentContext?.findRenderObject();
+    var translation = renderObject?.getTransformTo(null).getTranslation();
+    if (translation != null && renderObject?.paintBounds != null) {
+      return renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
+    } else {
+      return null;
+    }
+  }
   bool showSubButtons = false;
 
   bool isUnSubscribed() =>
@@ -172,7 +185,7 @@ class _TileBodyState extends State<TileBody> {
         DailytasksUpdateTask(task: task.copyWith(timeLock: !task.timeLock)));
   }
 
-  void showCopyDialog({required RegularTask task}) {
+  void showCopyDialog({required Task task}) {
     showDialog(
       context: context,
       barrierColor: Colors.transparent,
@@ -182,7 +195,8 @@ class _TileBodyState extends State<TileBody> {
     );
   }
 
-  onEditClicked(BuildContext context, {required RegularTask task}) {
+  onEditClicked(BuildContext context, {required Task task}) {
+    if(!(task is RegularTask)) return;
     Navigator.push(
             context,
             CupertinoPageRoute(
@@ -198,10 +212,18 @@ class _TileBodyState extends State<TileBody> {
   Widget build(BuildContext context) {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
     return InkWell(
+      key: widget.task.key,
       onTap: () {
-        setState(() {
-          showSubButtons = !showSubButtons;
-        });
+        showModal(context, RegularTaskModal(
+            widget.task,
+            _getOffset(widget.task.key)?.top ?? 0,
+                () => onEditClicked(context, task: widget.task),
+                () => onLockClicked(context, task: widget.task),
+                () => showCopyDialog(task: widget.task))
+        );
+        // setState(() {
+        //   showSubButtons = !showSubButtons;
+        // });
       },
       child: IntrinsicHeight(
         child: Row(
