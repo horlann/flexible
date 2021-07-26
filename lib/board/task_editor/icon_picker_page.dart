@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flexible/board/repository/image_repo_mock.dart';
+import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism/glassmorphism.dart';
@@ -30,7 +32,13 @@ class _IconPickerPageState extends State<IconPickerPage> {
             slivers: [
               SliverFillRemaining(
                 hasScrollBody: true,
-                child: buildBody(context),
+                child: Stack(children: [
+                  Container(
+                    child: WeatherBg(),
+                    width: double.maxFinite,
+                  ),
+                  buildBody(context)
+                ]),
               ),
             ],
           ),
@@ -49,15 +57,26 @@ class _IconPickerPageState extends State<IconPickerPage> {
           Positioned.fill(child: buildGlassmorphicLayer()),
           Column(
             children: [
-              buildCloseButton(),
-              Text(
-                'Give it an icon',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xffE24F4F),
+              Row(children: [
+                buildCloseButton(),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: Center(
+                      child: Text(
+
+                        ' Give it an icon',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],),
+
               SizedBox(
                 height: 16,
               ),
@@ -91,7 +110,11 @@ class _IconPickerPageState extends State<IconPickerPage> {
                 crossAxisCount: 5,
                 children: snapshot.data!
                     .map((e) => Container(
-                          color: Color(0xffDDDDDD),
+                  margin: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
                           child: buildImageLoader(context, e),
                         ))
                     .toList(),
@@ -114,16 +137,16 @@ class _IconPickerPageState extends State<IconPickerPage> {
             if (snapshot.hasData) {
               return Image.memory(
                 snapshot.data!,
-                width: 24,
-                height: 24,
+                width: 18,
+                height: 18,
                 gaplessPlayback: true,
               );
             }
 
             return Image.asset(
               'src/task_icons/noimage.png',
-              width: 24,
-              height: 24,
+              width: 18,
+              height: 18,
               gaplessPlayback: true,
             );
           },
@@ -134,14 +157,13 @@ class _IconPickerPageState extends State<IconPickerPage> {
 
   Padding buildImproveSwitch() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        height: 100,
-        decoration: BoxDecoration(
-            color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
-        child: Center(
-          child: Text('Improove'),
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 35),
+      child: Center(
+        child: Row(children: [
+          Text("Improve smart icons", style: TextStyle(color: Colors.white),),
+          Spacer(),
+          Switch(value: true, onChanged: (onChanged) {})
+        ],),
       ),
     );
   }
@@ -190,7 +212,7 @@ class _IconPickerPageState extends State<IconPickerPage> {
             padding: const EdgeInsets.only(right: 16, top: 16, left: 16),
             child: Image.asset(
               'src/icons/return.png',
-              width: 24,
+              width: 20,
               fit: BoxFit.fitWidth,
             ),
           )

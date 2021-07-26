@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter_bloc: ^7.0.0
   shared_preferences: ^2.0.6
+  flutter_time_picker_spinner: ^2.0.0
+
   sqflite: ^2.0.0+3
   glassmorphism: ^2.0.1
   invert_colors: ^0.0.3-null-safety.0

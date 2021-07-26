@@ -140,13 +140,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Column(
       children: [
         SizedBox(height: 16 * byWithScale(context)),
-        Text(
-          'Flexible',
-          style: TextStyle(
-              color: Color(0xffFF0000),
-              fontSize: 28 * byWithScale(context),
-              fontWeight: FontWeight.w900),
-        ),
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(16 * byWithScale(context)),
@@ -160,13 +153,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       Spacer(
                         flex: 1,
                       ),
-                      Text(
-                        'Create an Acount',
+                      Center(
+                          child: Text(
+                        "Flexible",
                         style: TextStyle(
-                            color: Color(0xffE24F4F),
-                            fontSize: 20 * byWithScale(context),
-                            fontWeight: FontWeight.w700),
-                      ),
+                            fontSize: 35 * byWithScale(context),
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xffE24F4F)),
+                      )),
+                      Center(
+                          child: Text(
+                        "Registration",
+                        style: TextStyle(
+                            fontSize: 16 * byWithScale(context),
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white),
+                      )),
                       Spacer(
                         flex: 1,
                       ),
@@ -178,8 +180,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           child: InkWell(
                             onTap: () => getImage(),
                             child: Container(
-                              height: 60 * byWithScale(context),
-                              width: 60 * byWithScale(context),
+                              height: 50 * byWithScale(context),
+                              width: 50 * byWithScale(context),
                               child: _image != null
                                   ? Image.memory(
                                       _image!,
@@ -317,7 +319,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   Widget buildFullNameInput() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
+      padding: const EdgeInsets.symmetric(horizontal: 38),
       child: TextFormField(
         style: TextStyle(fontSize: 10 * byWithScale(context)),
         keyboardType: TextInputType.name,
@@ -330,7 +332,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             isDense: true,
             contentPadding: EdgeInsets.all(8 * byWithScale(context)),
             focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(35),
                 borderSide: BorderSide(color: Color(0xffFA6400))),
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(30),

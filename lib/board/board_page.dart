@@ -83,25 +83,7 @@ class _BoardPageState extends State<BoardPage> {
                     child: BlocBuilder<WeatherBloc, WeatherState>(
                       builder: (context, state) {
                         if (state is WeatherLoaded) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              TextButton(
-                                  onPressed: () {
-                                    BlocProvider.of<WeatherBloc>(context)
-                                        .add(WeatherManualSwitch());
-                                  },
-                                  child: Text(state.wCode.toString(),
-                                      style: TextStyle(color: Colors.black))),
-                              TextButton(
-                                  onPressed: () {
-                                    BlocProvider.of<WeatherBloc>(context)
-                                        .add(LightManualSwitch());
-                                  },
-                                  child: Text(state.daylight.toString(),
-                                      style: TextStyle(color: Colors.black))),
-                            ],
-                          );
+                          return Container();
                         } else {
                           return SizedBox();
                         }

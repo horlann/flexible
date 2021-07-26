@@ -1,9 +1,15 @@
 import 'dart:ui';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flexible/authentification/code_verification_page.dart';
+import 'package:flexible/authentification/sign_in_page.dart';
 import 'package:flexible/authentification/terms_of_use.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/board/widgets/weather_bg.dart';
+import 'package:flexible/helper/helper_page.dart';
+import 'package:flexible/helper/helper_wrapper.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
+import 'package:flexible/subscription/subscription_wrapper.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
@@ -48,92 +54,111 @@ class _SubscribePageState extends State<SubscribePage> {
         gradient: mainBackgroundGradient,
       ),
       child: SafeArea(
-        child: CustomScrollView(
-          physics: BouncingScrollPhysics(),
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: true,
-              child: buildBody(context),
+          child: Stack(
+        children: [
+          Container(
+            child: WeatherBg(),
+            width: double.maxFinite,
+            height: double.maxFinite,
+          ),
+          buildBody(context),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 48 * byWithScale(context),
+                  right: 48 * byWithScale(context),
+                  bottom: 5 * byWithScale(context)),
+              child: WideRoundedButton(
+                  enable: true,
+                  fontSizw: 15,
+                  enableColor: Colors.transparent,
+                  textColor: Colors.white,
+                  text: 'No,thanks',
+                  disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                  callback: () => Navigator.push(
+                        context,
+                        //MaterialPageRoute(builder: (context) => HelperWrapper(child: Container(color: Colors.green,))),
+                        MaterialPageRoute(builder: (context) => noThx()),
+                      )),
             ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      )),
     ));
   }
 
   Widget buildBody(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(64 / pRatio(context)),
+      padding: EdgeInsets.only(
+          right: 75 / pRatio(context),
+          left: 75 / pRatio(context),
+          top: 40 / pRatio(context),
+          bottom: 200 / pRatio(context)),
       child: Stack(
         children: [
           Positioned.fill(child: GlassmorphLayer()),
           Column(
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                height: 12 * byWithScale(context),
-              ),
-              Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        BlocProvider.of<SubscribeBloc>(context).add(Decline());
-                      },
-                      child: Image.asset(
-                        'src/icons/return.png',
-                        width: 20 * byWithScale(context),
-                      ),
-                    ),
-                    BlocBuilder<SubscribeBloc, SubscribeState>(
-                      builder: (context, state) {
-                        if (state is AskForSubscribe && state.showInfoPopup) {
-                          return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) => TermsPage(),
-                                    ));
-                              },
-                              child: Icon(Icons.info));
-                        }
-                        return SizedBox();
-                      },
-                    )
-                  ],
+
+//              Padding(
+//                padding:
+//                    EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
+//                child: Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  children: [
+////                    GestureDetector(
+////                      onTap: () {
+////                        BlocProvider.of<SubscribeBloc>(context).add(Decline());
+////                      },
+////                      child: Image.asset(
+////                        'src/icons/return.png',
+////                        width: 20 * byWithScale(context),
+////                      ),
+////                    ),
+//                    BlocBuilder<SubscribeBloc, SubscribeState>(
+//                      builder: (context, state) {
+//                        if (state is AskForSubscribe && state.showInfoPopup) {
+//                          return GestureDetector(
+//                              onTap: () {
+//                                Navigator.push(
+//                                    context,
+//                                    CupertinoPageRoute(
+//                                      builder: (context) => TermsPage(),
+//                                    ));
+//                              },
+//                              child: Icon(Icons.info));
+//                        }
+//                        return SizedBox();
+//                      },
+//                    )
+//                  ],
+//                ),
+//              ),
+              Center(
+                  child: Text(
+                    "Flexible",
+                style: TextStyle(
+                    fontSize: 35 * byWithScale(context),
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xffE24F4F)),
+                  )),
+              Center(
+                child: Text(
+                  'Thanks for using the app!',
+                  style: TextStyle(
+                      fontSize: 18 * byWithScale(context),
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
                 ),
-              ),
-              Spacer(
-                flex: 1,
-              ),
-              Text(
-                'Thanks for using the app!',
-                style: TextStyle(
-                    fontSize: 20 * byWithScale(context),
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xffE24F4F)),
-              ),
-              Spacer(
-                flex: 1,
-              ),
-              Text(
-                'Text',
-                style: TextStyle(
-                    fontSize: 18 * byWithScale(context),
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xffE24F4F)),
               ),
               Spacer(
                 flex: 1,
               ),
               buildTip(context,
                   title: 'Stay on track with reminders',
-                  subtitle:
-                      'Get notifications when a task starts and ends. You can even complete tasks without opening the app.'),
+                  subtitle: 'Get notifications when a task starts end ends.'),
               Spacer(
                 flex: 1,
               ),
@@ -157,21 +182,19 @@ class _SubscribePageState extends State<SubscribePage> {
               Spacer(
                 flex: 1,
               ),
-              Image.asset(
-                'src/yoga.png',
-                width: 60 * byWithScale(context),
-              ),
+
               Spacer(
                 flex: 1,
               ),
               Padding(
                 padding:
-                    EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
+                EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
                 child: WideRoundedButton(
                   enable: true,
+                  fontSizw: 15,
                   enableColor: Color(0xffE24F4F),
                   textColor: Colors.white,
-                  text: 'Subscribe',
+                  text: 'SUBSCRIBE',
                   disableColor: Color(0xffE24F4F).withOpacity(0.25),
                   callback: () => subscribe(),
                 ),
@@ -181,41 +204,19 @@ class _SubscribePageState extends State<SubscribePage> {
               ),
               Padding(
                 padding:
-                    EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
+                EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
                 child: WideRoundedButton(
                   enable: true,
+                  fontSizw: 15,
                   enableColor: Color(0xffE24F4F),
                   textColor: Colors.white,
-                  text: 'Restore purchashes',
+                  text: 'RESTORE PURCHASHES',
                   disableColor: Color(0xffE24F4F).withOpacity(0.25),
                   callback: () => restoreSub(),
                 ),
               ),
               SizedBox(
                 height: 10 * byWithScale(context),
-              ),
-              BlocBuilder<SubscribeBloc, SubscribeState>(
-                builder: (context, state) {
-                  if (state is AskForSubscribe && !state.noThanksBtnOFF) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 10 * byWithScale(context)),
-                      child: WideRoundedButton(
-                        enable: true,
-                        enableColor: Colors.transparent,
-                        borderColor: Color(0xffE24F4F),
-                        textColor: Color(0xffE24F4F),
-                        text: 'No thanks',
-                        disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                        callback: () => noThx(),
-                      ),
-                    );
-                  }
-                  return SizedBox();
-                },
-              ),
-              Spacer(
-                flex: 1,
               ),
             ],
           )
@@ -229,23 +230,45 @@ class _SubscribePageState extends State<SubscribePage> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
+          padding: EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
           child: Row(
             children: [
-              Image.asset(
-                'src/icons/Message.png',
-                width: 14 * byWithScale(context),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Image.asset(
+                    'src/icons/tick.png',
+                    width: 13 * byWithScale(context),
+                    color: Colors.red,
+                    fit: BoxFit.fitWidth,
+                  ),),
               ),
               SizedBox(
                 width: 4,
               ),
-              Text(
-                title,
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    fontSize: 10 * byWithScale(context),
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xff373535)),
+              Wrap(
+                direction: Axis.vertical,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                        fontSize: 10 * byWithScale(context),
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    subtitle,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context),
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
+                  ),
+                ],
               )
             ],
           ),
@@ -253,20 +276,6 @@ class _SubscribePageState extends State<SubscribePage> {
         SizedBox(
           height: 2 * byWithScale(context),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              subtitle,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  fontSize: 8 * byWithScale(context),
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xff373535)),
-            ),
-          ),
-        )
       ],
     );
   }

@@ -1,15 +1,17 @@
+import 'package:flexible/board/bloc/dailytasks_bloc.dart';
+import 'package:flexible/board/models/day_options.dart';
+import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/board/widgets/weather_bg.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:glassmorphism/glassmorphism.dart';
-
-import 'package:flexible/board/bloc/dailytasks_bloc.dart';
-import 'package:flexible/board/models/day_options.dart';
-import 'package:flexible/board/models/tasks/regular_taks.dart';
-import 'package:flexible/utils/main_backgroung_gradient.dart';
 
 class DayOptionsEditor extends StatefulWidget {
   final DayOptions dayOptions;
+
   const DayOptionsEditor({
     Key? key,
     required this.dayOptions,
@@ -36,65 +38,102 @@ class _TaskEditorState extends State<DayOptionsEditor> {
       backgroundColor: Color(0xffE9E9E9),
       body: SafeArea(
           child: SizedBox.expand(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: mainBackgroundGradient,
+            child: Container(
+              decoration: BoxDecoration(
+            color: Colors.green,
+            // gradient: mainBackgroundGradient,
           ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(28),
-                  // Stack uses for make layer of glass
-                  child: Stack(
-                    children: [
-                      // the glass layer
-                      // fill uses for adopt is size
-                      Positioned.fill(child: buildGlassmorphicLayer()),
-                      Column(
-                        children: [
-                          buildCloseButton(),
-                          Text(
-                            'Edit Daytime',
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xffE24F4F),
+              child: Stack(
+                children: [
+                  Container(child: WeatherBg(), width: 100, height: 100,),
+                  Padding(
+                    padding: EdgeInsets.all(18),
+                    // Stack uses for make layer of glass
+                    child: Stack(
+                      children: [
+                        // the glass layer
+                        // fill uses for adopt is size
+                        Positioned.fill(child: GlassmorphLayer()),
+                        Padding(
+                          padding: EdgeInsets.only(left: 15 * byWithScale(
+                              context)),
+                          child: buildCloseButton(),
+                        ),
+
+                        Column(
+                          children: [
+                            Text(
+                              'Edit Daytime',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          Text(
-                            'When do you want to do wake up',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                          buildWakeTimePicker(),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            'When do you want to go sleep',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                          buildSleepTimePicker(),
-                          SizedBox(
-                            height: 16,
-                          ),
-                        ],
-                      )
-                    ],
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Text(
+                              'When do you want to do wake up',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            buildWakeTimePicker(),
+                            SizedBox(
+                              height: 56,
+                            ),
+                            Text(
+                              'When do you want to go sleep',
+                              style: TextStyle(color: Colors.white,
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            buildSleepTimePicker(),
+                            SizedBox(
+                              height: 70,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                BlocProvider.of<DailytasksBloc>(context).add(
+                                    DailytasksUpdateDayOptions(
+                                        dayOptions: editableOptions));
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                height: 40,
+                                width: double.maxFinite,
+                                margin: EdgeInsets.symmetric(horizontal: 70),
+                                decoration: BoxDecoration(
+                                    color: Color(0xffE24F4F),
+                                    borderRadius: BorderRadius.circular(30)),
+                                child: Center(
+                                  child: Text(
+                                    'UPDATE TASK',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                buildUpdateDeleteButtons()
-              ],
+                  buildUpdateDeleteButtons()
+                ],
+              ),
             ),
-          ),
-        ),
-      )),
+          )),
     );
   }
 
@@ -105,30 +144,6 @@ class _TaskEditorState extends State<DayOptionsEditor> {
         SizedBox(
           height: 16,
         ),
-        GestureDetector(
-          onTap: () {
-            BlocProvider.of<DailytasksBloc>(context)
-                .add(DailytasksUpdateDayOptions(dayOptions: editableOptions));
-            Navigator.pop(context);
-          },
-          child: Container(
-            height: 40,
-            width: double.maxFinite,
-            margin: EdgeInsets.symmetric(horizontal: 40),
-            decoration: BoxDecoration(
-                color: Color(0xffE24F4F),
-                borderRadius: BorderRadius.circular(30)),
-            child: Center(
-              child: Text(
-                'Update time settings',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
-          ),
-        ),
         SizedBox(
           height: 16,
         ),
@@ -138,38 +153,145 @@ class _TaskEditorState extends State<DayOptionsEditor> {
 
   SizedBox buildWakeTimePicker() {
     return SizedBox(
-        height: 190,
-        child: CupertinoTimerPicker(
-            initialTimerDuration: editableOptions.wakeUpTime
-                .difference(DateUtils.dateOnly(editableOptions.wakeUpTime)),
-            mode: CupertinoTimerPickerMode.hm,
-            onTimerDurationChanged: (v) {
-              DateTime wakeUpTime =
-                  DateUtils.dateOnly(editableOptions.wakeUpTime).add(v);
-
-              setState(() {
-                editableOptions =
-                    editableOptions.copyWith(wakeUpTime: wakeUpTime);
-              });
-            }));
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 60 * byWithScale(context)),
+        padding: EdgeInsets.symmetric(horizontal: 20 * byWithScale(context)),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius:
+            BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.03,
+                top: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.105,
+              ),
+              child: Align(
+                child: Text(":", style: TextStyle(fontSize: 20),),
+                alignment: Alignment.center,
+              ),
+            ),
+            Center(
+              child: TimePickerSpinner(
+                isForce2Digits: true,
+                is24HourMode: true,
+                itemHeight: 30 * byWithScale(context),
+                itemWidth: 30 * byWithScale(context),
+                normalTextStyle: TextStyle(
+                    color: Colors.grey, fontSize: 15 * byWithScale(context)),
+                highlightedTextStyle: TextStyle(
+                    color: Colors.black, fontSize: 15 * byWithScale(context)),
+                spacing: 40,
+                minutesInterval: 1,
+                onTimeChange: (time) {
+                  setState(() {
+                    editableOptions =
+                        editableOptions.copyWith(wakeUpTime: time);
+                    //DateTime wakeUpTime =
+                    //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
+                    //_dateTime = time;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+//    return SizedBox(
+//        height: 190,
+//        child: CupertinoTimerPicker(
+//            initialTimerDuration: editableOptions.wakeUpTime
+//                .difference(DateUtils.dateOnly(editableOptions.wakeUpTime)),
+//            mode: CupertinoTimerPickerMode.hm,
+//            onTimerDurationChanged: (v) {
+//              DateTime wakeUpTime =
+//                  DateUtils.dateOnly(editableOptions.wakeUpTime).add(v);
+//
+//              setState(() {
+//                editableOptions =
+//                    editableOptions.copyWith(wakeUpTime: wakeUpTime);
+//              });
+//            }));
   }
 
   SizedBox buildSleepTimePicker() {
     return SizedBox(
-        height: 190,
-        child: CupertinoTimerPicker(
-            initialTimerDuration: editableOptions.goToSleepTime
-                .difference(DateUtils.dateOnly(editableOptions.goToSleepTime)),
-            mode: CupertinoTimerPickerMode.hm,
-            onTimerDurationChanged: (v) {
-              DateTime goToSleepTime =
-                  DateUtils.dateOnly(editableOptions.goToSleepTime).add(v);
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 60 * byWithScale(context)),
+        padding: EdgeInsets.symmetric(horizontal: 20 * byWithScale(context)),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius:
+            BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.105,
+                left: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.03,
 
-              setState(() {
-                editableOptions =
-                    editableOptions.copyWith(goToSleepTime: goToSleepTime);
-              });
-            }));
+              ),
+              child: Align(
+                child: Text(":", style: TextStyle(fontSize: 20),),
+                alignment: Alignment.center,
+              ),
+            ),
+            Center(
+              child: TimePickerSpinner(
+                isForce2Digits: true,
+                is24HourMode: true,
+                itemHeight: 30 * byWithScale(context),
+                itemWidth: 30 * byWithScale(context),
+                normalTextStyle: TextStyle(
+                    color: Colors.grey, fontSize: 15 * byWithScale(context)),
+                highlightedTextStyle: TextStyle(
+                    color: Colors.black, fontSize: 15 * byWithScale(context)),
+                spacing: 40,
+                minutesInterval: 1,
+                onTimeChange: (time) {
+                  setState(() {
+                    editableOptions =
+                        editableOptions.copyWith(goToSleepTime: time);
+                    //DateTime wakeUpTime =
+                    //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
+                    //_dateTime = time;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+//    return SizedBox(
+//        height: 190,
+//        child: CupertinoTimerPicker(
+//            initialTimerDuration: editableOptions.goToSleepTime
+//                .difference(DateUtils.dateOnly(editableOptions.goToSleepTime)),
+//            mode: CupertinoTimerPickerMode.hm,
+//            onTimerDurationChanged: (v) {
+//              DateTime goToSleepTime =
+//                  DateUtils.dateOnly(editableOptions.goToSleepTime).add(v);
+//
+//              setState(() {
+//                editableOptions =
+//                    editableOptions.copyWith(goToSleepTime: goToSleepTime);
+//              });
+//            }));
   }
 
   Widget buildCloseButton() {
@@ -178,13 +300,13 @@ class _TaskEditorState extends State<DayOptionsEditor> {
         Navigator.pop(context);
       },
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(right: 16, top: 16),
             child: Image.asset(
               'src/icons/close.png',
-              width: 24,
+              width: 22,
               fit: BoxFit.fitWidth,
             ),
           )

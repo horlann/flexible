@@ -23,10 +23,9 @@ class RowWithCloseBtn extends StatelessWidget {
                 left: 16 * byWithScale(context),
                 right: 16 * byWithScale(context),
                 top: 12 * byWithScale(context)),
-            child: Image.asset(
-              'src/icons/close.png',
-              width: 20 * byWithScale(context),
-              fit: BoxFit.fitWidth,
+            child: Icon(
+              Icons.close,
+              size: 18 * byWithScale(context),
             ),
           )
         ],

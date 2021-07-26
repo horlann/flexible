@@ -1,18 +1,18 @@
-import 'dart:async';
-
-import 'package:flexible/widgets/circular_snakbar.dart';
-import 'package:flexible/widgets/error_snakbar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/country_code_picker.dart';
+import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/utils/validators.dart';
+import 'package:flexible/widgets/circular_snakbar.dart';
+import 'package:flexible/widgets/error_snakbar.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -54,18 +54,58 @@ class _SignInPageState extends State<SignInPage> {
           decoration: BoxDecoration(
             gradient: mainBackgroundGradient,
           ),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                    minHeight: MediaQuery.of(context).size.height -
-                        safeTopPadding -
-                        safeBottomPadding),
-                child: IntrinsicHeight(
-                  child: buildBlocListenr(context),
+          child: Stack(
+            children: [
+              Container(
+                child: WeatherBg(),
+                width: double.maxFinite,
+                height: double.maxFinite,
+              ),
+              SafeArea(
+                child: SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height -
+                            safeTopPadding -
+                            safeBottomPadding),
+                    child: IntrinsicHeight(
+                      child: Stack(children: [
+                        buildBlocListenr(context),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                bottom: (10 * byWithScale(context))),
+                            child: Wrap(
+                              children: [
+                                Text(
+                                  'Don\'t have account yet? ',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10 * byWithScale(context)),
+                                  softWrap: true,
+                                ),
+                                GestureDetector(
+                                  onTap: () => onSignUpTap(),
+                                  child: Text(
+                                    'Registration',
+                                    softWrap: true,
+                                    style: TextStyle(
+                                        color: Color(0xffE24F4F),
+                                        decoration: TextDecoration.underline,
+                                        fontSize: 10 * byWithScale(context)),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ]),
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
@@ -99,13 +139,6 @@ class _SignInPageState extends State<SignInPage> {
         SizedBox(
           height: 16 * byWithScale(context),
         ),
-        Text(
-          'Flexible',
-          style: TextStyle(
-              color: Color(0xffFF0000),
-              fontSize: 28 * byWithScale(context),
-              fontWeight: FontWeight.w900),
-        ),
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(16 * byWithScale(context)),
@@ -120,10 +153,11 @@ class _SignInPageState extends State<SignInPage> {
                     SizedBox(
                       height: 16 * byWithScale(context),
                     ),
+                    FlexibleText(),
                     Text(
-                      'Sign In',
+                      'Login',
                       style: TextStyle(
-                          color: Color(0xffE24F4F),
+                          color: Colors.white,
                           fontSize: 20 * byWithScale(context),
                           fontWeight: FontWeight.w700),
                     ),
@@ -136,30 +170,32 @@ class _SignInPageState extends State<SignInPage> {
                         children: [
                           Form(key: _formKey, child: buildPhoneInput()),
                           SizedBox(
-                            height: 16 * byWithScale(context),
+                            height: 60 * byWithScale(context),
                           ),
                           Wrap(
                             children: [
-                              Text(
-                                'Don\'t have account yet? ',
-                                style: TextStyle(
-                                    fontSize: 12 * byWithScale(context)),
-                                softWrap: true,
-                              ),
-                              GestureDetector(
-                                onTap: () => onSignUpTap(),
-                                child: Text(
-                                  'Sign Up',
-                                  softWrap: true,
-                                  style: TextStyle(
-                                      color: Color(0xffE24F4F),
-                                      fontSize: 12 * byWithScale(context)),
-                                ),
-                              )
+                              Container()
+
                             ],
                           )
                         ],
                       ),
+                    ),
+                    BlocBuilder<AuthBloc, AuthState>(
+                      builder: (context, state) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 60),
+                          child: WideRoundedButton(
+                            text: 'CONTINUE',
+                            // bloc submit button if processing or on all data passed
+                            enable: !state.isBusy ? submitActive : false,
+                            textColor: Colors.white,
+                            enableColor: Color(0xffE24F4F),
+                            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                            callback: () => onSignin(),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(
                       height: 16 * byWithScale(context),
@@ -169,26 +205,6 @@ class _SignInPageState extends State<SignInPage> {
               ],
             ),
           ),
-        ),
-        Column(
-          children: [
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 60),
-                  child: WideRoundedButton(
-                    text: 'Sign in',
-                    // bloc submit button if processing or on all data passed
-                    enable: !state.isBusy ? submitActive : false,
-                    textColor: Colors.white,
-                    enableColor: Color(0xffE24F4F),
-                    disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                    callback: () => onSignin(),
-                  ),
-                );
-              },
-            ),
-          ],
         ),
         SizedBox(
           height: 16 * byWithScale(context),

@@ -56,6 +56,7 @@ class SubAndAuthChooser extends StatelessWidget {
 
         if (state is AskForSubscribe) {
           return SubscribePage();
+          //return Container();
         }
 
         return Scaffold(

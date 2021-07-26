@@ -42,7 +42,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
   @override
   Widget build(BuildContext context) {
     String currentDate(DateTime date) =>
-        DateFormat('yyyy-LLLL-dd').format(date);
+        DateFormat('dd.LLLL yyyy').format(date);
 
     return BlocBuilder<DailytasksBloc, DailytasksState>(
       builder: (context, state) {

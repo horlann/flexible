@@ -7,6 +7,7 @@ class WideRoundedButton extends StatelessWidget {
   final Color enableColor;
   final Color disableColor;
   final Color borderColor;
+  final int? fontSizw;
   final Function() callback;
   final String text;
   const WideRoundedButton(
@@ -17,6 +18,7 @@ class WideRoundedButton extends StatelessWidget {
       required this.disableColor,
       required this.callback,
       required this.text,
+      this.fontSizw,
       this.borderColor = Colors.transparent})
       : super(key: key);
 
@@ -25,9 +27,9 @@ class WideRoundedButton extends StatelessWidget {
     return Stack(
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(15 * byWithScale(context)),
+          borderRadius: BorderRadius.circular(25 * byWithScale(context)),
           child: SizedBox(
-            height: 30 * byWithScale(context),
+            height: 40 * byWithScale(context),
             child: Material(
               color: enable ? enableColor : disableColor,
               child: InkWell(
@@ -37,7 +39,7 @@ class WideRoundedButton extends StatelessWidget {
                     text,
                     style: TextStyle(
                         color: textColor,
-                        fontSize: 16 * byWithScale(context),
+                        fontSize: (fontSizw ?? 16.0) * byWithScale(context),
                         fontWeight: FontWeight.w700),
                   ),
                 ),
@@ -50,7 +52,7 @@ class WideRoundedButton extends StatelessWidget {
             child: Container(
                 decoration: BoxDecoration(
               border: Border.all(color: borderColor),
-              borderRadius: BorderRadius.circular(15 * byWithScale(context)),
+                  borderRadius: BorderRadius.circular(25),
             )),
           ),
         ),

@@ -1,9 +1,5 @@
 import 'dart:async';
-import 'package:flexible/board/task_editor/priority_chooser.dart';
-import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/models/tasks/supertask.dart';
@@ -11,6 +7,7 @@ import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/task_editor/color_picker_row.dart';
 import 'package:flexible/board/task_editor/deadline_chooser.dart';
 import 'package:flexible/board/task_editor/icon_picker_page.dart';
+import 'package:flexible/board/task_editor/priority_chooser.dart';
 import 'package:flexible/board/task_editor/row_with_close_btn.dart';
 import 'package:flexible/board/task_editor/supertask_daily_duration_slider.dart';
 import 'package:flexible/board/task_editor/supertask_global_duration_slider.dart';
@@ -19,9 +16,14 @@ import 'package:flexible/board/task_editor/task_period_slider.dart';
 import 'package:flexible/board/task_editor/time_picker.dart';
 import 'package:flexible/board/task_editor/title_input_section.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/board/widgets/weather_bg.dart';
+import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum TaskType { Regular, Super }
 
@@ -66,7 +68,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffE9E9E9),
       body: SafeArea(
           child: SizedBox.expand(
@@ -75,11 +77,20 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
             gradient: mainBackgroundGradient,
           ),
           child: CustomScrollView(
+            shrinkWrap: true,
+            primary: false,
             physics: BouncingScrollPhysics(),
             slivers: [
               SliverFillRemaining(
                 hasScrollBody: true,
-                child: buildBody(context),
+                child: Stack(children: [
+                  Container(
+                    width: double.maxFinite,
+                    height: double.maxFinite,
+                    child: WeatherBg(),
+                  ),
+                  buildBody(context)
+                ]),
               ),
             ],
           ),
@@ -100,15 +111,19 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                 // the glass layer
                 // fill uses for adopt is size
                 Positioned.fill(child: GlassmorphLayer()),
+                RowWithCloseBtn(context: context),
+
                 Column(
                   children: [
-                    RowWithCloseBtn(context: context),
-                    Text(
-                      'Create Task',
-                      style: TextStyle(
-                        fontSize: 24 * byWithScale(context),
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xffE24F4F),
+                    Padding(
+                      padding: EdgeInsets.only(top: 15 * byWithScale(context)),
+                      child: Text(
+                        'Create Task',
+                        style: TextStyle(
+                          fontSize: 24 * byWithScale(context),
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xffE24F4F),
+                        ),
                       ),
                     ),
                     isUnSubscribed()
@@ -145,17 +160,18 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                                     .add(DailytasksSuperTaskAdd(task: task));
                                 Navigator.pop(context);
                               },
-                            )
+                            ),
+                          buildUpdateDeleteButtons()
                         ],
                       ),
                     ),
+                    //buildUpdateDeleteButtons()
                   ],
                 )
               ],
             ),
           ),
         ),
-        buildUpdateDeleteButtons()
       ],
     );
   }
@@ -174,10 +190,13 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                     : BoxDecoration(
                         border: Border(
                             bottom: BorderSide(
-                                width: 4, color: Color(0xffE24F4F)))),
+                              width: 1,
+                              color: Colors.white,
+                            ))),
                 child: Text(
                   'Regular task',
                   style: TextStyle(
+                      color: Colors.white,
                       fontSize: 12 * byWithScale(context),
                       fontWeight: tasktype != TaskType.Regular
                           ? FontWeight.w400
@@ -195,10 +214,13 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                     : BoxDecoration(
                         border: Border(
                             bottom: BorderSide(
-                                width: 4, color: Color(0xffE24F4F)))),
+                              width: 1,
+                              color: Colors.white,
+                            ))),
                 child: Text(
                   'Super task',
                   style: TextStyle(
+                      color: Colors.white,
                       fontSize: 12 * byWithScale(context),
                       fontWeight: tasktype != TaskType.Super
                           ? FontWeight.w400
@@ -215,7 +237,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40),
+          padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
           child: WideRoundedButton(
               enable: true,
               textColor: Colors.white,
@@ -233,7 +255,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                 //     .add(DailytasksAddTask(task: editableTask));
                 // Navigator.pop(context);
               },
-              text: 'Create Task'),
+              text: 'CREATE TASK'),
         ),
         SizedBox(
           height: 8 * byWithScale(context),
@@ -247,6 +269,7 @@ class RegularTaskEditorBody extends StatefulWidget {
   final RegularTask? task;
   final Stream submitChanel;
   final Function(Task task) onSubmit;
+
   const RegularTaskEditorBody({
     Key? key,
     this.task,
@@ -331,16 +354,22 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
         Text(
           'When do you want to do it...',
           style: TextStyle(
-              fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
+              fontSize: 12 * byWithScale(context),
+              fontWeight: FontWeight.w500,
+              color: Colors.white),
         ),
-        TimePicker(
-          timeStart: editableRegularTask.timeStart,
-          callback: (time) {
-            setState(() {
-              editableRegularTask =
-                  editableRegularTask.copyWith(timeStart: time);
-            });
-          },
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(25)),
+          child: TimePicker(
+            timeStart: editableRegularTask.timeStart,
+            callback: (time) {
+              setState(() {
+                editableRegularTask =
+                    editableRegularTask.copyWith(timeStart: time);
+              });
+            },
+          ),
         ),
         Text(
           '...once on ${editableRegularTask.timeStart.toString().substring(0, 10)}',
@@ -350,7 +379,9 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
         Text(
           '...and how long it will take',
           style: TextStyle(
-              fontSize: 10 * byWithScale(context), fontWeight: FontWeight.w400),
+              color: Colors.white,
+              fontSize: 10 * byWithScale(context),
+              fontWeight: FontWeight.w400),
         ),
         TaskPeriodSlider(
           period: editableRegularTask.period,
@@ -361,16 +392,32 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
             });
           },
         ),
-        Text(
-          'What color should you task be?',
-          style: TextStyle(
-              fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w600),
+        SizedBox(
+          height: 24 * byWithScale(context),
         ),
-        ColorPickerRow(callback: (color) {
-          setState(() {
-            editableRegularTask = editableRegularTask.copyWith(color: color);
-          });
-        }),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 15),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(25)),
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          child: Column(
+            children: [
+              Text(
+                'What color should you task be?',
+                style: TextStyle(
+                    fontSize: 12 * byWithScale(context),
+                    fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 14 * byWithScale(context)),
+              ColorPickerRow(callback: (color) {
+                setState(() {
+                  editableRegularTask =
+                      editableRegularTask.copyWith(color: color);
+                });
+              }),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -380,6 +427,7 @@ class SuperTaskEditorBody extends StatefulWidget {
   final SuperTask? task;
   final Stream submitChanel;
   final Function(SuperTask task) onSubmit;
+
   const SuperTaskEditorBody({
     Key? key,
     this.task,

@@ -20,12 +20,12 @@ class ColorPickerRow extends StatelessWidget {
           child: Row(
             children: [
               SizedBox(
-                width: 6,
+                width: 3,
               ),
               Text(name,
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
               SizedBox(
-                width: 4,
+                width: 2,
               ),
               Container(
                 width: 20,
@@ -48,12 +48,27 @@ class ColorPickerRow extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            colorPart(color: Colors.lime, name: 'Lime'),
-            colorPart(color: Colors.redAccent, name: 'RedC'),
-            colorPart(color: Colors.indigo, name: 'Indigo'),
-            colorPart(color: Colors.cyan, name: 'Cyan'),
-            colorPart(color: Colors.amber, name: 'Amber'),
-            colorPart(color: Colors.deepPurple, name: 'DeepPurple'),
+            colorPart(color: Colors.lime, name: ''),
+            SizedBox(
+              width: 10,
+            ),
+            colorPart(color: Colors.redAccent, name: ''),
+            SizedBox(
+              width: 10,
+            ),
+            colorPart(color: Colors.indigo, name: ''),
+            SizedBox(
+              width: 10,
+            ),
+            colorPart(color: Colors.cyan, name: ''),
+            SizedBox(
+              width: 10,
+            ),
+            colorPart(color: Colors.amber, name: ''),
+            SizedBox(
+              width: 10,
+            ),
+            colorPart(color: Colors.deepPurple, name: ''),
           ],
         ),
       ),

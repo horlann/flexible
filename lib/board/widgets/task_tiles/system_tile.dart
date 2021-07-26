@@ -52,13 +52,14 @@ class _TaskTileState extends State<SystemTile> {
                   child: BlocBuilder<WeatherBloc, WeatherState>(
                     builder: (context, state) {
                       if (state is WeatherLoaded) {
-                        return Text(geTimeString(widget.showTime),
-                            style: TextStyle(
-                                color: state.daylight == DayLight.dark
-                                    ? Colors.white
-                                    : Color(0xff545353),
-                                fontSize: 10 * byWithScale(context),
-                                fontWeight: FontWeight.w400));
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(geTimeString(widget.showTime),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10 * byWithScale(context),
+                                  fontWeight: FontWeight.w400)),
+                        );
                       }
                       return Text(geTimeString(widget.showTime),
                           style: TextStyle(
@@ -69,6 +70,7 @@ class _TaskTileState extends State<SystemTile> {
                   )),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
                     width: isLessThen350() ? 40 : 59,
@@ -80,10 +82,30 @@ class _TaskTileState extends State<SystemTile> {
                   Expanded(
                     child: buildTextSection(),
                   ),
-                  buildSubButtons(),
-                  SizedBox(
-                    width: 25,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2.0),
+                    child: Column(children: [
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                          color:
+                          Colors.white,
+                          fontSize: 14 * byWithScale(context),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        widget.subtitle,
+                        style: TextStyle(
+                            color:
+                            Colors.white,
+                            fontSize: 11 * byWithScale(context),
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ],),
                   ),
+                  //buildSubButtons(),
+                  Spacer()
                 ],
               ),
             ],
@@ -99,10 +121,10 @@ class _TaskTileState extends State<SystemTile> {
         width: 50,
         decoration: BoxDecoration(
           boxShadow: [
-            BoxShadow(
-                color: Color(0xffEE7579), blurRadius: 20, offset: Offset(0, 10))
+            //BoxShadow(
+            //    color: Color(0xffEE7579), blurRadius: 20, offset: Offset(0, 10))
           ],
-          color: Color(0xffEE7579),
+          color: Color(0xffdf3034),
           borderRadius: BorderRadius.circular(25),
         ),
         child: InvertColors(child: widget.image));
@@ -120,34 +142,15 @@ class _TaskTileState extends State<SystemTile> {
             Text(
               '${geTimeString(widget.showTime)}',
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
-                  fontSize: 14 * byWithScale(context),
-                  fontWeight: FontWeight.w400),
+                  color: Colors.white
+                  ,
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w600),
             ),
             SizedBox(
               height: 4,
             ),
-            Text(
-              widget.title,
-              style: TextStyle(
-                color: state.daylight == DayLight.dark
-                    ? Colors.white
-                    : Color(0xff545353),
-                fontSize: 14 * byWithScale(context),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              widget.subtitle,
-              style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
-                  fontSize: 12 * byWithScale(context),
-                  fontWeight: FontWeight.w400),
-            ),
+
             SizedBox(
               height: 16,
             ),
