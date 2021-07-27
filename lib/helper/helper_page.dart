@@ -1,12 +1,11 @@
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
-import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class HelperPage extends StatefulWidget {
   HelperPage({required this.callback});
@@ -31,14 +30,30 @@ class _HelperPageState extends State<HelperPage> {
         duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
   }
 
-  final List<Widget> subPages = [
-    Helper2(),
-    Helper1(),
-    Helper4(),
-    Helper5(),
-    Helper3(),
-  ];
+  late final List<Widget> subPages;
   double currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    subPages = [
+      Helper2(
+        callback: () => onContinue(),
+      ),
+      Helper1(
+        callback: () => onContinue(),
+      ),
+      Helper4(
+        callback: () => onContinue(),
+      ),
+      Helper5(
+        callback: () => onContinue(),
+      ),
+      Helper3(
+        callback: () => onContinue(),
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,21 +73,21 @@ class _HelperPageState extends State<HelperPage> {
 
     return Scaffold(
         body: Container(
-          decoration: BoxDecoration(
-            gradient: mainBackgroundGradient,
-          ),
-          child: SafeArea(
-            child: CustomScrollView(
-              physics: BouncingScrollPhysics(),
-              slivers: [
-                SliverFillRemaining(
-                  hasScrollBody: true,
-                  child: buildBody(context),
-                ),
-              ],
+      decoration: BoxDecoration(
+        gradient: mainBackgroundGradient,
+      ),
+      child: SafeArea(
+        child: CustomScrollView(
+          physics: BouncingScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: true,
+              child: buildBody(context),
             ),
-          ),
-        ));
+          ],
+        ),
+      ),
+    ));
   }
 
   Widget buildBody(BuildContext context) {
@@ -85,7 +100,6 @@ class _HelperPageState extends State<HelperPage> {
             SizedBox(
               height: 16 * byWithScale(context),
             ),
-
             Expanded(
               child: Padding(
                 padding: EdgeInsets.all(32 / hpRatio(context)),
@@ -101,27 +115,26 @@ class _HelperPageState extends State<HelperPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 60),
-              child: WideRoundedButton(
-                text: 'Continue',
-                enable: true,
-                textColor: Colors.white,
-                enableColor: Color(0xffE24F4F),
-                disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                callback: () => onContinue(),
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 60),
+            //   child: WideRoundedButton(
+            //     text: 'Continue',
+            //     enable: true,
+            //     textColor: Colors.white,
+            //     enableColor: Color(0xffE24F4F),
+            //     disableColor: Color(0xffE24F4F).withOpacity(0.25),
+            //     callback: () => onContinue(),
+            //   ),
+            // ),
             SizedBox(
               height: 16 * byWithScale(context),
             ),
             DotsIndicator(
-                decorator: DotsDecorator(activeColor: Color(0xffE24F4F),
+                decorator: DotsDecorator(
+                    activeColor: Color(0xffE24F4F),
                     color: Color(0xffE24F4F).withOpacity(0.4)),
                 dotsCount: subPages.length,
-                position: currentPage
-            )
-
+                position: currentPage)
           ],
         );
       },
@@ -130,8 +143,10 @@ class _HelperPageState extends State<HelperPage> {
 }
 
 class Helper1 extends StatelessWidget {
+  final VoidCallback callback;
   const Helper1({
     Key? key,
+    required this.callback,
   }) : super(key: key);
 
   @override
@@ -177,7 +192,7 @@ class Helper1 extends StatelessWidget {
             textColor: Colors.white,
             enableColor: Color(0xffE24F4F),
             disableColor: Color(0xffE24F4F).withOpacity(0.25),
-            callback: () => {},
+            callback: () => callback(),
           ),
         ),
         SizedBox(
@@ -189,8 +204,10 @@ class Helper1 extends StatelessWidget {
 }
 
 class Helper2 extends StatelessWidget {
-  const Helper2({PageController? i,
+  final VoidCallback callback;
+  const Helper2({
     Key? key,
+    required this.callback,
   }) : super(key: key);
 
   @override
@@ -233,7 +250,7 @@ class Helper2 extends StatelessWidget {
             textColor: Colors.white,
             enableColor: Color(0xffE24F4F),
             disableColor: Color(0xffE24F4F).withOpacity(0.25),
-            callback: () => {null},
+            callback: () => callback(),
           ),
         ),
         SizedBox(
@@ -245,8 +262,10 @@ class Helper2 extends StatelessWidget {
 }
 
 class Helper3 extends StatelessWidget {
+  final VoidCallback callback;
   const Helper3({
     Key? key,
+    required this.callback,
   }) : super(key: key);
 
   @override
@@ -264,16 +283,12 @@ class Helper3 extends StatelessWidget {
         Text(
           'Increase productivity',
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.w700),
+              color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700),
         ),
         Text(
           'Start with your first task',
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
         ),
         Spacer(
           flex: 4,
@@ -306,7 +321,7 @@ class Helper3 extends StatelessWidget {
             textColor: Colors.white,
             enableColor: Color(0xffE24F4F),
             disableColor: Color(0xffE24F4F).withOpacity(0.25),
-            callback: () => {null},
+            callback: () => callback(),
           ),
         ),
         SizedBox(
@@ -318,8 +333,10 @@ class Helper3 extends StatelessWidget {
 }
 
 class Helper4 extends StatelessWidget {
-  const Helper4({int? num,
+  final VoidCallback callback;
+  const Helper4({
     Key? key,
+    required this.callback,
   }) : super(key: key);
 
   @override
@@ -335,11 +352,10 @@ class Helper4 extends StatelessWidget {
           flex: 2,
         ),
         // ignore: unrelated_type_equality_checks
-        Text('Good morning',
+        Text(
+          'Good morning',
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.w700),
+              color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700),
         ),
         Spacer(
           flex: 1,
@@ -347,17 +363,19 @@ class Helper4 extends StatelessWidget {
         Text(
           'When do you  usually wake up',
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
         ),
 //        Image.asset(
 //          'src/helper/helper_morning.png',
 //          height: 500 / hpRatio(context),
 //        ),
-        Container(height: 350 / hpRatio(context),
+        Container(
+          height: 350 / hpRatio(context),
           child: Image.asset(
-            'src/helper/helper_morning.png', fit: BoxFit.cover,),),
+            'src/helper/helper_morning.png',
+            fit: BoxFit.cover,
+          ),
+        ),
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -380,7 +398,7 @@ class Helper4 extends StatelessWidget {
             textColor: Colors.white,
             enableColor: Color(0xffE24F4F),
             disableColor: Color(0xffE24F4F).withOpacity(0.25),
-            callback: () => {null},
+            callback: () => callback(),
           ),
         ),
         SizedBox(
@@ -391,10 +409,11 @@ class Helper4 extends StatelessWidget {
   }
 }
 
-
 class Helper5 extends StatelessWidget {
-  const Helper5({int? num,
+  final VoidCallback callback;
+  const Helper5({
     Key? key,
+    required this.callback,
   }) : super(key: key);
 
   @override
@@ -410,11 +429,10 @@ class Helper5 extends StatelessWidget {
           flex: 2,
         ),
         // ignore: unrelated_type_equality_checks
-        Text('Good night',
+        Text(
+          'Good night',
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.w700),
+              color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700),
         ),
         Spacer(
           flex: 1,
@@ -422,17 +440,19 @@ class Helper5 extends StatelessWidget {
         Text(
           'When do you  usually wake up',
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
         ),
 //        Image.asset(
 //          'src/helper/helper_morning.png',
 //          height: 500 / hpRatio(context),
 //        ),
-        Container(height: 350 / hpRatio(context),
+        Container(
+          height: 350 / hpRatio(context),
           child: Image.asset(
-            'src/helper/helper_morning.png', fit: BoxFit.cover,),),
+            'src/helper/helper_morning.png',
+            fit: BoxFit.cover,
+          ),
+        ),
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -455,7 +475,7 @@ class Helper5 extends StatelessWidget {
             textColor: Colors.white,
             enableColor: Color(0xffE24F4F),
             disableColor: Color(0xffE24F4F).withOpacity(0.25),
-            callback: () => {null},
+            callback: () => callback(),
           ),
         ),
         SizedBox(
