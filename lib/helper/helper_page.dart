@@ -1,4 +1,6 @@
+import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
@@ -10,12 +12,6 @@ class HelperPage extends StatelessWidget {
 
   final VoidCallback callback;
   final PageController pageController = PageController();
-  final List<Widget> subPages = [
-    Helper1(),
-    Helper2(),
-    Helper3(),
-    Helper4(),
-  ];
 
   onContinue() {
     // If all pages showed call
@@ -27,6 +23,15 @@ class HelperPage extends StatelessWidget {
     pageController.nextPage(
         duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
   }
+
+  final List<Widget> subPages = [
+    Helper2(),
+    Helper1(),
+    Helper4(),
+    Helper5(),
+    Helper3(),
+  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,21 +46,21 @@ class HelperPage extends StatelessWidget {
 
     return Scaffold(
         body: Container(
-      decoration: BoxDecoration(
-        gradient: mainBackgroundGradient,
-      ),
-      child: SafeArea(
-        child: CustomScrollView(
-          physics: BouncingScrollPhysics(),
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: true,
-              child: buildBody(context),
+          decoration: BoxDecoration(
+            gradient: mainBackgroundGradient,
+          ),
+          child: SafeArea(
+            child: CustomScrollView(
+              physics: BouncingScrollPhysics(),
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: true,
+                  child: buildBody(context),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    ));
+          ),
+        ));
   }
 
   Widget buildBody(BuildContext context) {
@@ -68,22 +73,18 @@ class HelperPage extends StatelessWidget {
             SizedBox(
               height: 16 * byWithScale(context),
             ),
-            Text(
-              'Flexible',
-              style: TextStyle(
-                  color: Color(0xffFF0000),
-                  fontSize: 48,
-                  fontWeight: FontWeight.w900),
-            ),
+
             Expanded(
               child: Padding(
                 padding: EdgeInsets.all(32 / hpRatio(context)),
                 child: Stack(
                   children: [
+                    WeatherBg(),
                     Positioned.fill(child: GlassmorphLayer()),
                     PageView(
                         physics: BouncingScrollPhysics(),
                         controller: pageController,
+
                         children: subPages)
                   ],
                 ),
@@ -123,51 +124,54 @@ class Helper1 extends StatelessWidget {
         Spacer(
           flex: 1,
         ),
+        FlexibleText(),
+        Spacer(
+          flex: 2,
+        ),
         Text(
-          'Welcome',
+          'Plain',
           style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 32,
-              fontWeight: FontWeight.w700),
+              color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700),
+        ),
+        Text(
+          'Schedule of all affairs and events',
+          style: TextStyle(
+              color: Colors.white, fontSize: 15, fontWeight: FontWeight.w400),
         ),
         Spacer(
           flex: 1,
-        ),
-        Text(
-          'Flexible',
-          style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 24,
-              fontWeight: FontWeight.w400),
-        ),
-        Spacer(
-          flex: 1,
-        ),
-        Text(
-          'Bring structure to your day',
-          style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
         ),
         Spacer(
           flex: 4,
         ),
         Image.asset(
-          'src/helper/wtf.png',
+          'src/helper/helper.png',
           height: 300 / hpRatio(context),
         ),
         Spacer(
           flex: 3,
         ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 60),
+          child: WideRoundedButton(
+            text: 'CONTINUE',
+            enable: true,
+            textColor: Colors.white,
+            enableColor: Color(0xffE24F4F),
+            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+            callback: () => {},
+          ),
+        ),
+        SizedBox(
+          height: 16 * byWithScale(context),
+        ),
       ],
     );
-    ;
   }
 }
 
 class Helper2 extends StatelessWidget {
-  const Helper2({
+  const Helper2({var i,
     Key? key,
   }) : super(key: key);
 
@@ -179,42 +183,43 @@ class Helper2 extends StatelessWidget {
         Spacer(
           flex: 1,
         ),
-        Text(
-          'Plain',
-          style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 32,
-              fontWeight: FontWeight.w700),
-        ),
+        FlexibleText(),
         Spacer(
-          flex: 1,
+          flex: 2,
         ),
         Text(
-          'Diary',
+          'Welcome',
           style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 24,
-              fontWeight: FontWeight.w400),
-        ),
-        Spacer(
-          flex: 1,
+              color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700),
         ),
         Text(
-          'Schedule of all affairs and events',
+          'Flexible bring structure to your day',
           style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
         ),
         Spacer(
           flex: 4,
         ),
         Image.asset(
-          'src/helper/document.png',
+          'src/helper/helper_second.png',
           height: 300 / hpRatio(context),
         ),
         Spacer(
           flex: 3,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 60),
+          child: WideRoundedButton(
+            text: 'CONTINUE',
+            enable: true,
+            textColor: Colors.white,
+            enableColor: Color(0xffE24F4F),
+            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+            callback: () => {null},
+          ),
+        ),
+        SizedBox(
+          height: 16 * byWithScale(context),
         ),
       ],
     );
@@ -234,98 +239,21 @@ class Helper3 extends StatelessWidget {
         Spacer(
           flex: 1,
         ),
-        Text(
-          'Plain',
-          style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 32,
-              fontWeight: FontWeight.w700),
-        ),
-        Spacer(
-          flex: 1,
-        ),
-        Text(
-          'Diary',
-          style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 24,
-              fontWeight: FontWeight.w400),
-        ),
-        Spacer(
-          flex: 1,
-        ),
-        Text(
-          'Start with a simple task',
-          style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
-        ),
-        Spacer(
-          flex: 4,
-        ),
-        Image.asset(
-          'src/helper/task.png',
-          height: 250 / hpRatio(context),
-        ),
-        Spacer(
-          flex: 1,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Text(
-            'Stop wasting time - divide your day into small tasks',
-            style: TextStyle(
-                color: Color(0xffE24F4F),
-                fontSize: 14,
-                fontWeight: FontWeight.w400),
-          ),
-        ),
+        FlexibleText(),
         Spacer(
           flex: 2,
         ),
-      ],
-    );
-  }
-}
-
-class Helper4 extends StatelessWidget {
-  const Helper4({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Spacer(
-          flex: 1,
-        ),
         Text(
-          'Good',
+          'Increase productivity',
           style: TextStyle(
-              color: Color(0xffE24F4F),
+              color: Colors.white,
               fontSize: 32,
               fontWeight: FontWeight.w700),
         ),
-        Spacer(
-          flex: 1,
-        ),
         Text(
-          'Morning',
+          'Start with your first task',
           style: TextStyle(
-              color: Color(0xffE24F4F),
-              fontSize: 24,
-              fontWeight: FontWeight.w400),
-        ),
-        Spacer(
-          flex: 1,
-        ),
-        Text(
-          'Start with a simple task',
-          style: TextStyle(
-              color: Color(0xffE24F4F),
+              color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w400),
         ),
@@ -333,11 +261,11 @@ class Helper4 extends StatelessWidget {
           flex: 4,
         ),
         Image.asset(
-          'src/helper/time.png',
+          'src/helper/helper_third.png',
           height: 250 / hpRatio(context),
         ),
         Spacer(
-          flex: 1,
+          flex: 4,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -350,8 +278,171 @@ class Helper4 extends StatelessWidget {
           ),
         ),
         Spacer(
+          flex: 3,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 60),
+          child: WideRoundedButton(
+            text: 'GET STARTED',
+            enable: true,
+            textColor: Colors.white,
+            enableColor: Color(0xffE24F4F),
+            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+            callback: () => {null},
+          ),
+        ),
+        SizedBox(
+          height: 16 * byWithScale(context),
+        )
+      ],
+    );
+  }
+}
+
+class Helper4 extends StatelessWidget {
+  const Helper4({int? num,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Spacer(
+          flex: 1,
+        ),
+        FlexibleText(),
+        Spacer(
           flex: 2,
         ),
+        // ignore: unrelated_type_equality_checks
+        Text('Good morning',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.w700),
+        ),
+        Spacer(
+          flex: 1,
+        ),
+        Text(
+          'When do you  usually wake up',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w400),
+        ),
+//        Image.asset(
+//          'src/helper/helper_morning.png',
+//          height: 500 / hpRatio(context),
+//        ),
+        Container(height: 350 / hpRatio(context),
+          child: Image.asset(
+            'src/helper/helper_morning.png', fit: BoxFit.cover,),),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Text(
+            'You can change this later in the settings',
+            style: TextStyle(
+                color: Color(0xffE24F4F),
+                fontSize: 14,
+                fontWeight: FontWeight.w400),
+          ),
+        ),
+        Spacer(
+          flex: 3,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 60),
+          child: WideRoundedButton(
+            text: 'CONTINUE',
+            enable: true,
+            textColor: Colors.white,
+            enableColor: Color(0xffE24F4F),
+            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+            callback: () => {null},
+          ),
+        ),
+        SizedBox(
+          height: 16 * byWithScale(context),
+        )
+      ],
+    );
+  }
+}
+
+
+class Helper5 extends StatelessWidget {
+  const Helper5({int? num,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Spacer(
+          flex: 1,
+        ),
+        FlexibleText(),
+        Spacer(
+          flex: 2,
+        ),
+        // ignore: unrelated_type_equality_checks
+        Text('Good night',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.w700),
+        ),
+        Spacer(
+          flex: 1,
+        ),
+        Text(
+          'When do you  usually wake up',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w400),
+        ),
+//        Image.asset(
+//          'src/helper/helper_morning.png',
+//          height: 500 / hpRatio(context),
+//        ),
+        Container(height: 350 / hpRatio(context),
+          child: Image.asset(
+            'src/helper/helper_morning.png', fit: BoxFit.cover,),),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Text(
+            'You can change this later in the settings',
+            style: TextStyle(
+                color: Color(0xffE24F4F),
+                fontSize: 14,
+                fontWeight: FontWeight.w400),
+          ),
+        ),
+        Spacer(
+          flex: 3,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 60),
+          child: WideRoundedButton(
+            text: 'CONTINUE',
+            enable: true,
+            textColor: Colors.white,
+            enableColor: Color(0xffE24F4F),
+            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+            callback: () => {null},
+          ),
+        ),
+        SizedBox(
+          height: 16 * byWithScale(context),
+        )
       ],
     );
   }

@@ -11,7 +11,8 @@ class FlexibleText extends StatelessWidget {
           fontSize: 38 * byWithScale(context),
           fontWeight: FontWeight.w900,
           letterSpacing: 0.5,
-          color: Color(0xffdf3034)),
+        color: Color(0xffFF0000),
+      ),
     ));
   }
 }
