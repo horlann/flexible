@@ -1,3 +1,4 @@
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/board/widgets/weather_bg.dart';
@@ -7,16 +8,22 @@ import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class HelperPage extends StatelessWidget {
+class HelperPage extends StatefulWidget {
   HelperPage({required this.callback});
 
   final VoidCallback callback;
+
+  @override
+  _HelperPageState createState() => _HelperPageState();
+}
+
+class _HelperPageState extends State<HelperPage> {
   final PageController pageController = PageController();
 
   onContinue() {
     // If all pages showed call
     if (pageController.page == subPages.length - 1) {
-      callback();
+      widget.callback();
     }
 
     // show next subpage
@@ -31,10 +38,15 @@ class HelperPage extends StatelessWidget {
     Helper5(),
     Helper3(),
   ];
-
+  double currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
+    pageController.addListener(() {
+      setState(() {
+        currentPage = pageController.page!;
+      });
+    });
     // Lock portreit mode
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -79,12 +91,11 @@ class HelperPage extends StatelessWidget {
                 padding: EdgeInsets.all(32 / hpRatio(context)),
                 child: Stack(
                   children: [
-                    WeatherBg(),
+                    // WeatherBg(),
                     Positioned.fill(child: GlassmorphLayer()),
                     PageView(
                         physics: BouncingScrollPhysics(),
                         controller: pageController,
-
                         children: subPages)
                   ],
                 ),
@@ -104,6 +115,13 @@ class HelperPage extends StatelessWidget {
             SizedBox(
               height: 16 * byWithScale(context),
             ),
+            DotsIndicator(
+                decorator: DotsDecorator(activeColor: Color(0xffE24F4F),
+                    color: Color(0xffE24F4F).withOpacity(0.4)),
+                dotsCount: subPages.length,
+                position: currentPage
+            )
+
           ],
         );
       },
@@ -171,7 +189,7 @@ class Helper1 extends StatelessWidget {
 }
 
 class Helper2 extends StatelessWidget {
-  const Helper2({var i,
+  const Helper2({PageController? i,
     Key? key,
   }) : super(key: key);
 
