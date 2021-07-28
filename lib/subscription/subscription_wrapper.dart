@@ -1,4 +1,5 @@
 import 'package:flexible/authentification/auth_pusher.dart';
+import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/board_page.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/subscription/subscribe_page.dart';
@@ -42,7 +43,7 @@ class SubAndAuthChooser extends StatelessWidget {
       builder: (context, state) {
         print(state);
         if (state is UnSubscribed) {
-          // BlocProvider.of<AuthBloc>(context).add(SignOut());
+          BlocProvider.of<AuthBloc>(context).add(SignOut());
           return BoardPage();
         }
 

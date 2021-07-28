@@ -68,7 +68,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffE9E9E9),
       body: SafeArea(
           child: SizedBox.expand(
@@ -256,9 +256,9 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                   onSubmitCS.add('submit');
                 }
 
-                // BlocProvider.of<DailytasksBloc>(context)
-                //     .add(DailytasksAddTask(task: editableTask));
-                // Navigator.pop(context);
+//                 BlocProvider.of<DailytasksBloc>(context)
+//                     .add(DailytasksAddTask(task: editableTask));
+//                 Navigator.pop(context);
               },
               text: 'CREATE TASK'),
         ),

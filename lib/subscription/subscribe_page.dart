@@ -35,7 +35,7 @@ class _SubscribePageState extends State<SubscribePage> {
       }));
       print('show ppp');
     }
-    // BlocProvider.of<SubscribeBloc>(context).add(Decline());
+    BlocProvider.of<SubscribeBloc>(context).add(Decline());
   }
 
   restoreSub() {

@@ -90,7 +90,7 @@ class _AddingTileState extends State<AddingTile> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         GestureDetector(
-                          //onTap: () => addNewTask(context),
+                          //                      onTap: () => addNewTask(context),
                           onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
