@@ -81,11 +81,7 @@ class _SubscribePageState extends State<SubscribePage> {
                   textColor: Color(0xffE24F4F),
                   text: 'NO,THANKS',
                   disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                  callback: () => Navigator.push(
-                        context,
-                        //MaterialPageRoute(builder: (context) => HelperWrapper(child: Container(color: Colors.green,))),
-                        MaterialPageRoute(builder: (context) => noThx()),
-                      )),
+                  callback: () => noThx()),
             ),
           ),
         ],
@@ -106,7 +102,6 @@ class _SubscribePageState extends State<SubscribePage> {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-
 //              Padding(
 //                padding:
 //                    EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
@@ -143,12 +138,12 @@ class _SubscribePageState extends State<SubscribePage> {
 //              ),
               Center(
                   child: Text(
-                    "Flexible",
+                "Flexible",
                 style: TextStyle(
                     fontSize: 35 * byWithScale(context),
                     fontWeight: FontWeight.w900,
                     color: Color(0xffE24F4F)),
-                  )),
+              )),
               Center(
                 child: Text(
                   'Thanks for using the app!',
@@ -194,7 +189,7 @@ class _SubscribePageState extends State<SubscribePage> {
               ),
               Padding(
                 padding:
-                EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
+                    EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
                 child: WideRoundedButton(
                   enable: true,
                   fontSizw: 15,
@@ -210,7 +205,7 @@ class _SubscribePageState extends State<SubscribePage> {
               ),
               Padding(
                 padding:
-                EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
+                    EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
                 child: WideRoundedButton(
                   enable: true,
                   fontSizw: 15,
@@ -249,7 +244,8 @@ class _SubscribePageState extends State<SubscribePage> {
                     width: 13 * byWithScale(context),
                     color: Colors.red,
                     fit: BoxFit.fitWidth,
-                  ),),
+                  ),
+                ),
               ),
               SizedBox(
                 width: 15,

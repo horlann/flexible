@@ -61,9 +61,7 @@ class SubAndAuthChooser extends StatelessWidget {
         }
 
         return Scaffold(
-          body: Center(
-            child: BoardPage(),
-          ),
+          body: Center(child: CircularProgressIndicator()),
         );
       },
     );
