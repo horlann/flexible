@@ -45,9 +45,13 @@ class _TaskEditorState extends State<DayOptionsEditor> {
           ),
               child: Stack(
                 children: [
-                  Container(child: WeatherBg(), width: 100, height: 100,),
-                  Padding(
-                    padding: EdgeInsets.all(18),
+              Container(
+                child: WeatherBg(),
+                width: double.infinity,
+                height: double.infinity,
+              ),
+              Padding(
+                padding: EdgeInsets.all(18),
                     // Stack uses for make layer of glass
                     child: Stack(
                       children: [

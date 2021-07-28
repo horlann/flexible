@@ -11,6 +11,7 @@ class PriorityChooser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         buildButton(context,
@@ -34,6 +35,7 @@ class PriorityChooser extends StatelessWidget {
     return GestureDetector(
       onTap: () => callback(),
       child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
         alignment: Alignment.center,
         height: 25 * byWithScale(context),
         width: 25 * byWithScale(context),
@@ -42,13 +44,14 @@ class PriorityChooser extends StatelessWidget {
               BoxShadow(color: Colors.black.withOpacity(0.20), blurRadius: 20)
             ],
             color: active ? Color(0xffE24F4F) : Colors.white,
+            border: Border.all(color: Color(0xffE24F4F), width: 1.5),
             borderRadius: BorderRadius.circular(
               12 * byWithScale(context),
             )),
         child: Text(
           text,
           style: TextStyle(
-              color: !active ? Colors.black : Colors.white,
+              color: !active ? Color(0xffE24F4F) : Colors.white,
               fontSize: 12 * byWithScale(context),
               fontWeight: FontWeight.w600),
         ),

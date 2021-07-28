@@ -29,7 +29,7 @@ class WideRoundedButton extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(25 * byWithScale(context)),
           child: SizedBox(
-            height: 40 * byWithScale(context),
+            height: 35 * byWithScale(context),
             child: Material(
               color: enable ? enableColor : disableColor,
               child: InkWell(

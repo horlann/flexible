@@ -54,13 +54,17 @@ class _TaskTileState extends State<MorningTile> {
                   child: BlocBuilder<WeatherBloc, WeatherState>(
                     builder: (context, state) {
                       if (state is WeatherLoaded) {
-                        return Text(geTimeString(widget.showTime),
-                            style: TextStyle(
-                                color: state.daylight == DayLight.dark
-                                    ? Colors.white
-                                    : Color(0xff545353),
-                                fontSize: 10 * byWithScale(context),
-                                fontWeight: FontWeight.w400));
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 12.0),
+                          child: Text(geTimeString(widget.showTime),
+                              style: TextStyle(
+                                  color: state.daylight == DayLight.dark
+                                      ? Colors.white
+                                      : Colors.white,
+                                  //: Color(0xff545353),
+                                  fontSize: 9 * byWithScale(context),
+                                  fontWeight: FontWeight.w600)),
+                        );
                       }
                       return Text(geTimeString(widget.showTime),
                           style: TextStyle(
@@ -101,102 +105,107 @@ class _TaskTileState extends State<MorningTile> {
         width: 50,
         decoration: BoxDecoration(
           boxShadow: [
-            BoxShadow(
-                color: Color(0xffEE7579), blurRadius: 20, offset: Offset(0, 10))
+//            BoxShadow(
+//                color: Color(0xffEE7579), blurRadius: 20, offset: Offset(0, 10))
           ],
-          color: Color(0xffEE7579),
+          color: Color(0xffE24F4F),
           borderRadius: BorderRadius.circular(25),
         ),
         child: InvertColors(child: widget.image));
   }
 
-  Column buildTextSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: BlocBuilder<WeatherBloc, WeatherState>(
-                builder: (context, state) {
-                  return Text(
-                    '${geTimeString(widget.showTime)}',
-                    style: TextStyle(
+  Padding buildTextSection() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: BlocBuilder<WeatherBloc, WeatherState>(
+                  builder: (context, state) {
+                    return Text(
+                      '${geTimeString(widget.showTime)}',
+                      style: TextStyle(
+                          color: state.daylight == DayLight.dark
+                              ? Colors.white
+                              //: Color(0xff545353),
+                              : Colors.white,
+                          fontSize: 12 * byWithScale(context),
+                          fontWeight: FontWeight.w600),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: BlocBuilder<WeatherBloc, WeatherState>(
+                  builder: (context, state) {
+                    return Text(
+                      widget.title,
+                      style: TextStyle(
                         color: state.daylight == DayLight.dark
                             ? Colors.white
-                            : Color(0xff545353),
-                        fontSize: 14 * byWithScale(context),
-                        fontWeight: FontWeight.w400),
-                  );
-                },
+                            : Colors.white,
+                        //: Color(0xff545353),
+                        fontSize: 12 * byWithScale(context),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-            buildSubButtons(),
-          ],
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: BlocBuilder<WeatherBloc, WeatherState>(
-                builder: (context, state) {
-                  return Text(
-                    widget.title,
-                    style: TextStyle(
-                      color: state.daylight == DayLight.dark
-                          ? Colors.white
-                          : Color(0xff545353),
-                      fontSize: 14 * byWithScale(context),
-                      fontWeight: FontWeight.w400,
-                    ),
-                  );
-                },
-              ),
-            ),
-            // showSubButtons
-            //     ? InkWell(
-            //         child: showWeather
-            //             ? Icon(Icons.close)
-            //             : Icon(Icons.add_rounded),
-            //         onTap: () {
-            //           setState(() {
-            //             showWeather = !showWeather;
-            //           });
-            //         },
-            //       )
-            //     : SizedBox(),
-          ],
-        ),
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 20),
-        //   child: Text(
-        //     widget.subtitle,
-        //     style: TextStyle(
-        //         color: Color(0xff545353),
-        //         fontSize: 12 * byWithScale(context),
-        //         fontWeight: FontWeight.w400),
-        //   ),
-        // ),
-        SizedBox(
-          height: 4,
-        ),
-        // AnimatedCrossFade(
-        //     firstChild: SizedBox(),
-        //     secondChild: WeatherWidget(),
-        //     crossFadeState: !showWeather
-        //         ? CrossFadeState.showFirst
-        //         : CrossFadeState.showSecond,
-        //     duration: Duration(milliseconds: 200)),
-        SizedBox(
-          height: 16,
-        ),
-      ],
+              buildSubButtons(),
+            ],
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // showSubButtons
+              //     ? InkWell(
+              //         child: showWeather
+              //             ? Icon(Icons.close)
+              //             : Icon(Icons.add_rounded),
+              //         onTap: () {
+              //           setState(() {
+              //             showWeather = !showWeather;
+              //           });
+              //         },
+              //       )
+              //     : SizedBox(),
+            ],
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 20),
+          //   child: Text(
+          //     widget.subtitle,
+          //     style: TextStyle(
+          //         color: Color(0xff545353),
+          //         fontSize: 12 * byWithScale(context),
+          //         fontWeight: FontWeight.w400),
+          //   ),
+          // ),
+          SizedBox(
+            height: 4,
+          ),
+          // AnimatedCrossFade(
+          //     firstChild: SizedBox(),
+          //     secondChild: WeatherWidget(),
+          //     crossFadeState: !showWeather
+          //         ? CrossFadeState.showFirst
+          //         : CrossFadeState.showSecond,
+          //     duration: Duration(milliseconds: 200)),
+          SizedBox(
+            height: 16,
+          ),
+        ],
+      ),
     );
   }
 

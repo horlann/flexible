@@ -90,7 +90,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                         onTap: () => onTapLeft(),
                         child: Image.asset(
                           'src/icons/arrow_left.png',
-                          width: 26 * byWithScale(context),
+                          width: 20 * byWithScale(context),
                           fit: BoxFit.fitWidth,
                         ),
                       ),
@@ -106,8 +106,8 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                           return Text(
                             currentDate(state.showDay),
                             style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 20 * byWithScale(context),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 21 * byWithScale(context),
                                 color: weatherState.daylight == DayLight.dark
                                     ? Colors.white
                                     : Color(0xffF66868)),
@@ -128,7 +128,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                         onTap: () => onTapRight(),
                         child: Image.asset(
                           'src/icons/arrow_right.png',
-                          width: 26 * byWithScale(context),
+                          width: 20 * byWithScale(context),
                           fit: BoxFit.fitWidth,
                         ),
                       ),

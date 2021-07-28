@@ -1,8 +1,13 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:flexible/authentification/bloc/auth_bloc.dart';
+import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/authentification/terms_of_use.dart';
+import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flexible/utils/validators.dart';
 import 'package:flexible/widgets/circular_snakbar.dart';
 import 'package:flexible/widgets/error_snakbar.dart';
 import 'package:flexible/widgets/message_snakbar.dart';
@@ -12,12 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'package:flexible/authentification/bloc/auth_bloc.dart';
-import 'package:flexible/authentification/country_code_picker.dart';
-import 'package:flexible/board/widgets/glassmorph_layer.dart';
-import 'package:flexible/utils/main_backgroung_gradient.dart';
-import 'package:flexible/utils/validators.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -83,7 +82,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     double safeBottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       // backgroundColor: Color(0xffE9E9E9),
       body: SizedBox.expand(
         child: Container(
@@ -91,16 +90,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
             gradient: mainBackgroundGradient,
           ),
           child: SafeArea(
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                    minHeight: MediaQuery.of(context).size.height -
-                        safeTopPadding -
-                        safeBottomPadding),
-                child: IntrinsicHeight(
-                  child: buildBlocListenr(context),
+            child: ListView(
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height -
+                          safeTopPadding -
+                          safeBottomPadding),
+                  child: IntrinsicHeight(
+                    child: buildBlocListenr(context),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
@@ -132,134 +133,202 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ));
         }
       },
-      child: buildBody(context),
+      child: Stack(children: [
+        Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('src/helper/backgroundimage.png'),
+              fit: BoxFit.cover,
+            ),
+          ) /* add child content here */,
+        ),
+        buildBody(context),
+        Builder(builder: (BuildContext context) {
+          return !isUserAgree
+              ? Center(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.transparent.withOpacity(0.85),
+                    borderRadius: BorderRadius.only(
+                        topRight:
+                        Radius.circular(15 * byWithScale(context)),
+                        topLeft:
+                        Radius.circular(15 * byWithScale(context)))),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 50 * byWithScale(context)),
+                width: double.infinity,
+                height: 140 * byWithScale(context),
+                child: Center(
+                    child: Text(
+                      'You have to agree to Terms of Service and Privacy Policy first',
+                      softWrap: true,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12 * byWithScale(context)),
+                    )),
+              ),
+            ),
+          )
+              : Center(child: Container());
+        })
+      ]),
     );
   }
 
-  Column buildBody(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 16 * byWithScale(context)),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(16 * byWithScale(context)),
-            child: Stack(
-              children: [
-                Positioned.fill(child: GlassmorphLayer()),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Spacer(
-                        flex: 1,
-                      ),
-                      Center(
-                          child: Text(
-                        "Flexible",
-                        style: TextStyle(
-                            fontSize: 35 * byWithScale(context),
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xffE24F4F)),
-                      )),
-                      Center(
-                          child: Text(
-                        "Registration",
-                        style: TextStyle(
-                            fontSize: 16 * byWithScale(context),
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white),
-                      )),
-                      Spacer(
-                        flex: 1,
-                      ),
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(30 * byWithScale(context)),
-                        child: Material(
-                          color: Colors.grey[300],
-                          child: InkWell(
-                            onTap: () => getImage(),
-                            child: Container(
-                              height: 50 * byWithScale(context),
-                              width: 50 * byWithScale(context),
-                              child: _image != null
-                                  ? Image.memory(
-                                      _image!,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Center(
-                                      child: Icon(
-                                        Icons.person,
-                                        color: Colors.grey[500],
-                                      ),
-                                    ),
+  Container buildBody(BuildContext context) {
+    return Container(
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: 16 * byWithScale(context)),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(16 * byWithScale(context)),
+              child: Stack(
+                children: [
+                  Positioned.fill(child: GlassmorphLayer()),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Spacer(
+                          flex: 1,
+                        ),
+                        Center(
+                            child: Text(
+                              "Flexible",
+                              style: TextStyle(
+                                  fontSize: 35 * byWithScale(context),
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xffE24F4F)),
+                            )),
+                        Center(
+                            child: Text(
+                              "Registration",
+                              style: TextStyle(
+                                  fontSize: 16 * byWithScale(context),
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white),
+                            )),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        ClipRRect(
+                          borderRadius:
+                          BorderRadius.circular(30 * byWithScale(context)),
+                          child: Material(
+                            color: Colors.grey[300],
+                            child: InkWell(
+                              onTap: () => getImage(),
+                              child: Container(
+                                height: 50 * byWithScale(context),
+                                width: 50 * byWithScale(context),
+                                child: _image != null
+                                    ? Image.memory(
+                                  _image!,
+                                  fit: BoxFit.cover,
+                                )
+                                    : Center(
+                                  child: Icon(
+                                    Icons.person,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                      buildFullNameInput(),
-                      Spacer(
-                        flex: 1,
-                      ),
-                      buildPhoneInput(),
-                      Spacer(
-                        flex: 1,
-                      ),
-                      buildEmailInput(),
-                      Spacer(
-                        flex: 1,
-                      ),
-                      buildAgreement(),
-                      Spacer(
-                        flex: 2,
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-        Column(
-          children: [
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 60 * byWithScale(context)),
-                  child: WideRoundedButton(
-                    text: 'Continue',
-                    // bloc submit button if processing or on all data passed
-                    enable: !state.isBusy ? submitActive : false,
-                    textColor: Colors.white,
-                    enableColor: Color(0xffE24F4F),
-                    disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                    callback: () => onRegistration(),
-                  ),
-                );
-              },
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: 60 * byWithScale(context)),
-              child: WideRoundedButton(
-                text: 'Sign in',
-                enable: true,
-                textColor: Color(0xffE24F4F),
-                enableColor: Colors.transparent,
-                disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                callback: () => onSignInTap(),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        buildFullNameInput(),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        buildPhoneInput(),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        buildEmailInput(),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        buildAgreement(),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 60 * byWithScale(context)),
+                              child: WideRoundedButton(
+                                text: 'CONTINUE',
+                                // bloc submit button if processing or on all data passed
+                                enable: !state.isBusy ? submitActive : false,
+                                textColor: Colors.white,
+                                enableColor: Color(0xffE24F4F),
+                                disableColor:
+                                Color(0xffE24F4F).withOpacity(0.25),
+                                callback: () => onRegistration(),
+                              ),
+                            );
+                          },
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
-          ],
-        )
-      ],
+          ),
+          Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: 60 * byWithScale(context), vertical: 20),
+              child: Wrap(
+                children: [
+                  Text(
+                    'Already Registered?',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11 * byWithScale(context)),
+                  ),
+                  GestureDetector(
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                          color: Color(0xffE24F4F),
+                          decoration: TextDecoration.underline,
+                          fontSize: 11 * byWithScale(context)),
+                    ),
+                    onTap: () {
+                      onSignInTap();
+                    },
+                  ),
+                ],
+              ))
+        ],
+      ),
     );
   }
 
@@ -293,20 +362,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 children: [
                   Text('By creating an account you agree to our ',
                       softWrap: true,
-                      style: TextStyle(fontSize: 10 * byWithScale(context))),
+                      style: TextStyle(
+                          fontSize: 9 * byWithScale(context),
+                          color: Colors.white)),
                   Text(
                     'Terms of Service ',
                     softWrap: true,
                     style: TextStyle(
+                        decoration: TextDecoration.underline,
                         color: Color(0xffE24F4F),
-                        fontSize: 10 * byWithScale(context)),
+                        fontSize: 9 * byWithScale(context)),
                   ),
+                  Text('and ',
+                      softWrap: true,
+                      style: TextStyle(
+                          fontSize: 9 * byWithScale(context),
+                          color: Colors.white)),
                   Text(
                     'and Privacy Policy',
                     softWrap: true,
                     style: TextStyle(
+                        decoration: TextDecoration.underline,
                         color: Color(0xffE24F4F),
-                        fontSize: 10 * byWithScale(context)),
+                        fontSize: 9 * byWithScale(context)),
                   ),
                 ],
               ),
