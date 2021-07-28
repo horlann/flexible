@@ -166,7 +166,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                                 Navigator.pop(context);
                               },
                             ),
-                          buildUpdateDeleteButtons()
+                          //buildUpdateDeleteButtons()
                         ],
                       ),
                     ),
@@ -195,9 +195,9 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                     : BoxDecoration(
                         border: Border(
                             bottom: BorderSide(
-                              width: 1,
-                              color: Colors.white,
-                            ))),
+                        width: 1,
+                        color: Colors.white,
+                      ))),
                 child: Text(
                   'Regular task',
                   style: TextStyle(
@@ -508,7 +508,6 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
                       editableRegularTask.copyWith(color: color);
                 });
               }),
-
             ],
           ),
         ),
@@ -516,7 +515,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
 //          onTap: () {
 //            BlocProvider.of<DailytasksBloc>(context).add(
 //                DailytasksUpdateDayOptions(
-//                    dayOptions: editableOptions));
+//                    dayOptions: editableRegularTask));
 //            Navigator.pop(context);
 //          },
           child: Container(
@@ -673,7 +672,8 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
           'What is your task Duration?',
           style: TextStyle(
               color: Colors.white,
-              fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w400),
+              fontSize: 12 * byWithScale(context),
+              fontWeight: FontWeight.w400),
         ),
         SuperTaskGlobasDurationSlider(
           duration: editableSuperTask.globalDuration,
@@ -688,7 +688,8 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
           'Daily Task Time?',
           style: TextStyle(
               color: Colors.white,
-              fontSize: 12 * byWithScale(context), fontWeight: FontWeight.w400),
+              fontSize: 12 * byWithScale(context),
+              fontWeight: FontWeight.w400),
         ),
         SuperTaskDailyDurationSlider(
           duration: editableSuperTask.period,
@@ -698,26 +699,29 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
             });
           },
         ),
-        Wrap(children: [
-          Text(
-            'Priority:',
-            style: TextStyle(
-                fontSize: 12 * byWithScale(context),
-                fontWeight: FontWeight.w600,
-                color: Colors.white),
-          ),
-          SizedBox(width: 20 * byWithScale(context),),
-          PriorityChooser(
-            initialPriority: editableSuperTask.priority,
-            onChange: (priority) {
-              setState(() {
-                editableSuperTask =
-                    editableSuperTask.copyWith(priority: priority);
-              });
-            },
-          ),
-        ],),
-
+        Wrap(
+          children: [
+            Text(
+              'Priority:',
+              style: TextStyle(
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white),
+            ),
+            SizedBox(
+              width: 20 * byWithScale(context),
+            ),
+            PriorityChooser(
+              initialPriority: editableSuperTask.priority,
+              onChange: (priority) {
+                setState(() {
+                  editableSuperTask =
+                      editableSuperTask.copyWith(priority: priority);
+                });
+              },
+            ),
+          ],
+        ),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 15),
           decoration: BoxDecoration(
@@ -734,14 +738,23 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
               SizedBox(height: 14 * byWithScale(context)),
               ColorPickerRow(callback: (color) {
                 setState(() {
-                  editableSuperTask =
-                      editableSuperTask.copyWith(color: color);
+                  editableSuperTask = editableSuperTask.copyWith(color: color);
                 });
               }),
-
             ],
           ),
         ),
+        Builder(builder: (BuildContext context) {
+          if (BlocProvider
+              .of<SubscribeBloc>(context)
+              .state is UnSubscribed) {
+            return Center(
+              child: Text("Text"),
+            );
+          } else {
+            return Container();
+          }
+        }),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 80, vertical: 5),
           child: WideRoundedButton(

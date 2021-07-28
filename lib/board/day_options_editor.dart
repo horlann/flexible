@@ -186,6 +186,7 @@ class _TaskEditorState extends State<DayOptionsEditor> {
               child: TimePickerSpinner(
                 isForce2Digits: true,
                 is24HourMode: true,
+                time: widget.dayOptions.wakeUpTime,
                 itemHeight: 30 * byWithScale(context),
                 itemWidth: 30 * byWithScale(context),
                 normalTextStyle: TextStyle(
@@ -198,9 +199,6 @@ class _TaskEditorState extends State<DayOptionsEditor> {
                   setState(() {
                     editableOptions =
                         editableOptions.copyWith(wakeUpTime: time);
-                    // DateTime wakeUpTime =
-                    //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
-                    //_dateTime = time;
                   });
                 },
               ),
@@ -209,21 +207,6 @@ class _TaskEditorState extends State<DayOptionsEditor> {
         ),
       ),
     );
-//    return SizedBox(
-//        height: 190,
-//        child: CupertinoTimerPicker(
-//            initialTimerDuration: editableOptions.wakeUpTime
-//                .difference(DateUtils.dateOnly(editableOptions.wakeUpTime)),
-//            mode: CupertinoTimerPickerMode.hm,
-//            onTimerDurationChanged: (v) {
-//              DateTime wakeUpTime =
-//                  DateUtils.dateOnly(editableOptions.wakeUpTime).add(v);
-//
-//              setState(() {
-//                editableOptions =
-//                    editableOptions.copyWith(wakeUpTime: wakeUpTime);
-//              });
-//            }));
   }
 
   SizedBox buildSleepTimePicker() {
@@ -258,6 +241,8 @@ class _TaskEditorState extends State<DayOptionsEditor> {
               child: TimePickerSpinner(
                 isForce2Digits: true,
                 is24HourMode: true,
+                time: widget.dayOptions.goToSleepTime,
+
                 itemHeight: 30 * byWithScale(context),
                 itemWidth: 30 * byWithScale(context),
                 normalTextStyle: TextStyle(
@@ -281,21 +266,6 @@ class _TaskEditorState extends State<DayOptionsEditor> {
         ),
       ),
     );
-//    return SizedBox(
-//        height: 190,
-//        child: CupertinoTimerPicker(
-//            initialTimerDuration: editableOptions.goToSleepTime
-//                .difference(DateUtils.dateOnly(editableOptions.goToSleepTime)),
-//            mode: CupertinoTimerPickerMode.hm,
-//            onTimerDurationChanged: (v) {
-//              DateTime goToSleepTime =
-//                  DateUtils.dateOnly(editableOptions.goToSleepTime).add(v);
-//
-//              setState(() {
-//                editableOptions =
-//                    editableOptions.copyWith(goToSleepTime: goToSleepTime);
-//              });
-//            }));
   }
 
   Widget buildCloseButton() {
