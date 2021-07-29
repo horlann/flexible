@@ -35,7 +35,7 @@ class _SubscribePageState extends State<SubscribePage> {
       }));
       print('show ppp');
     }
-    // BlocProvider.of<SubscribeBloc>(context).add(Decline());
+    BlocProvider.of<SubscribeBloc>(context).add(Decline());
   }
 
   restoreSub() {
@@ -57,9 +57,14 @@ class _SubscribePageState extends State<SubscribePage> {
           child: Stack(
         children: [
           Container(
-            child: WeatherBg(),
-            width: double.maxFinite,
-            height: double.maxFinite,
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('src/helper/backgroundimage.png'),
+                fit: BoxFit.cover,
+              ),
+            ) /* add child content here */,
           ),
           buildBody(context),
           Align(
@@ -68,19 +73,15 @@ class _SubscribePageState extends State<SubscribePage> {
               padding: EdgeInsets.only(
                   left: 48 * byWithScale(context),
                   right: 48 * byWithScale(context),
-                  bottom: 5 * byWithScale(context)),
+                  bottom: 8 * byWithScale(context)),
               child: WideRoundedButton(
                   enable: true,
                   fontSizw: 15,
                   enableColor: Colors.transparent,
-                  textColor: Colors.white,
-                  text: 'No,thanks',
+                  textColor: Color(0xffE24F4F),
+                  text: 'NO,THANKS',
                   disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                  callback: () => Navigator.push(
-                        context,
-                        //MaterialPageRoute(builder: (context) => HelperWrapper(child: Container(color: Colors.green,))),
-                        MaterialPageRoute(builder: (context) => noThx()),
-                      )),
+                  callback: () => noThx()),
             ),
           ),
         ],
@@ -91,17 +92,16 @@ class _SubscribePageState extends State<SubscribePage> {
   Widget buildBody(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          right: 75 / pRatio(context),
-          left: 75 / pRatio(context),
+          right: 50 / pRatio(context),
+          left: 50 / pRatio(context),
           top: 40 / pRatio(context),
-          bottom: 200 / pRatio(context)),
+          bottom: 190 / pRatio(context)),
       child: Stack(
         children: [
           Positioned.fill(child: GlassmorphLayer()),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-
 //              Padding(
 //                padding:
 //                    EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
@@ -138,12 +138,12 @@ class _SubscribePageState extends State<SubscribePage> {
 //              ),
               Center(
                   child: Text(
-                    "Flexible",
+                "Flexible",
                 style: TextStyle(
                     fontSize: 35 * byWithScale(context),
                     fontWeight: FontWeight.w900,
                     color: Color(0xffE24F4F)),
-                  )),
+              )),
               Center(
                 child: Text(
                   'Thanks for using the app!',
@@ -154,11 +154,12 @@ class _SubscribePageState extends State<SubscribePage> {
                 ),
               ),
               Spacer(
-                flex: 1,
+                flex: 5,
               ),
               buildTip(context,
                   title: 'Stay on track with reminders',
-                  subtitle: 'Get notifications when a task starts end ends.'),
+                  subtitle:
+                      'Get notifications when a task starts end ends.You can even complete tasks without opening the app                             '),
               Spacer(
                 flex: 1,
               ),
@@ -188,7 +189,7 @@ class _SubscribePageState extends State<SubscribePage> {
               ),
               Padding(
                 padding:
-                EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
+                    EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
                 child: WideRoundedButton(
                   enable: true,
                   fontSizw: 15,
@@ -204,7 +205,7 @@ class _SubscribePageState extends State<SubscribePage> {
               ),
               Padding(
                 padding:
-                EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
+                    EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
                 child: WideRoundedButton(
                   enable: true,
                   fontSizw: 15,
@@ -230,43 +231,56 @@ class _SubscribePageState extends State<SubscribePage> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
+          padding: EdgeInsets.symmetric(horizontal: 20 * byWithScale(context)),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
+                padding: const EdgeInsets.only(top: 3.0),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Image.asset(
-                    'src/icons/tick.png',
+                    'src/icons/done.png',
                     width: 13 * byWithScale(context),
                     color: Colors.red,
                     fit: BoxFit.fitWidth,
-                  ),),
+                  ),
+                ),
               ),
               SizedBox(
-                width: 4,
+                width: 15,
               ),
               Wrap(
                 direction: Axis.vertical,
+                //mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     title,
                     style: TextStyle(
-                        fontSize: 10 * byWithScale(context),
+                        fontSize: 13 * byWithScale(context),
                         fontWeight: FontWeight.w600,
                         color: Colors.white),
                   ),
                   SizedBox(
                     height: 5,
                   ),
-                  Text(
-                    subtitle,
-                    overflow: TextOverflow.fade,
-                    style: TextStyle(
-                        fontSize: 8 * byWithScale(context),
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white),
+                  Container(
+                    height: 55,
+                    width: 200 * byWithScale(context),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          subtitle,
+                          maxLines: 5,
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(
+                              fontSize: 11 * byWithScale(context),
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               )

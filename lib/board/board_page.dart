@@ -62,10 +62,10 @@ class _BoardPageState extends State<BoardPage> {
             // Provide video bg by weather
 
             // TODO uncomment for prod
-//            Container(
-//                width: double.maxFinite,
-//                height: double.maxFinite,
-//                child: WeatherBg()),
+            Container(
+                width: double.maxFinite,
+                height: double.maxFinite,
+                child: WeatherBg()),
             SafeArea(
               child: Column(
                 children: [

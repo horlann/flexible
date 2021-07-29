@@ -88,7 +88,7 @@ class _SignInPageState extends State<SignInPage> {
                                 GestureDetector(
                                   onTap: () => onSignUpTap(),
                                   child: Text(
-                                    'Registration',
+                                    'Registrationn',
                                     softWrap: true,
                                     style: TextStyle(
                                         color: Color(0xffE24F4F),

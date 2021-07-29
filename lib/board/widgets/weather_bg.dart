@@ -1,5 +1,5 @@
 import 'package:flexible/board/video_layer_fitted.dart';
-import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/material.dart';
@@ -101,17 +101,57 @@ class _WeatherBgState extends State<WeatherBg> {
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
         print(state);
-        if (state is WeatherError) {
-          return Center(child: Text(state.error));
+        if (BlocProvider.of<SubscribeBloc>(context).state is Subscribed) {
+          if (state is WeatherError) {
+            return Center(child: Text(state.error));
+          } else if (state is WeatherLoaded) {
+            return VideoLayerFittedToBG(
+                key: Key(getWeatherAssetByCode(state.wCode, state.daylight)),
+                videoAsset: getWeatherAssetByCode(state.wCode, state.daylight),
+                backgroundColor: colorByType(state.daylight));
+          }
+          return Center(child: Text('Loading'));
         }
-        if (state is WeatherLoaded) {
-          return VideoLayerFittedToBG(
-              key: Key(getWeatherAssetByCode(state.wCode, state.daylight)),
-              videoAsset: getWeatherAssetByCode(state.wCode, state.daylight),
-              backgroundColor: colorByType(state.daylight));
-        }
-
-        return Center(child: Text('Loading'));
+        return Builder(builder: (BuildContext context) {
+          if (state.daylight == DayLight.light) {
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                //color: colorByType(state.daylight),
+                image: DecorationImage(
+                  image: AssetImage('src/helper/backgroundimage.png'),
+                  fit: BoxFit.cover,
+                ),
+              ) /* add child content here */,
+            );
+          } else if (state.daylight == DayLight.medium) {
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('src/helper/backgroundimage_medium.png'),
+                  fit: BoxFit.cover,
+                ),
+              ) /* add child content here */,
+            );
+          } else if (state.daylight == DayLight.dark) {
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('src/helper/backgroundimage_dark.png'),
+                  fit: BoxFit.cover,
+                ),
+              ) /* add child content here */,
+            );
+          } else {
+            return Container();
+          }
+        });
+//        return
       },
     );
   }

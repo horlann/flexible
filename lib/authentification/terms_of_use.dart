@@ -1,4 +1,3 @@
-import 'package:flexible/board/task_editor/row_with_close_btn.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/board/widgets/weather_bg.dart';
@@ -44,25 +43,29 @@ class _TermsPageState extends State<TermsPage> {
             child: Stack(
               children: [
                 Container(
-                  child: WeatherBg(),
                   width: double.infinity,
                   height: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('src/helper/backgroundimage.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ) /* add child content here */,
                 ),
                 SafeArea(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(10 * byWithScale(context)),
-                          child: Stack(
+                  child: Padding(
+                    padding: EdgeInsets.all(10 * byWithScale(context)),
+                    child: Stack(
+                      children: [
+                        Positioned.fill(child: GlassmorphLayer()),
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Positioned.fill(child: GlassmorphLayer()),
-                              Align(
-                                  alignment: Alignment.topCenter,
-                                  child: FlexibleText()),
+                              FlexibleText(),
                               SizedBox(
-                                // height: 500,
+                                height: double.infinity,
                                 width: double.maxFinite,
                                 child: PageView(
                                   physics: BouncingScrollPhysics(),
@@ -88,9 +91,12 @@ class _TermsPageState extends State<TermsPage> {
                                       enableColor: Color(0xffE24F4F),
                                       textColor: Colors.white,
                                       text: 'CLOSE',
-                                      disableColor:
-                                          Color(0xffE24F4F).withOpacity(0.25),
-                                      callback: () => Navigator.pop,
+                                      disableColor: Color(0xffE24F4F)
+                                          .withOpacity(0.25),
+                                      callback: () {
+                                        Navigator.pop;
+                                        print("dsdsdd");
+                                      },
                                     ),
                                   ),
                                 ),
@@ -98,31 +104,11 @@ class _TermsPageState extends State<TermsPage> {
                             ],
                           ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(subPages.length, (index) {
-                          if (_currentPage == index) {
-                            return Container(
-                              width: 10,
-                              height: 6,
-                              margin: EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                  color: Color(0xffE24F4F),
-                                  borderRadius: BorderRadius.circular(3)),
-                            );
-                          }
-                          return Container(
-                            width: 6,
-                            height: 6,
-                            margin: EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                                color: Color(0xffE24F4F).withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(6)),
-                          );
-                        }),
-                      ),
-                    ],
+                        SizedBox(
+                          height: 30 * byWithScale(context),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -140,7 +126,7 @@ class Terms extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 50 * byWithScale(context),
+          height: 10 * byWithScale(context),
         ),
         Text(
           'Terms of use',
@@ -171,9 +157,6 @@ class Terms extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          height: 32,
-        ),
       ],
     );
   }
@@ -185,7 +168,7 @@ class Privacy extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: 50 * byWithScale(context),
+          height: 10 * byWithScale(context),
         ),
         Text(
           'Privacy policy',
@@ -213,7 +196,6 @@ class Privacy extends StatelessWidget {
             ),
           ),
         ),
-
       ],
     );
   }

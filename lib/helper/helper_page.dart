@@ -1,11 +1,12 @@
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
+import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class HelperPage extends StatefulWidget {
   HelperPage({required this.callback});
@@ -27,7 +28,7 @@ class _HelperPageState extends State<HelperPage> {
 
     // show next subpage
     pageController.nextPage(
-        duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   late final List<Widget> subPages;
@@ -82,7 +83,19 @@ class _HelperPageState extends State<HelperPage> {
           slivers: [
             SliverFillRemaining(
               hasScrollBody: true,
-              child: buildBody(context),
+              child: Stack(children: [
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('src/helper/backgroundimage.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ) /* add child content here */,
+                ),
+                buildBody(context)
+              ]),
             ),
           ],
         ),
@@ -144,6 +157,7 @@ class _HelperPageState extends State<HelperPage> {
 
 class Helper1 extends StatelessWidget {
   final VoidCallback callback;
+
   const Helper1({
     Key? key,
     required this.callback,
@@ -205,6 +219,7 @@ class Helper1 extends StatelessWidget {
 
 class Helper2 extends StatelessWidget {
   final VoidCallback callback;
+
   const Helper2({
     Key? key,
     required this.callback,
@@ -263,6 +278,7 @@ class Helper2 extends StatelessWidget {
 
 class Helper3 extends StatelessWidget {
   final VoidCallback callback;
+
   const Helper3({
     Key? key,
     required this.callback,
@@ -334,6 +350,7 @@ class Helper3 extends StatelessWidget {
 
 class Helper4 extends StatelessWidget {
   final VoidCallback callback;
+
   const Helper4({
     Key? key,
     required this.callback,
@@ -411,6 +428,7 @@ class Helper4 extends StatelessWidget {
 
 class Helper5 extends StatelessWidget {
   final VoidCallback callback;
+
   const Helper5({
     Key? key,
     required this.callback,

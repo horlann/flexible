@@ -20,6 +20,7 @@ class TaskPeriodSlider extends StatelessWidget {
                 '${period.inHours.toString()} hours',
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
+                    color: Colors.white,
                     fontSize: 10 * byWithScale(context)),
               ),
               Text('',
@@ -32,26 +33,29 @@ class TaskPeriodSlider extends StatelessWidget {
         SliderTheme(
           data: SliderThemeData(
             // trackHeight: 2,
-            activeTickMarkColor: Colors.black,
-            inactiveTickMarkColor: Colors.black,
-            // thumbColor: ColorAssets.themeColorMagenta,
-            thumbColor: Color(0xffE24F4F),
+            activeTickMarkColor: Colors.white,
+            inactiveTickMarkColor: Colors.white,
 
+            //thumbColor: ColorAssets.themeColorMagenta,
+            thumbColor: Color(0xffE24F4F),
+            tickMarkShape: RoundSliderTickMarkShape(
+                tickMarkRadius: 4 * byWithScale(context)),
             activeTrackColor: Color(0xffDDDDDD),
             inactiveTrackColor: Color(0xffDDDDDD),
-            trackShape: RectangularSliderTrackShape(),
 
+            trackShape: RectangularSliderTrackShape(),
             // overlayColor: Colors.red.withAlpha(32),
             // overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
             thumbShape: RoundSliderThumbShape(
-                enabledThumbRadius: 8 * byWithScale(context)),
+              enabledThumbRadius: 8 * byWithScale(context),
+            ),
 
             valueIndicatorShape: PaddleSliderValueIndicatorShape(),
             valueIndicatorColor: Colors.redAccent,
             valueIndicatorTextStyle: TextStyle(
               color: Colors.white,
             ),
-            trackHeight: 3.0 * byWithScale(context),
+            trackHeight: 1.0 * byWithScale(context),
           ),
           child: SizedBox(
             height: 30 * byWithScale(context),

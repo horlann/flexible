@@ -31,7 +31,9 @@ class ColorPickerRow extends StatelessWidget {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                    color: color, borderRadius: BorderRadius.circular(10)),
+                  //border: Border.all(color: Colors.black),
+                    color: color,
+                    borderRadius: BorderRadius.circular(10)),
               ),
               SizedBox(
                 width: 6,

@@ -67,10 +67,10 @@ class _State extends State<DailyTaskModal> {
                                               )
                                           ),
                                           Container(
-                                              height: 52,
-                                              width: 108,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
+                                  height: 40,
+                                  width: 90,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
                                                   borderRadius: BorderRadius.circular(8)
                                               ),
                                               child: Row(
@@ -95,11 +95,11 @@ class _State extends State<DailyTaskModal> {
                                                                 splashColor: redMain,
                                                                 highlightColor: Colors.transparent,
                                                                 child: Container(
-                                                                    height: 52,
-                                                                    width: 108,
+                                                                    height: 40,
+                                                                    width: 90,
                                                                     child: Center(
                                                                         child: Text("Edit", style: TextStyle(
-                                                                            fontSize: 30,
+                                                                            fontSize: 28,
                                                                             fontWeight: FontWeight.bold,
                                                                             fontFamily: "Mikado",
                                                                             color: editButtonHold == true ? Colors.white : redMain)

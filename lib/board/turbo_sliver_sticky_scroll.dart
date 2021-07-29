@@ -1,4 +1,7 @@
 import 'package:flexible/board/day_options_editor.dart';
+import 'package:flexible/board/models/day_options.dart';
+import 'package:flexible/board/widgets/sliver_persistant_header.dart';
+import 'package:flexible/board/widgets/task_tiles/adding_tile.dart';
 import 'package:flexible/board/widgets/task_tiles/morning_tile.dart';
 import 'package:flexible/board/widgets/task_tiles/system_tile.dart';
 import 'package:flexible/utils/modal.dart';
@@ -10,13 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-import 'package:flexible/board/models/day_options.dart';
-import 'package:flexible/board/widgets/task_tiles/adding_tile.dart';
-import 'package:flexible/board/widgets/sliver_persistant_header.dart';
-
 class TurboAnimatedScrollView extends StatefulWidget {
   final List<Widget> tasks;
   final DayOptions dayOptions;
+
   const TurboAnimatedScrollView({
     Key? key,
     required this.tasks,
@@ -37,11 +37,12 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
   GlobalKey nightKey = GlobalKey();
 
   Rect? _getOffset(GlobalKey? key) {
-    if(key == null) return null;
+    if (key == null) return null;
     final renderObject = key.currentContext?.findRenderObject();
     var translation = renderObject?.getTransformTo(null).getTranslation();
     if (translation != null && renderObject?.paintBounds != null) {
-      return renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
+      return renderObject?.paintBounds
+          .shift(Offset(translation.x, translation.y));
     } else {
       return null;
     }
@@ -117,10 +118,11 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                 child: Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
-                        width: 3,
+                        width: 2,
                         color: state.daylight == DayLight.dark
                             ? Colors.white
-                            : Color(0xff707070))),
+                            //: Color(0xff707070))),
+                            : Colors.white)),
               ));
             },
           ),
@@ -154,14 +156,19 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                       scale: 1.1,
                     ),
                     callback: () {
-                      showModal(context, DailyTaskModal(widget.dayOptions, _getOffset(nightKey)?.top ?? 0, () {
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) =>
-                                  DayOptionsEditor(dayOptions: widget.dayOptions),
-                            ));
-                      }));
+                      showModal(
+                          context,
+                          DailyTaskModal(
+                              widget.dayOptions, _getOffset(nightKey)?.top ?? 0,
+                                  () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          DayOptionsEditor(
+                                              dayOptions: widget.dayOptions),
+                                    ));
+                              }));
                     })
               ])),
               // Adding section with last tile
@@ -193,16 +200,21 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                       scale: 1.1,
                     ),
                     callback: () {
-                      showModal(context, DailyTaskModal(widget.dayOptions, _getOffset(morningKey)?.top ?? 0, () {
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) =>
-                                  DayOptionsEditor(dayOptions: widget.dayOptions),
-                            ));
-                      }));
+                      showModal(
+                          context,
+                          DailyTaskModal(widget.dayOptions,
+                              _getOffset(morningKey)?.top ?? 0, () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          DayOptionsEditor(
+                                              dayOptions: widget.dayOptions),
+                                    ));
+                              }));
                     })
               ])),
+
             ],
           ),
         ],

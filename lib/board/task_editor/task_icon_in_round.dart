@@ -24,10 +24,9 @@ class TaskIconInRound extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(),
       child: Container(
-        width: 24 * byWithScale(context),
-        height: 24 * byWithScale(context),
-        decoration: BoxDecoration(
-            color: taskColor, borderRadius: BorderRadius.circular(16)),
+        width: 35 * byWithScale(context),
+        height: 35 * byWithScale(context),
+        decoration: BoxDecoration(color: taskColor, shape: BoxShape.circle),
         child: InvertColors(
           child: Center(
             child: FutureBuilder(

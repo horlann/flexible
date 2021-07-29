@@ -1,11 +1,26 @@
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class SuperTaskGlobasDurationSlider extends StatelessWidget {
+  int value = 0;
   final Duration duration;
   final Function(Duration duration) onChange;
 
-  final List<int> hours = [1, 5, 10, 30, 60, 90, 180];
+  final List<Duration> durations = [
+    Duration(minutes: 1),
+    Duration(minutes: 5),
+    Duration(minutes: 15),
+    Duration(minutes: 30),
+    Duration(minutes: 45),
+    Duration(hours: 1),
+    Duration(hours: 2),
+    Duration(hours: 3),
+    Duration(hours: 4),
+    Duration(hours: 5),
+    Duration(hours: 6),
+    Duration(hours: 7)
+  ];
 
   SuperTaskGlobasDurationSlider(
       {required this.duration, required this.onChange});
@@ -22,6 +37,7 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
               Text(
                 '${duration.inHours.toString()} hours',
                 style: TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.w600,
                     fontSize: 10 * byWithScale(context)),
               ),
@@ -32,53 +48,105 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
             ],
           ),
         ),
+//        SfSliderTheme(
+//          child: SfSlider(
+//            showDividers: false,
+//            max: 6,
+//            min: 0,
+//            value: hours.indexOf(duration.inHours).toDouble(),
+//            interval: 20,
+//            showTicks: false,
+//            showLabels: false,
+//            enableTooltip: false,
+//            minorTicksPerInterval: 1,
+//            onChanged: (value) {
+//              onChange(Duration(hours: hours[value.toInt()]),);
+//            },
+//          ),
+//        ),
         SliderTheme(
           data: SliderThemeData(
             // trackHeight: 2,
-            activeTickMarkColor: Colors.black,
-            inactiveTickMarkColor: Colors.black,
+            activeTickMarkColor: Colors.white,
+            inactiveTickMarkColor: Colors.white,
             // thumbColor: ColorAssets.themeColorMagenta,
             thumbColor: Color(0xffE24F4F),
+            tickMarkShape: RoundSliderTickMarkShape(
+                tickMarkRadius: 4 * byWithScale(context)),
 
             activeTrackColor: Color(0xffDDDDDD),
-            inactiveTrackColor: Color(0xffDDDDDD),
+            inactiveTrackColor: Colors.green,
             trackShape: RectangularSliderTrackShape(),
-
             // overlayColor: Colors.red.withAlpha(32),
             // overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
             thumbShape: RoundSliderThumbShape(
-                enabledThumbRadius: 8 * byWithScale(context)),
-
+                enabledThumbRadius: 8 * byWithScale(context),
+                disabledThumbRadius: 10),
             valueIndicatorShape: PaddleSliderValueIndicatorShape(),
             valueIndicatorColor: Colors.redAccent,
             valueIndicatorTextStyle: TextStyle(
               color: Colors.white,
             ),
-            trackHeight: 3.0 * byWithScale(context),
+            trackHeight: 1.0 * byWithScale(context),
           ),
           child: SizedBox(
             height: 30 * byWithScale(context),
             child: Slider(
-              divisions: 6,
-              max: 6,
+              inactiveColor: Colors.white,
+              divisions: 9,
+              max: 10,
               min: 0,
-              value: hours.indexOf(duration.inHours).toDouble(),
-              onChanged: (v) => onChange(
-                Duration(hours: hours[v.toInt()]),
-              ),
+              //value: durations.indexOf(duration).toDouble(),
+              value: 1,
+              onChanged: (v) => onChange(durations[v.toInt()]),
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                  7,
-                  (index) => Text(
-                        '${hours[index]} h',
-                        style: TextStyle(fontSize: 8 * byWithScale(context)),
-                      ))),
+          padding: const EdgeInsets.only(left: 22, right: 16),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(
+              '15',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '30  ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '45  ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '1h  ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '2h  ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '3h  ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '4h  ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '5h ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '6h ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '7h ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            )
+          ]),
         )
       ],
     );
