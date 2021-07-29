@@ -77,28 +77,26 @@ class _HelperPageState extends State<HelperPage> {
       decoration: BoxDecoration(
         gradient: mainBackgroundGradient,
       ),
-      child: SafeArea(
-        child: CustomScrollView(
-          physics: BouncingScrollPhysics(),
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: true,
-              child: Stack(children: [
-                Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('src/helper/backgroundimage.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ) /* add child content here */,
-                ),
-                buildBody(context)
-              ]),
-            ),
-          ],
-        ),
+      child: CustomScrollView(
+        physics: BouncingScrollPhysics(),
+        slivers: [
+          SliverFillRemaining(
+            hasScrollBody: true,
+            child: Stack(children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('src/helper/backgroundimage.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ) /* add child content here */,
+              ),
+              buildBody(context)
+            ]),
+          ),
+        ],
       ),
     ));
   }

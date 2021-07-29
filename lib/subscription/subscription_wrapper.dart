@@ -55,12 +55,24 @@ class SubAndAuthChooser extends StatelessWidget {
           return BoardPage();
         }
 
-        // if (state is AskForSubscribe) {
-        //   return SubscribePage();
-        //   //return Container();
-        // }
+        if (state is AskForSubscribe) {
+          return SubscribePage();
+          //return Container();
+        }
 
-        return SubscribePage();
+        return Scaffold(
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('src/helper/backgroundimage.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        );
       },
     );
   }
