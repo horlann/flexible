@@ -106,11 +106,12 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
   }
 
   Rect? _getOffset(GlobalKey? key) {
-    if(key == null) return null;
+    if (key == null) return null;
     final renderObject = key.currentContext?.findRenderObject();
     var translation = renderObject?.getTransformTo(null).getTranslation();
     if (translation != null && renderObject?.paintBounds != null) {
-      return renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
+      return renderObject?.paintBounds
+          .shift(Offset(translation.x, translation.y));
     } else {
       return null;
     }
@@ -124,11 +125,14 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          showModal(context, PeriodicTaskModal(
-              widget.task,
-              _getOffset(widget.task.key)?.top ?? 0,
-                  () => onLockClicked(context))
-          );
+          showModal(
+              context,
+              RegularTaskModal(
+                  widget.task,
+                  _getOffset(widget.task.key)?.top ?? 0,
+                  () => onEditClicked(context),
+                  () => onLockClicked(context),
+                  () => showCopyDialog()));
           // setState(() {
           //   showSubButtons = !showSubButtons;
           // });

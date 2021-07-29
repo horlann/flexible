@@ -34,82 +34,77 @@ class _TermsPageState extends State<TermsPage> {
     return Scaffold(
       // backgroundColor: Color(0xffE9E9E9),
       body: SizedBox.expand(
-        child: Center(
-          child: Container(
-            margin: EdgeInsets.only(bottom: 10),
-            decoration: BoxDecoration(
-              gradient: mainBackgroundGradient,
-            ),
-            child: Stack(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('src/helper/backgroundimage.png'),
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('src/helper/backgroundimage.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ) /* add child content here */,
+                SizedBox(
+                  height: 32,
                 ),
-                SafeArea(
+                Text(
+                  'fleXible',
+                  style: TextStyle(
+                      color: Color(0xffE24F4F),
+                      fontSize: 28 * byWithScale(context),
+                      fontWeight: FontWeight.w700),
+                ),
+                Expanded(
                   child: Padding(
-                    padding: EdgeInsets.all(10 * byWithScale(context)),
+                    padding: EdgeInsets.all(16 * byWithScale(context)),
                     child: Stack(
                       children: [
                         Positioned.fill(child: GlassmorphLayer()),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              FlexibleText(),
-                              SizedBox(
-                                height: double.infinity,
-                                width: double.maxFinite,
-                                child: PageView(
-                                  physics: BouncingScrollPhysics(),
-                                  onPageChanged: (value) {
-                                    setState(() {
-                                      _currentPage = value;
-                                    });
-                                  },
-                                  controller: pageController,
-                                  children: subPages,
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  height: byWithScale(context) * 35,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 60 * byWithScale(context)),
-                                    child: WideRoundedButton(
-                                      enable: true,
-                                      fontSizw: 15,
-                                      enableColor: Color(0xffE24F4F),
-                                      textColor: Colors.white,
-                                      text: 'CLOSE',
-                                      disableColor: Color(0xffE24F4F)
-                                          .withOpacity(0.25),
-                                      callback: () {
-                                        Navigator.pop;
-                                        print("dsdsdd");
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                        SizedBox(
+                          // height: 500,
+                          width: double.maxFinite,
+                          child: PageView(
+                            physics: BouncingScrollPhysics(),
+                            onPageChanged: (value) {
+                              setState(() {
+                                _currentPage = value;
+                              });
+                            },
+                            controller: pageController,
+                            children: subPages,
                           ),
                         ),
-                        SizedBox(
-                          height: 30 * byWithScale(context),
-                        )
+                        // RowWithCloseBtn(context: context),
                       ],
                     ),
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(subPages.length, (index) {
+                    if (_currentPage == index) {
+                      return Container(
+                        width: 10,
+                        height: 6,
+                        margin: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                            color: Color(0xffE24F4F),
+                            borderRadius: BorderRadius.circular(3)),
+                      );
+                    }
+                    return Container(
+                      width: 6,
+                      height: 6,
+                      margin: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                          color: Color(0xffE24F4F).withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(6)),
+                    );
+                  }),
+                ),
+                SizedBox(
+                  height: 8 * byWithScale(context),
                 ),
               ],
             ),
@@ -157,6 +152,21 @@ class Terms extends StatelessWidget {
             ),
           ),
         ),
+        Padding(
+          padding: EdgeInsets.all(64 / pRatio(context)),
+          child: WideRoundedButton(
+            enable: true,
+            fontSizw: 15,
+            enableColor: Color(0xffE24F4F),
+            textColor: Colors.white,
+            text: 'CLOSE',
+            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+            callback: () {
+              Navigator.pop(context);
+              print("dsdsdd");
+            },
+          ),
+        ),
       ],
     );
   }
@@ -194,6 +204,21 @@ class Privacy extends StatelessWidget {
                     fontWeight: FontWeight.w400),
               ),
             ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(64 / pRatio(context)),
+          child: WideRoundedButton(
+            enable: true,
+            fontSizw: 15,
+            enableColor: Color(0xffE24F4F),
+            textColor: Colors.white,
+            text: 'CLOSE',
+            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+            callback: () {
+              Navigator.pop(context);
+              print("dsdsdd");
+            },
           ),
         ),
       ],

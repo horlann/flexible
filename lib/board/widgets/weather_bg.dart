@@ -111,21 +111,8 @@ class _WeatherBgState extends State<WeatherBg> {
                 backgroundColor: colorByType(state.daylight));
           }
           return Center(child: Text('Loading'));
-        }
-        return Builder(builder: (BuildContext context) {
-          if (state.daylight == DayLight.light) {
-            return Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                //color: colorByType(state.daylight),
-                image: DecorationImage(
-                  image: AssetImage('src/helper/backgroundimage.png'),
-                  fit: BoxFit.cover,
-                ),
-              ) /* add child content here */,
-            );
-          } else if (state.daylight == DayLight.medium) {
+        } else {
+          if (state.daylight == DayLight.medium) {
             return Container(
               width: double.infinity,
               height: double.infinity,
@@ -148,10 +135,19 @@ class _WeatherBgState extends State<WeatherBg> {
               ) /* add child content here */,
             );
           } else {
-            return Container();
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                //color: colorByType(state.daylight),
+                image: DecorationImage(
+                  image: AssetImage('src/helper/backgroundimage.png'),
+                  fit: BoxFit.cover,
+                ),
+              ) /* add child content here */,
+            );
           }
-        });
-//        return
+        }
       },
     );
   }

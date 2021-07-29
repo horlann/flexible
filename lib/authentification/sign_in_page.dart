@@ -1,4 +1,3 @@
-
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
@@ -47,65 +46,31 @@ class _SignInPageState extends State<SignInPage> {
     double safeTopPadding = MediaQuery.of(context).padding.top;
     double safeBottomPadding = MediaQuery.of(context).padding.bottom;
 
+    // This trick uses for expand content by display size
+    // and provide scroll when keyboard is opens over fields
+    // + bonus calc safe area
     return Scaffold(
-      // backgroundColor: Color(0xffE9E9E9),
+      resizeToAvoidBottomInset: true,
       body: SizedBox.expand(
         child: Container(
           decoration: BoxDecoration(
-            gradient: mainBackgroundGradient,
-          ),
-          child: Stack(
-            children: [
-              Container(
-                child: WeatherBg(),
-                width: double.maxFinite,
-                height: double.maxFinite,
-              ),
-              SafeArea(
-                child: SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                        minHeight: MediaQuery.of(context).size.height -
-                            safeTopPadding -
-                            safeBottomPadding),
-                    child: IntrinsicHeight(
-                      child: Stack(children: [
-                        buildBlocListenr(context),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                bottom: (10 * byWithScale(context))),
-                            child: Wrap(
-                              children: [
-                                Text(
-                                  'Don\'t have account yet? ',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10 * byWithScale(context)),
-                                  softWrap: true,
-                                ),
-                                GestureDetector(
-                                  onTap: () => onSignUpTap(),
-                                  child: Text(
-                                    'Registrationn',
-                                    softWrap: true,
-                                    style: TextStyle(
-                                        color: Color(0xffE24F4F),
-                                        decoration: TextDecoration.underline,
-                                        fontSize: 10 * byWithScale(context)),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ]),
-                    ),
-                  ),
+              // gradient: mainBackgroundGradient,
+              image: DecorationImage(
+                  image: AssetImage('src/helper/backgroundimage.png'),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter)),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height -
+                        safeTopPadding -
+                        safeBottomPadding),
+                child: IntrinsicHeight(
+                  child: buildBlocListenr(context),
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -173,10 +138,7 @@ class _SignInPageState extends State<SignInPage> {
                             height: 60 * byWithScale(context),
                           ),
                           Wrap(
-                            children: [
-                              Container()
-
-                            ],
+                            children: [Container()],
                           )
                         ],
                       ),
@@ -206,9 +168,28 @@ class _SignInPageState extends State<SignInPage> {
             ),
           ),
         ),
-        SizedBox(
-          height: 16 * byWithScale(context),
-        ),
+        Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: 60 * byWithScale(context), vertical: 20),
+            child: Wrap(
+              children: [
+                Text(
+                  'Don\'t have account yet? ',
+                  style: TextStyle(
+                      color: Colors.white, fontSize: 11 * byWithScale(context)),
+                ),
+                GestureDetector(
+                  child: Text(
+                    'Register',
+                    style: TextStyle(
+                        color: Color(0xffE24F4F),
+                        decoration: TextDecoration.underline,
+                        fontSize: 11 * byWithScale(context)),
+                  ),
+                  onTap: () => onSignUpTap(),
+                ),
+              ],
+            ))
       ],
     );
   }

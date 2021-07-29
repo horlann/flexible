@@ -48,45 +48,38 @@ class _SubscribePageState extends State<SubscribePage> {
 
   @override
   Widget build(BuildContext context) {
+    double safeTopPadding = MediaQuery.of(context).padding.top;
+    double safeBottomPadding = MediaQuery.of(context).padding.bottom;
+
+    // This trick uses for expand content by display size
+    // and provide scroll when keyboard is opens over fields
+    // + bonus calc safe area
     return Scaffold(
-        body: Container(
-      decoration: BoxDecoration(
-        gradient: mainBackgroundGradient,
-      ),
-      child: SafeArea(
-          child: Stack(
-        children: [
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
+      resizeToAvoidBottomInset: true,
+      body: SizedBox.expand(
+        child: Container(
+          decoration: BoxDecoration(
+              // gradient: mainBackgroundGradient,
               image: DecorationImage(
-                image: AssetImage('src/helper/backgroundimage.png'),
-                fit: BoxFit.cover,
+                  image: AssetImage('src/helper/backgroundimage.png'),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter)),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height -
+                        safeTopPadding -
+                        safeBottomPadding),
+                child: IntrinsicHeight(
+                  child: buildBody(context),
+                ),
               ),
-            ) /* add child content here */,
-          ),
-          buildBody(context),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: 48 * byWithScale(context),
-                  right: 48 * byWithScale(context),
-                  bottom: 8 * byWithScale(context)),
-              child: WideRoundedButton(
-                  enable: true,
-                  fontSizw: 15,
-                  enableColor: Colors.transparent,
-                  textColor: Color(0xffE24F4F),
-                  text: 'NO,THANKS',
-                  disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                  callback: () => noThx()),
             ),
           ),
-        ],
-      )),
-    ));
+        ),
+      ),
+    );
   }
 
   Widget buildBody(BuildContext context) {
@@ -95,13 +88,16 @@ class _SubscribePageState extends State<SubscribePage> {
           right: 50 / pRatio(context),
           left: 50 / pRatio(context),
           top: 40 / pRatio(context),
-          bottom: 190 / pRatio(context)),
-      child: Stack(
+          bottom: 40 / pRatio(context)),
+      child: Column(
         children: [
-          Positioned.fill(child: GlassmorphLayer()),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned.fill(child: GlassmorphLayer()),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
 //              Padding(
 //                padding:
 //                    EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
@@ -136,91 +132,109 @@ class _SubscribePageState extends State<SubscribePage> {
 //                  ],
 //                ),
 //              ),
-              Center(
-                  child: Text(
-                "Flexible",
-                style: TextStyle(
-                    fontSize: 35 * byWithScale(context),
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xffE24F4F)),
-              )),
-              Center(
-                child: Text(
-                  'Thanks for using the app!',
-                  style: TextStyle(
-                      fontSize: 18 * byWithScale(context),
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
-                ),
-              ),
-              Spacer(
-                flex: 5,
-              ),
-              buildTip(context,
-                  title: 'Stay on track with reminders',
-                  subtitle:
-                      'Get notifications when a task starts end ends.You can even complete tasks without opening the app                             '),
-              Spacer(
-                flex: 1,
-              ),
-              buildTip(context,
-                  title: 'Import calendar events',
-                  subtitle:
-                      'Automatically add your calendar events to your day plan.'),
-              Spacer(
-                flex: 1,
-              ),
-              buildTip(context,
-                  title: 'Plan recurring events',
-                  subtitle:
-                      'Repeat events daily , on certain weekdays, weekly or monthly.'),
-              Spacer(
-                flex: 1,
-              ),
-              buildTip(context,
-                  title: 'Support the development',
-                  subtitle: 'Help me continue working on improving Flexible.'),
-              Spacer(
-                flex: 1,
-              ),
+                    Spacer(
+                      flex: 1,
+                    ),
+                    Center(
+                        child: Text(
+                      "Flexible",
+                      style: TextStyle(
+                          fontSize: 32 * byWithScale(context),
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xffE24F4F)),
+                    )),
+                    Center(
+                      child: Text(
+                        'Thanks for using the app!',
+                        style: TextStyle(
+                            fontSize: 20 * byWithScale(context),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white),
+                      ),
+                    ),
+                    Spacer(
+                      flex: 5,
+                    ),
+                    buildTip(context,
+                        title: 'Stay on track with reminders',
+                        subtitle:
+                            'Get notifications when a task starts end ends.You can even complete tasks without opening the app'),
+                    Spacer(
+                      flex: 1,
+                    ),
+                    buildTip(context,
+                        title: 'Import calendar events',
+                        subtitle:
+                            'Automatically add your calendar events to your day plan.'),
+                    Spacer(
+                      flex: 1,
+                    ),
+                    buildTip(context,
+                        title: 'Plan recurring events',
+                        subtitle:
+                            'Repeat events daily , on certain weekdays, weekly or monthly.'),
+                    Spacer(
+                      flex: 1,
+                    ),
+                    buildTip(context,
+                        title: 'Support the development',
+                        subtitle:
+                            'Help me continue working on improving Flexible.'),
+                    Spacer(
+                      flex: 1,
+                    ),
 
-              Spacer(
-                flex: 1,
-              ),
-              Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
-                child: WideRoundedButton(
-                  enable: true,
-                  fontSizw: 15,
-                  enableColor: Color(0xffE24F4F),
-                  textColor: Colors.white,
-                  text: 'SUBSCRIBE',
-                  disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                  callback: () => subscribe(),
-                ),
-              ),
-              SizedBox(
-                height: 10 * byWithScale(context),
-              ),
-              Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 30 * byWithScale(context)),
-                child: WideRoundedButton(
-                  enable: true,
-                  fontSizw: 15,
-                  enableColor: Color(0xffE24F4F),
-                  textColor: Colors.white,
-                  text: 'RESTORE PURCHASHES',
-                  disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                  callback: () => restoreSub(),
-                ),
-              ),
-              SizedBox(
-                height: 10 * byWithScale(context),
-              ),
-            ],
-          )
+                    Spacer(
+                      flex: 1,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 30 * byWithScale(context)),
+                      child: WideRoundedButton(
+                        enable: true,
+                        fontSizw: 18 ~/ byWithScale(context),
+                        enableColor: Color(0xffE24F4F),
+                        textColor: Colors.white,
+                        text: 'SUBSCRIBE',
+                        disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                        callback: () => subscribe(),
+                      ),
+                    ),
+                    Spacer(
+                      flex: 1,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 30 * byWithScale(context)),
+                      child: WideRoundedButton(
+                        enable: true,
+                        fontSizw: 18 ~/ byWithScale(context),
+                        enableColor: Color(0xffE24F4F),
+                        textColor: Colors.white,
+                        text: 'RESTORE PURCHASHES',
+                        disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                        callback: () => restoreSub(),
+                      ),
+                    ),
+                    Spacer(
+                      flex: 2,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 40 / pRatio(context),
+          ),
+          WideRoundedButton(
+              enable: true,
+              fontSizw: 18 ~/ byWithScale(context),
+              enableColor: Colors.transparent,
+              textColor: Color(0xffE24F4F),
+              text: 'NO,THANKS',
+              disableColor: Color(0xffE24F4F).withOpacity(0.25),
+              callback: () => noThx()),
         ],
       ),
     );
@@ -248,41 +262,36 @@ class _SubscribePageState extends State<SubscribePage> {
                 ),
               ),
               SizedBox(
-                width: 15,
+                width: 8 * byWithScale(context),
               ),
-              Wrap(
-                direction: Axis.vertical,
-                //mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                        fontSize: 13 * byWithScale(context),
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    height: 55,
-                    width: 200 * byWithScale(context),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          subtitle,
-                          maxLines: 5,
-                          overflow: TextOverflow.fade,
-                          style: TextStyle(
-                              fontSize: 11 * byWithScale(context),
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                        ),
-                      ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                          fontSize: 11 * byWithScale(context),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: 5,
+                    ),
+                    IntrinsicWidth(
+                      child: Text(
+                        subtitle,
+                        maxLines: 5,
+                        overflow: TextOverflow.fade,
+                        softWrap: true,
+                        style: TextStyle(
+                            fontSize: 11 * byWithScale(context),
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               )
             ],
           ),

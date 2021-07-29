@@ -170,7 +170,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                         ],
                       ),
                     ),
-                    //buildUpdateDeleteButtons()
+                    buildUpdateDeleteButtons()
                   ],
                 )
               ],
@@ -219,9 +219,9 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                     : BoxDecoration(
                         border: Border(
                             bottom: BorderSide(
-                              width: 1,
-                              color: Colors.white,
-                            ))),
+                        width: 1,
+                        color: Colors.white,
+                      ))),
                 child: Text(
                   'Super task',
                   style: TextStyle(
@@ -511,31 +511,31 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
             ],
           ),
         ),
-        GestureDetector(
-//          onTap: () {
-//            BlocProvider.of<DailytasksBloc>(context).add(
-//                DailytasksUpdateDayOptions(
-//                    dayOptions: editableRegularTask));
-//            Navigator.pop(context);
-//          },
-          child: Container(
-            height: 35,
-            width: double.maxFinite,
-            margin: EdgeInsets.symmetric(horizontal: 70),
-            decoration: BoxDecoration(
-                color: Color(0xffE24F4F),
-                borderRadius: BorderRadius.circular(30)),
-            child: Center(
-              child: Text(
-                'CREATE TASK',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
-          ),
-        ),
+//         GestureDetector(
+// //          onTap: () {
+// //            BlocProvider.of<DailytasksBloc>(context).add(
+// //                DailytasksUpdateDayOptions(
+// //                    dayOptions: editableRegularTask));
+// //            Navigator.pop(context);
+// //          },
+//           child: Container(
+//             height: 35,
+//             width: double.maxFinite,
+//             margin: EdgeInsets.symmetric(horizontal: 70),
+//             decoration: BoxDecoration(
+//                 color: Color(0xffE24F4F),
+//                 borderRadius: BorderRadius.circular(30)),
+//             child: Center(
+//               child: Text(
+//                 'CREATE TASK',
+//                 style: TextStyle(
+//                     color: Colors.white,
+//                     fontSize: 18,
+//                     fontWeight: FontWeight.w700),
+//               ),
+//             ),
+//           ),
+//         ),
       ],
     );
   }
@@ -744,39 +744,37 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
             ],
           ),
         ),
-        Builder(builder: (BuildContext context) {
-          if (BlocProvider
-              .of<SubscribeBloc>(context)
-              .state is UnSubscribed) {
-            return Center(
-              child: Text("Text"),
-            );
-          } else {
-            return Container();
-          }
-        }),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 80, vertical: 5),
-          child: WideRoundedButton(
-              enable: true,
-              textColor: Colors.white,
-              enableColor: Color(0xffE24F4F),
-              disableColor: Color(0xffE24F4F),
-              callback: () {},
-//              callback: () {
-//                if (tasktype == TaskType.Regular) {
-//                  onSubmitCR.add('submit');
-//                }
-//                if (tasktype == TaskType.Super) {
-//                  onSubmitCS.add('submit');
-//                }
-//
-//                // BlocProvider.of<DailytasksBloc>(context)
-//                //     .add(DailytasksAddTask(task: editableTask));
-//                // Navigator.pop(context);
-//              },
-              text: 'CREATE TASK'),
-        ),
+        // Builder(builder: (BuildContext context) {
+        //   if (BlocProvider.of<SubscribeBloc>(context).state is UnSubscribed) {
+        //     return Center(
+        //       child: Text("Text"),
+        //     );
+        //   } else {
+        //     return Container();
+        //   }
+        // }),
+//         Padding(
+//           padding: EdgeInsets.symmetric(horizontal: 80, vertical: 5),
+//           child: WideRoundedButton(
+//               enable: true,
+//               textColor: Colors.white,
+//               enableColor: Color(0xffE24F4F),
+//               disableColor: Color(0xffE24F4F),
+//               callback: () {},
+// //              callback: () {
+// //                if (tasktype == TaskType.Regular) {
+// //                  onSubmitCR.add('submit');
+// //                }
+// //                if (tasktype == TaskType.Super) {
+// //                  onSubmitCS.add('submit');
+// //                }
+// //
+// //                // BlocProvider.of<DailytasksBloc>(context)
+// //                //     .add(DailytasksAddTask(task: editableTask));
+// //                // Navigator.pop(context);
+// //              },
+//               text: 'CREATE TASK'),
+//         ),
       ],
     );
   }

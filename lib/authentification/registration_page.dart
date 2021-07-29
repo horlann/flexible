@@ -81,27 +81,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
     double safeTopPadding = MediaQuery.of(context).padding.top;
     double safeBottomPadding = MediaQuery.of(context).padding.bottom;
 
+    // This trick uses for expand content by display size
+    // and provide scroll when keyboard is opens over fields
+    // + bonus calc safe area
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      // backgroundColor: Color(0xffE9E9E9),
+      resizeToAvoidBottomInset: true,
       body: SizedBox.expand(
         child: Container(
           decoration: BoxDecoration(
-            gradient: mainBackgroundGradient,
-          ),
+              // gradient: mainBackgroundGradient,
+              image: DecorationImage(
+                  image: AssetImage('src/helper/backgroundimage.png'),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter)),
           child: SafeArea(
-            child: ListView(
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height -
-                          safeTopPadding -
-                          safeBottomPadding),
-                  child: IntrinsicHeight(
-                    child: buildBlocListenr(context),
-                  ),
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height -
+                        safeTopPadding -
+                        safeBottomPadding),
+                child: IntrinsicHeight(
+                  child: buildBlocListenr(context),
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -133,202 +136,144 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ));
         }
       },
-      child: Stack(children: [
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('src/helper/backgroundimage.png'),
-              fit: BoxFit.cover,
-            ),
-          ) /* add child content here */,
-        ),
-        buildBody(context),
-        Builder(builder: (BuildContext context) {
-          return !isUserAgree
-              ? Center(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.transparent.withOpacity(0.85),
-                    borderRadius: BorderRadius.only(
-                        topRight:
-                        Radius.circular(15 * byWithScale(context)),
-                        topLeft:
-                        Radius.circular(15 * byWithScale(context)))),
-                padding: EdgeInsets.symmetric(
-                    horizontal: 50 * byWithScale(context)),
-                width: double.infinity,
-                height: 140 * byWithScale(context),
-                child: Center(
-                    child: Text(
-                      'You have to agree to Terms of Service and Privacy Policy first',
-                      softWrap: true,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12 * byWithScale(context)),
-                    )),
-              ),
-            ),
-          )
-              : Center(child: Container());
-        })
-      ]),
+      child: buildBody(context),
     );
   }
 
-  Container buildBody(BuildContext context) {
-    return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(height: 16 * byWithScale(context)),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(16 * byWithScale(context)),
-              child: Stack(
-                children: [
-                  Positioned.fill(child: GlassmorphLayer()),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Spacer(
-                          flex: 1,
-                        ),
-                        Center(
-                            child: Text(
-                              "Flexible",
-                              style: TextStyle(
-                                  fontSize: 35 * byWithScale(context),
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xffE24F4F)),
-                            )),
-                        Center(
-                            child: Text(
-                              "Registration",
-                              style: TextStyle(
-                                  fontSize: 16 * byWithScale(context),
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white),
-                            )),
-                        Spacer(
-                          flex: 1,
-                        ),
-                        ClipRRect(
-                          borderRadius:
-                          BorderRadius.circular(30 * byWithScale(context)),
-                          child: Material(
-                            color: Colors.grey[300],
-                            child: InkWell(
-                              onTap: () => getImage(),
-                              child: Container(
-                                height: 50 * byWithScale(context),
-                                width: 50 * byWithScale(context),
-                                child: _image != null
-                                    ? Image.memory(
-                                  _image!,
-                                  fit: BoxFit.cover,
-                                )
-                                    : Center(
-                                  child: Icon(
-                                    Icons.person,
-                                    color: Colors.grey[500],
-                                  ),
-                                ),
-                              ),
+  Widget buildBody(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(height: 16 * byWithScale(context)),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(16 * byWithScale(context)),
+            child: Stack(
+              children: [
+                Positioned.fill(child: GlassmorphLayer()),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Spacer(
+                        flex: 1,
+                      ),
+                      Center(
+                          child: Text(
+                        "Flexible",
+                        style: TextStyle(
+                            fontSize: 35 * byWithScale(context),
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xffE24F4F)),
+                      )),
+                      Center(
+                          child: Text(
+                        "Registration",
+                        style: TextStyle(
+                            fontSize: 16 * byWithScale(context),
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white),
+                      )),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(30 * byWithScale(context)),
+                        child: Material(
+                          color: Colors.grey[300],
+                          child: InkWell(
+                            onTap: () => getImage(),
+                            child: Container(
+                              height: 50 * byWithScale(context),
+                              width: 50 * byWithScale(context),
+                              child: _image != null
+                                  ? Image.memory(
+                                      _image!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Center(
+                                      child: Icon(
+                                        Icons.person,
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
                             ),
                           ),
                         ),
-                        Spacer(
-                          flex: 1,
-                        ),
-                        buildFullNameInput(),
-                        Spacer(
-                          flex: 1,
-                        ),
-                        buildPhoneInput(),
-                        Spacer(
-                          flex: 1,
-                        ),
-                        buildEmailInput(),
-                        Spacer(
-                          flex: 1,
-                        ),
-                        buildAgreement(),
-                        Spacer(
-                          flex: 1,
-                        ),
-                        BlocBuilder<AuthBloc, AuthState>(
-                          builder: (context, state) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 60 * byWithScale(context)),
-                              child: WideRoundedButton(
-                                text: 'CONTINUE',
-                                // bloc submit button if processing or on all data passed
-                                enable: !state.isBusy ? submitActive : false,
-                                textColor: Colors.white,
-                                enableColor: Color(0xffE24F4F),
-                                disableColor:
-                                Color(0xffE24F4F).withOpacity(0.25),
-                                callback: () => onRegistration(),
-                              ),
-                            );
-                          },
-                        ),
-                        Spacer(
-                          flex: 1,
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                      ),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      buildFullNameInput(),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      buildPhoneInput(),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      buildEmailInput(),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      buildAgreement(),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 60 * byWithScale(context)),
+                            child: WideRoundedButton(
+                              text: 'CONTINUE',
+                              // bloc submit button if processing or on all data passed
+                              enable: !state.isBusy ? submitActive : false,
+                              textColor: Colors.white,
+                              enableColor: Color(0xffE24F4F),
+                              disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                              callback: () => onRegistration(),
+                            ),
+                          );
+                        },
+                      ),
+                      Spacer(
+                        flex: 1,
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
-          Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 60 * byWithScale(context), vertical: 20),
-              child: Wrap(
-                children: [
-                  Text(
-                    'Already Registered?',
+        ),
+        Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: 60 * byWithScale(context), vertical: 20),
+            child: Wrap(
+              children: [
+                Text(
+                  'Already Registered?',
+                  style: TextStyle(
+                      color: Colors.white, fontSize: 11 * byWithScale(context)),
+                ),
+                GestureDetector(
+                  child: Text(
+                    'Login',
                     style: TextStyle(
-                        color: Colors.white,
+                        color: Color(0xffE24F4F),
+                        decoration: TextDecoration.underline,
                         fontSize: 11 * byWithScale(context)),
                   ),
-                  GestureDetector(
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                          color: Color(0xffE24F4F),
-                          decoration: TextDecoration.underline,
-                          fontSize: 11 * byWithScale(context)),
-                    ),
-                    onTap: () {
-                      onSignInTap();
-                    },
-                  ),
-                ],
-              ))
-        ],
-      ),
+                  onTap: () {
+                    onSignInTap();
+                  },
+                ),
+              ],
+            ))
+      ],
     );
   }
 
