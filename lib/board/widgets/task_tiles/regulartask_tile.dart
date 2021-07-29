@@ -50,7 +50,8 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
             CupertinoPageRoute(
               builder: (context) => TaskEditor(task: widget.task),
             ))
-        .then((value) => BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdate()));
+        .then((value) =>
+            BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdate()));
   }
 
   onDeleteClicked(BuildContext context) {
@@ -76,11 +77,12 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
   String geTimeString(DateTime date) => date.toString().substring(11, 16);
 
   Rect? _getOffset(GlobalKey? key) {
-    if(key == null) return null;
+    if (key == null) return null;
     final renderObject = key.currentContext?.findRenderObject();
     var translation = renderObject?.getTransformTo(null).getTranslation();
     if (translation != null && renderObject?.paintBounds != null) {
-      return renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
+      return renderObject?.paintBounds
+          .shift(Offset(translation.x, translation.y));
     } else {
       return null;
     }
@@ -95,13 +97,14 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          showModal(context, RegularTaskModal(
-              widget.task,
-              _getOffset(widget.task.key)?.top ?? 0,
+          showModal(
+              context,
+              RegularTaskModal(
+                  widget.task,
+                  _getOffset(widget.task.key)?.top ?? 0,
                   () => onEditClicked(context),
                   () => onLockClicked(context),
-                  () => showCopyDialog())
-          );
+                  () => showCopyDialog()));
           // setState(() {
           //   showSubButtons = !showSubButtons;
           // });
@@ -117,9 +120,7 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
                       if (state is WeatherLoaded) {
                         return Text(geTimeString(widget.task.timeStart),
                             style: TextStyle(
-                                color: state.daylight == DayLight.dark
-                                    ? Colors.white
-                                    : Color(0xff545353),
+                                color: Colors.white,
                                 fontSize: 10 * byWithScale(context),
                                 fontWeight: FontWeight.w400));
                       }
@@ -251,9 +252,7 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
             Text(
               '${geTimeString(widget.task.timeStart)}',
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
+                  color: Colors.white,
                   fontSize: 14 * byWithScale(context),
                   fontWeight: FontWeight.w400),
             ),
@@ -263,9 +262,7 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
             Text(
               widget.task.title,
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
+                  color: Colors.white,
                   fontSize: 14 * byWithScale(context),
                   fontWeight: FontWeight.w400,
                   decoration: widget.task.isDone
@@ -275,9 +272,7 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
             Text(
               widget.task.subtitle,
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
+                  color: Colors.white,
                   fontSize: 12 * byWithScale(context),
                   fontWeight: FontWeight.w400),
             ),

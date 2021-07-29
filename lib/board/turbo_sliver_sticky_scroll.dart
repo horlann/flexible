@@ -107,25 +107,16 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
         children: [
           // This is line under widgets
           // Its size grows with list size
-          BlocBuilder<WeatherBloc, WeatherState>(
-            builder: (context, state) {
-              return Positioned.fill(
-                  child: Padding(
-                padding: EdgeInsets.only(
-                    left: isLessThen350() ? 64 : 82,
-                    top: topOverscroll,
-                    bottom: bottomLinePadding),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                        width: 2,
-                        color: state.daylight == DayLight.dark
-                            ? Colors.white
-                            //: Color(0xff707070))),
-                            : Colors.white)),
-              ));
-            },
-          ),
+          Positioned.fill(
+              child: Padding(
+            padding: EdgeInsets.only(
+                left: isLessThen350() ? 64 : 82,
+                top: topOverscroll,
+                bottom: bottomLinePadding),
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(width: 2, color: Colors.white)),
+          )),
           // The sliver
           CustomScrollView(
             cacheExtent: 200,
@@ -160,15 +151,14 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                           context,
                           DailyTaskModal(
                               widget.dayOptions, _getOffset(nightKey)?.top ?? 0,
-                                  () {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) =>
-                                          DayOptionsEditor(
-                                              dayOptions: widget.dayOptions),
-                                    ));
-                              }));
+                              () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => DayOptionsEditor(
+                                      dayOptions: widget.dayOptions),
+                                ));
+                          }));
                     })
               ])),
               // Adding section with last tile
@@ -204,17 +194,15 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                           context,
                           DailyTaskModal(widget.dayOptions,
                               _getOffset(morningKey)?.top ?? 0, () {
-                                Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (context) =>
-                                          DayOptionsEditor(
-                                              dayOptions: widget.dayOptions),
-                                    ));
-                              }));
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => DayOptionsEditor(
+                                      dayOptions: widget.dayOptions),
+                                ));
+                          }));
                     })
               ])),
-
             ],
           ),
         ],

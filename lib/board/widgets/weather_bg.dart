@@ -113,38 +113,22 @@ class _WeatherBgState extends State<WeatherBg> {
           return Center(child: Text('Loading'));
         } else {
           if (state.daylight == DayLight.medium) {
-            return Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('src/helper/backgroundimage_medium.png'),
-                  fit: BoxFit.cover,
-                ),
-              ) /* add child content here */,
+            return Image.asset(
+              'src/helper/backgroundimage_medium.png',
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.topCenter,
             );
           } else if (state.daylight == DayLight.dark) {
-            return Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('src/helper/backgroundimage_dark.png'),
-                  fit: BoxFit.cover,
-                ),
-              ) /* add child content here */,
+            return Image.asset(
+              'src/helper/backgroundimage_dark.png',
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.topCenter,
             );
           } else {
-            return Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                //color: colorByType(state.daylight),
-                image: DecorationImage(
-                  image: AssetImage('src/helper/backgroundimage.png'),
-                  fit: BoxFit.cover,
-                ),
-              ) /* add child content here */,
+            return Image.asset(
+              'src/helper/backgroundimage.png',
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.topCenter,
             );
           }
         }

@@ -36,6 +36,7 @@ class _BoardPageState extends State<BoardPage> {
           child: Container(
         decoration: BoxDecoration(
           gradient: mainBackgroundGradient,
+
           // image: DecorationImage(
           //     image: AssetImage('src/testbg.jpg'),
           //     fit: BoxFit.cover,
@@ -43,25 +44,6 @@ class _BoardPageState extends State<BoardPage> {
         ),
         child: Stack(
           children: [
-            //
-            // Provide simple colored bg by weather
-            //
-            // BlocBuilder<WeatherBloc, WeatherState>(
-            //   builder: (context, state) {
-            //     if (state is WeatherLoaded) {
-            //       print(state.daylight);
-            //       return Container(
-            //         color: colorByType(state.daylight),
-            //       );
-            //     }
-
-            //     return SizedBox();
-            //   },
-            // ),
-
-            // Provide video bg by weather
-
-            // TODO uncomment for prod
             Container(
                 width: double.maxFinite,
                 height: double.maxFinite,
@@ -91,14 +73,6 @@ class _BoardPageState extends State<BoardPage> {
                     ),
                   ),
                   BottomDatePicker(),
-                  // Container(
-                  //   color: Colors.white,
-                  //   margin: EdgeInsets.all(8),
-                  //   padding: EdgeInsets.all(8),
-                  //   child: Text(weatherDescription.isEmpty
-                  //       ? 'NO PAGODA'
-                  //       : weatherDescription),
-                  // ),
                   SizedBox(
                     height: 16,
                   ),

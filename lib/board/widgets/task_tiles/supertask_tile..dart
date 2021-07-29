@@ -102,11 +102,12 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
   }
 
   Rect? _getOffset(GlobalKey? key) {
-    if(key == null) return null;
+    if (key == null) return null;
     final renderObject = key.currentContext?.findRenderObject();
     var translation = renderObject?.getTransformTo(null).getTranslation();
     if (translation != null && renderObject?.paintBounds != null) {
-      return renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
+      return renderObject?.paintBounds
+          .shift(Offset(translation.x, translation.y));
     } else {
       return null;
     }
@@ -120,11 +121,10 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          showModal(context, SuperTaskModal(
-              widget.task,
-              _getOffset(widget.task.key)?.top ?? 0,
-                  () => onLockClicked(context))
-          );
+          showModal(
+              context,
+              SuperTaskModal(widget.task, _getOffset(widget.task.key)?.top ?? 0,
+                  () => onLockClicked(context)));
           // setState(() {
           //   showSubButtons = !showSubButtons;
           // });
@@ -139,9 +139,7 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                       top: 2,
                       child: Text(geTimeString(widget.task.timeStart),
                           style: TextStyle(
-                              color: state.daylight == DayLight.dark
-                                  ? Colors.white
-                                  : Color(0xff545353),
+                              color: Colors.white,
                               fontSize: 10 * byWithScale(context),
                               fontWeight: FontWeight.w400)));
                 },
@@ -158,9 +156,7 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                                 geTimeString(DateTime.now()),
                                 style: TextStyle(
                                     fontSize: 10 * byWithScale(context),
-                                    color: state.daylight == DayLight.dark
-                                        ? Colors.white
-                                        : Color(0xff545353)),
+                                    color: Colors.white),
                               );
                             },
                           ),
@@ -173,9 +169,7 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                           geTimeString(
                               widget.task.timeStart.add(widget.task.period)),
                           style: TextStyle(
-                              color: state.daylight == DayLight.dark
-                                  ? Colors.white
-                                  : Color(0xff545353),
+                              color: Colors.white,
                               fontSize: 10 * byWithScale(context),
                               fontWeight: FontWeight.w400)));
                 },
@@ -320,9 +314,7 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
             Text(
               '${geTimeString(widget.task.timeStart)} - ${geTimeString(widget.task.timeStart.add(widget.task.period))}',
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
+                  color: Colors.white,
                   fontSize: 14 * byWithScale(context),
                   fontWeight: FontWeight.w400),
             ),
@@ -332,9 +324,7 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
             Text(
               widget.task.title,
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
+                  color: Colors.white,
                   fontSize: 14 * byWithScale(context),
                   fontWeight: FontWeight.w400,
                   decoration: widget.task.isDone

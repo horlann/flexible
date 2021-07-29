@@ -89,9 +89,7 @@ class _GroupedTaskTileState extends State<GroupedTaskTile> {
                     top: 2,
                     child: Text(geTimeString(timeStart()),
                         style: TextStyle(
-                            color: state.daylight == DayLight.dark
-                                ? Colors.white
-                                : Color(0xff545353),
+                            color: Colors.white,
                             fontSize: 10 * byWithScale(context),
                             fontWeight: FontWeight.w400)));
               },
@@ -108,9 +106,7 @@ class _GroupedTaskTileState extends State<GroupedTaskTile> {
                               geTimeString(DateTime.now()),
                               style: TextStyle(
                                   fontSize: 10 * byWithScale(context),
-                                  color: state.daylight == DayLight.dark
-                                      ? Colors.white
-                                      : Color(0xff545353)),
+                                  color: Colors.white),
                             );
                           },
                         ),
@@ -121,9 +117,7 @@ class _GroupedTaskTileState extends State<GroupedTaskTile> {
                     bottom: 0,
                     child: Text(geTimeString(timeEnd()),
                         style: TextStyle(
-                            color: state.daylight == DayLight.dark
-                                ? Colors.white
-                                : Color(0xff545353),
+                            color: Colors.white,
                             fontSize: 10 * byWithScale(context),
                             fontWeight: FontWeight.w400)));
               },
@@ -159,17 +153,18 @@ class TileBody extends StatefulWidget {
 }
 
 class _TileBodyState extends State<TileBody> {
-
   Rect? _getOffset(GlobalKey? key) {
-    if(key == null) return null;
+    if (key == null) return null;
     final renderObject = key.currentContext?.findRenderObject();
     var translation = renderObject?.getTransformTo(null).getTranslation();
     if (translation != null && renderObject?.paintBounds != null) {
-      return renderObject?.paintBounds.shift(Offset(translation.x, translation.y));
+      return renderObject?.paintBounds
+          .shift(Offset(translation.x, translation.y));
     } else {
       return null;
     }
   }
+
   bool showSubButtons = false;
 
   bool isUnSubscribed() =>
@@ -196,7 +191,7 @@ class _TileBodyState extends State<TileBody> {
   }
 
   onEditClicked(BuildContext context, {required Task task}) {
-    if(!(task is RegularTask)) return;
+    if (!(task is RegularTask)) return;
     Navigator.push(
             context,
             CupertinoPageRoute(
@@ -214,13 +209,14 @@ class _TileBodyState extends State<TileBody> {
     return InkWell(
       key: widget.task.key,
       onTap: () {
-        showModal(context, RegularTaskModal(
-            widget.task,
-            _getOffset(widget.task.key)?.top ?? 0,
+        showModal(
+            context,
+            RegularTaskModal(
+                widget.task,
+                _getOffset(widget.task.key)?.top ?? 0,
                 () => onEditClicked(context, task: widget.task),
                 () => onLockClicked(context, task: widget.task),
-                () => showCopyDialog(task: widget.task))
-        );
+                () => showCopyDialog(task: widget.task)));
         // setState(() {
         //   showSubButtons = !showSubButtons;
         // });
@@ -410,9 +406,7 @@ class _TileBodyState extends State<TileBody> {
             Text(
               '${geTimeString(task.timeStart)} - ${geTimeString(task.timeStart.add(task.period))}',
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
+                  color: Colors.white,
                   fontSize: 14 * byWithScale(context),
                   fontWeight: FontWeight.w400),
             ),
@@ -422,9 +416,7 @@ class _TileBodyState extends State<TileBody> {
             Text(
               task.title,
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
+                  color: Colors.white,
                   fontSize: 14 * byWithScale(context),
                   fontWeight: FontWeight.w400,
                   decoration: task.isDone

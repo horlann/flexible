@@ -147,9 +147,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
                       top: 2,
                       child: Text(geTimeString(widget.task.timeStart),
                           style: TextStyle(
-                              color: state.daylight == DayLight.dark
-                                  ? Colors.white
-                                  : Color(0xff545353),
+                              color: Colors.white,
                               fontSize: 10 * byWithScale(context),
                               fontWeight: FontWeight.w400)));
                 },
@@ -166,9 +164,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
                                 geTimeString(DateTime.now()),
                                 style: TextStyle(
                                     fontSize: 10 * byWithScale(context),
-                                    color: state.daylight == DayLight.dark
-                                        ? Colors.white
-                                        : Color(0xff545353)),
+                                    color: Colors.white),
                               );
                             },
                           ),
@@ -181,9 +177,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
                           geTimeString(
                               widget.task.timeStart.add(widget.task.period)),
                           style: TextStyle(
-                              color: state.daylight == DayLight.dark
-                                  ? Colors.white
-                                  : Color(0xff545353),
+                              color: Colors.white,
                               fontSize: 10 * byWithScale(context),
                               fontWeight: FontWeight.w400)));
                 },
@@ -342,9 +336,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
             Text(
               '${geTimeString(widget.task.timeStart)} - ${geTimeString(widget.task.timeStart.add(widget.task.period))}',
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
+                  color: Colors.white,
                   fontSize: 14 * byWithScale(context),
                   fontWeight: FontWeight.w400),
             ),
@@ -354,9 +346,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
             Text(
               widget.task.title,
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
+                  color: Colors.white,
                   fontSize: 14 * byWithScale(context),
                   fontWeight: FontWeight.w400,
                   decoration: widget.task.isDone
@@ -366,9 +356,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
             Text(
               widget.task.subtitle,
               style: TextStyle(
-                  color: state.daylight == DayLight.dark
-                      ? Colors.white
-                      : Color(0xff545353),
+                  color: Colors.white,
                   fontSize: 12 * byWithScale(context),
                   fontWeight: FontWeight.w400),
             ),

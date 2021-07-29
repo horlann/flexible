@@ -35,13 +35,10 @@ class _AddingTileState extends State<AddingTile> {
 
   @override
   Widget build(BuildContext context) {
-    bool isLessThen350() => MediaQuery.of(context).size.width < 350;
-    return BlocBuilder<WeatherBloc, WeatherState>(
-      builder: (context, state) {
-        return Column(
+    return Column(
+      children: [
+        Stack(
           children: [
-            Stack(
-              children: [
 //                Positioned(
 //                  left: isLessThen350() ? 64 : 82,
 //                  top: 40,
@@ -80,41 +77,37 @@ class _AddingTileState extends State<AddingTile> {
 //                        fontSize: 14 * byWithScale(context)),
 //                  ),
 //                ),
-                Flexible(
-                  child: Container(
-                    margin: EdgeInsets.only(top: 50, left: 32),
-                    clipBehavior: Clip.none,
-                    height: 80,
-                    width: double.maxFinite,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () => addNewTask(context),
-                          onLongPressEnd: (v) => insertSuperTasks(),
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Color(0xffE24F4F),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Image.asset('src/icons/plus.png',
-                                width: 80,
-                                scale: 0.7,
-                                color: Colors.white.withOpacity(0.8),
-                                height: 80),
-                          ),
-                        ),
-                      ],
+            Container(
+              margin: EdgeInsets.only(top: 50, left: 32),
+              clipBehavior: Clip.none,
+              height: 80,
+              width: double.maxFinite,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => addNewTask(context),
+                    onLongPressEnd: (v) => insertSuperTasks(),
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Color(0xffE24F4F),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset('src/icons/plus.png',
+                          width: 80,
+                          scale: 0.7,
+                          color: Colors.white.withOpacity(0.8),
+                          height: 80),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
-        );
-      },
+        ),
+      ],
     );
   }
 }

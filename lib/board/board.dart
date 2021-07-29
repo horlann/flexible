@@ -53,34 +53,17 @@ class _BoardState extends State<Board> {
       builder: (context, state) {
         print(state);
         if (state is DailytasksCommon) {
-          // List<Widget> tasks = state.tasks
-          //     .map((e) {
-          //       if (e is RegularTask) {
-          //         if (e.period.inMilliseconds == 0) {
-          //           return TaskTile(task: e);
-          //         } else {
-          //           return PeriodicTaskTile(task: e);
-          //         }
-          //       }
-          //       return SuperTaskTile(task: e as SuperTask);
-          //     })
-          //     .cast<Widget>()
-          //     .toList();
-
           List<List<Task>> taskGrouped = turboSortAlgorithm(tasks: state.tasks);
 
           List<Widget> tasks = [];
 
           taskGrouped.forEach((element) {
             if (element.length > 1) {
-              for(var e in element)
-                if(e.key == null)
-                  e.key = GlobalKey();
+              for (var e in element) if (e.key == null) e.key = GlobalKey();
               tasks.add(GroupedTaskTile(tasks: element));
             } else {
               var task = element.first;
-              if(task.key == null)
-                task.key = GlobalKey();
+              if (task.key == null) task.key = GlobalKey();
               if (task is RegularTask) {
                 if (task.period.inMilliseconds == 0) {
                   tasks.add(RegularTaskTile(task: task));
