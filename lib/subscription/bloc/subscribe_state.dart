@@ -15,14 +15,20 @@ class AskForSubscribe extends SubscribeState {
   final bool showInfoPopup;
   final bool noThanksBtnOFF;
   final bool showAreYouSurePopup;
+  final String message;
   AskForSubscribe({
     required this.showInfoPopup,
     required this.noThanksBtnOFF,
     required this.showAreYouSurePopup,
+    this.message = '',
   });
 
-  List<Object> get props =>
-      [showInfoPopup, noThanksBtnOFF, showAreYouSurePopup];
+  List<Object> get props => [
+        showInfoPopup,
+        noThanksBtnOFF,
+        showAreYouSurePopup,
+        message.isNotEmpty ? Random().nextDouble().toString() : ''
+      ];
 }
 
 class RegisterAndProcess extends SubscribeState {

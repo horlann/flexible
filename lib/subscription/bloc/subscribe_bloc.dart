@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -75,9 +76,20 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
       bool isAuthed = fireAuthService.isAuthenticated;
       if (isAuthed) {
         await subscribeService.setUserId(fireAuthService.getUser()!.uid);
-        bool isActive = await subscribeService.makeSubMonth();
+        // Start purchase process
+        bool isActive = await subscribeService
+            .makeSubMonth()
+            .onError((error, stackTrace) => false);
+        print(isActive);
+        // Show result
         if (isActive) {
           yield Subscribed();
+        } else {
+          yield AskForSubscribe(
+              message: 'Billing process failled',
+              showInfoPopup: remoteConfigRepository.showInfoPopup,
+              showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
+              noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF);
         }
       } else {
         // Start auth and continue then
@@ -98,13 +110,16 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
   }
 
   Stream<SubscribeState> mapCheckForSub() async* {
-    bool isActive = await subscribeService.checkSubMonth();
+    bool isActive = await subscribeService
+        .checkSubMonth()
+        .onError((error, stackTrace) => false);
     // Save localy subscribe state for offline mode
     subscribeService.saveSubStateLocaly(didSubscribed: isActive);
     if (isActive) {
       yield Subscribed();
     } else {
       yield AskForSubscribe(
+          message: 'You are not subscribed yet',
           showInfoPopup: remoteConfigRepository.showInfoPopup,
           showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
           noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF);

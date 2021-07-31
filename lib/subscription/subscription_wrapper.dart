@@ -3,6 +3,7 @@ import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/board_page.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/subscription/subscribe_page.dart';
+import 'package:flexible/widgets/message_snakbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,8 @@ class SubAndAuthChooser extends StatelessWidget {
           // Push pre registration
           // continue process if user authed by state bools
           // or abort if user out from auth
+          ScaffoldMessenger.of(context).showSnackBar(
+              messageSnakbar(text: 'You should auhorize before subscribe'));
           Navigator.push(
               context,
               CupertinoPageRoute(
@@ -38,6 +41,11 @@ class SubAndAuthChooser extends StatelessWidget {
               BlocProvider.of<SubscribeBloc>(context).add(Update());
             }
           });
+        }
+        // Message popup listener
+        if (state is AskForSubscribe && state.message.isNotEmpty) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(messageSnakbar(text: state.message));
         }
       },
       builder: (context, state) {
