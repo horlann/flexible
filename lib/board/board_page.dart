@@ -60,18 +60,6 @@ class _BoardPageState extends State<BoardPage> {
                   SizedBox(
                     height: 16,
                   ),
-                  Container(
-                    color: Colors.white.withOpacity(0.7),
-                    child: BlocBuilder<WeatherBloc, WeatherState>(
-                      builder: (context, state) {
-                        if (state is WeatherLoaded) {
-                          return Container();
-                        } else {
-                          return SizedBox();
-                        }
-                      },
-                    ),
-                  ),
                   BottomDatePicker(),
                   SizedBox(
                     height: 16,

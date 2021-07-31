@@ -28,7 +28,8 @@ class _BoardState extends State<Board> {
     super.initState();
 
     // If user subscribed ask for supertask insertion
-    if (BlocProvider.of<SubscribeBloc>(context).state is! UnSubscribed) {
+    SubscribeState state = BlocProvider.of<SubscribeBloc>(context).state;
+    if (state is Subscribed) {
       BlocProvider.of<DailytasksBloc>(context).add(DailytasksAskForInsert());
     }
   }

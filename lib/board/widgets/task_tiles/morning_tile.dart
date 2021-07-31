@@ -1,10 +1,6 @@
-import 'package:flexible/board/widgets/weather_widget.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/weather/bloc/weather_bloc.dart';
-import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:invert_colors/invert_colors.dart';
 
 class MorningTile extends StatefulWidget {
@@ -50,29 +46,16 @@ class _TaskTileState extends State<MorningTile> {
           child: Stack(
             children: [
               Positioned(
-                  top: 16,
-                  child: BlocBuilder<WeatherBloc, WeatherState>(
-                    builder: (context, state) {
-                      if (state is WeatherLoaded) {
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Text(geTimeString(widget.showTime),
-                              style: TextStyle(
-                                  color: state.daylight == DayLight.dark
-                                      ? Colors.white
-                                      : Colors.white,
-                                  //: Color(0xff545353),
-                                  fontSize: 9 * byWithScale(context),
-                                  fontWeight: FontWeight.w600)),
-                        );
-                      }
-                      return Text(geTimeString(widget.showTime),
-                          style: TextStyle(
-                              color: Color(0xff545353),
-                              fontSize: 10 * byWithScale(context),
-                              fontWeight: FontWeight.w400));
-                    },
-                  )),
+                top: 16,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: Text(geTimeString(widget.showTime),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9 * byWithScale(context),
+                          fontWeight: FontWeight.w600)),
+                ),
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -125,37 +108,23 @@ class _TaskTileState extends State<MorningTile> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 20),
-                child: BlocBuilder<WeatherBloc, WeatherState>(
-                  builder: (context, state) {
-                    return Text(
-                      '${geTimeString(widget.showTime)}',
-                      style: TextStyle(
-                          color: state.daylight == DayLight.dark
-                              ? Colors.white
-                              //: Color(0xff545353),
-                              : Colors.white,
-                          fontSize: 12 * byWithScale(context),
-                          fontWeight: FontWeight.w600),
-                    );
-                  },
+                child: Text(
+                  '${geTimeString(widget.showTime)}',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12 * byWithScale(context),
+                      fontWeight: FontWeight.w600),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20),
-                child: BlocBuilder<WeatherBloc, WeatherState>(
-                  builder: (context, state) {
-                    return Text(
-                      widget.title,
-                      style: TextStyle(
-                        color: state.daylight == DayLight.dark
-                            ? Colors.white
-                            : Colors.white,
-                        //: Color(0xff545353),
-                        fontSize: 12 * byWithScale(context),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    );
-                  },
+                child: Text(
+                  widget.title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12 * byWithScale(context),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               buildSubButtons(),

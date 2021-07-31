@@ -1,10 +1,6 @@
 import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/utils/colors.dart';
-import 'package:flexible/weather/bloc/weather_bloc.dart';
-import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:invert_colors/invert_colors.dart';
 
 class SystemTile extends StatefulWidget {
@@ -50,78 +46,54 @@ class _TaskTileState extends State<SystemTile> {
             children: [
               Positioned(
                   top: 16,
-                  child: BlocBuilder<WeatherBloc, WeatherState>(
-                    builder: (context, state) {
-                      if (state is WeatherLoaded) {
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Text(geTimeString(widget.showTime),
-                              style: TextStyle(
-                                  color: state.daylight == DayLight.dark
-                                      ? Colors.white
-                                      //: Color(0xff545353),
-                                      : Colors.white,
-                                  fontSize: 9 * byWithScale(context),
-                                  fontWeight: FontWeight.w600)),
-                        );
-                      }
-                      return Text(geTimeString(widget.showTime),
-                          style: TextStyle(
-                              color: Color(0xff545353),
-                              fontSize: 10 * byWithScale(context),
-                              fontWeight: FontWeight.w400));
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: Text(geTimeString(widget.showTime),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 9 * byWithScale(context),
+                            fontWeight: FontWeight.w600)),
                   )),
-              BlocBuilder<WeatherBloc, WeatherState>(
-                builder: (context, state) {
-                  if (state is WeatherLoaded) {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: isLessThen350() ? 40 : 59,
+                  ),
+                  buildMainIcon(),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: buildTextSection(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: isLessThen350() ? 40 : 59,
+                        Text(
+                          widget.title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12 * byWithScale(context),
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                        buildMainIcon(),
-                        SizedBox(
-                          width: 20,
+                        Text(
+                          widget.subtitle,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11 * byWithScale(context),
+                              fontWeight: FontWeight.w400),
                         ),
-                        Expanded(
-                          child: buildTextSection(),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
-                          child: Column(mainAxisAlignment: MainAxisAlignment
-                              .start, children: [
-                            Text(
-                              widget.title,
-                              style: TextStyle(
-                                color: state.daylight == DayLight.dark
-                                    ? Colors.white
-                                    : Colors.white,
-                                // : Color(0xff545353),
-                                fontSize: 12 * byWithScale(context),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              widget.subtitle,
-                              style: TextStyle(
-                                  color:
-                                  Colors.white,
-                                  fontSize: 11 * byWithScale(context),
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ],),
+                      ],
+                    ),
                   ),
                   //buildSubButtons(),
                   Spacer()
-                      ],
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
+                ],
               ),
             ],
           ),
@@ -146,35 +118,29 @@ class _TaskTileState extends State<SystemTile> {
   }
 
   Widget buildTextSection() {
-    return BlocBuilder<WeatherBloc, WeatherState>(
-      builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 4,
-              ),
-              Text(
-                '${geTimeString(widget.showTime)}',
-                style: TextStyle(
-                    color: Colors.white
-                    ,
-                    fontSize: 12 * byWithScale(context),
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 4,
-              ),
-
-              SizedBox(
-                height: 16,
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 4,
           ),
-        );
-      },
+          Text(
+            '${geTimeString(widget.showTime)}',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 12 * byWithScale(context),
+                fontWeight: FontWeight.w600),
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          SizedBox(
+            height: 16,
+          ),
+        ],
+      ),
     );
   }
 

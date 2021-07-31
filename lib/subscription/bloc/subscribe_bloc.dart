@@ -44,7 +44,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
           yield Subscribed();
           return;
         } else {
-          yield SubscribtionDeactivated();
+          yield UnSubscribed();
           return;
         }
       }
@@ -52,6 +52,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
       // Show sub page if oto enabled
       await remoteConfigRepository.syncRemote();
       bool hideOTO = remoteConfigRepository.hideOTO;
+      print('Oto disabled > $hideOTO');
       if (hideOTO) {
         yield SubscribtionDeactivated();
       } else {

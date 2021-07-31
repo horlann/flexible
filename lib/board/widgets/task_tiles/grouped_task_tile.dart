@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:typed_data';
-
 import 'package:flexible/utils/modal.dart';
 import 'package:flexible/widgets/modals/regular_task_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:invert_colors/invert_colors.dart';
-
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
@@ -20,8 +18,6 @@ import 'package:flexible/board/widgets/task_tiles/components/hidable_lock.dart';
 import 'package:flexible/board/widgets/task_tiles/components/mini_buttons_with_icon.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/weather/bloc/weather_bloc.dart';
-import 'package:flexible/weather/openweather_service.dart';
 
 class GroupedTaskTile extends StatefulWidget {
   final List<Task> tasks;
@@ -50,7 +46,7 @@ class _GroupedTaskTileState extends State<GroupedTaskTile> {
   String geTimeString(DateTime date) => date.toString().substring(11, 16);
 
   bool isUnSubscribed() =>
-      (BlocProvider.of<SubscribeBloc>(context).state is UnSubscribed);
+      (BlocProvider.of<SubscribeBloc>(context).state is! Subscribed);
 
   DateTime timeStart() => widget.tasks.first.timeStart;
   DateTime timeEnd() =>
@@ -83,45 +79,33 @@ class _GroupedTaskTileState extends State<GroupedTaskTile> {
         margin: EdgeInsets.symmetric(vertical: 16),
         child: Stack(
           children: [
-            BlocBuilder<WeatherBloc, WeatherState>(
-              builder: (context, state) {
-                return Positioned(
-                    top: 2,
-                    child: Text(geTimeString(timeStart()),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10 * byWithScale(context),
-                            fontWeight: FontWeight.w400)));
-              },
-            ),
+            Positioned(
+                top: 2,
+                child: Text(geTimeString(timeStart()),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10 * byWithScale(context),
+                        fontWeight: FontWeight.w400))),
             timeDiffEquality() > 1
                 ? SizedBox()
                 : (timeDiffEquality() == 0
                     ? SizedBox()
                     : Positioned(
                         top: (110 * timeDiffEquality()) + 12,
-                        child: BlocBuilder<WeatherBloc, WeatherState>(
-                          builder: (context, state) {
-                            return Text(
-                              geTimeString(DateTime.now()),
-                              style: TextStyle(
-                                  fontSize: 10 * byWithScale(context),
-                                  color: Colors.white),
-                            );
-                          },
+                        child: Text(
+                          geTimeString(DateTime.now()),
+                          style: TextStyle(
+                              fontSize: 10 * byWithScale(context),
+                              color: Colors.white),
                         ),
                       )),
-            BlocBuilder<WeatherBloc, WeatherState>(
-              builder: (context, state) {
-                return Positioned(
-                    bottom: 0,
-                    child: Text(geTimeString(timeEnd()),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10 * byWithScale(context),
-                            fontWeight: FontWeight.w400)));
-              },
-            ),
+            Positioned(
+                bottom: 0,
+                child: Text(geTimeString(timeEnd()),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10 * byWithScale(context),
+                        fontWeight: FontWeight.w400))),
             Column(
                 children: widget.tasks
                     .map((e) => TileBody(
@@ -168,7 +152,7 @@ class _TileBodyState extends State<TileBody> {
   bool showSubButtons = false;
 
   bool isUnSubscribed() =>
-      (BlocProvider.of<SubscribeBloc>(context).state is UnSubscribed);
+      (BlocProvider.of<SubscribeBloc>(context).state is! Subscribed);
 
   onCheckClicked(BuildContext context, {required Task task}) {
     BlocProvider.of<DailytasksBloc>(context)
@@ -395,37 +379,33 @@ class _TileBodyState extends State<TileBody> {
   }
 
   Widget buildTextSection({required Task task}) {
-    return BlocBuilder<WeatherBloc, WeatherState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 4,
-            ),
-            Text(
-              '${geTimeString(task.timeStart)} - ${geTimeString(task.timeStart.add(task.period))}',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14 * byWithScale(context),
-                  fontWeight: FontWeight.w400),
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Text(
-              task.title,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14 * byWithScale(context),
-                  fontWeight: FontWeight.w400,
-                  decoration: task.isDone
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none),
-            ),
-          ],
-        );
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 4,
+        ),
+        Text(
+          '${geTimeString(task.timeStart)} - ${geTimeString(task.timeStart.add(task.period))}',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 14 * byWithScale(context),
+              fontWeight: FontWeight.w400),
+        ),
+        SizedBox(
+          height: 4,
+        ),
+        Text(
+          task.title,
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 14 * byWithScale(context),
+              fontWeight: FontWeight.w400,
+              decoration: task.isDone
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none),
+        ),
+      ],
     );
   }
 }

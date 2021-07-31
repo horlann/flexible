@@ -12,8 +12,6 @@ import 'package:flexible/board/widgets/task_tiles/components/done_checkbox.dart'
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/modal.dart';
-import 'package:flexible/weather/bloc/weather_bloc.dart';
-import 'package:flexible/weather/openweather_service.dart';
 import 'package:flexible/widgets/modals/regular_task_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +35,7 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
   }
 
   bool isUnSubscribed() =>
-      (BlocProvider.of<SubscribeBloc>(context).state is UnSubscribed);
+      (BlocProvider.of<SubscribeBloc>(context).state is! Subscribed);
 
   onCheckClicked(BuildContext context) {
     BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdateTask(
@@ -114,23 +112,13 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
           child: Stack(
             children: [
               Positioned(
-                  top: 16,
-                  child: BlocBuilder<WeatherBloc, WeatherState>(
-                    builder: (context, state) {
-                      if (state is WeatherLoaded) {
-                        return Text(geTimeString(widget.task.timeStart),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10 * byWithScale(context),
-                                fontWeight: FontWeight.w400));
-                      }
-                      return Text(geTimeString(widget.task.timeStart),
-                          style: TextStyle(
-                              color: Color(0xff545353),
-                              fontSize: 10 * byWithScale(context),
-                              fontWeight: FontWeight.w400));
-                    },
-                  )),
+                top: 16,
+                child: Text(geTimeString(widget.task.timeStart),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10 * byWithScale(context),
+                        fontWeight: FontWeight.w400)),
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -241,44 +229,40 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
   }
 
   Widget buildTextSection() {
-    return BlocBuilder<WeatherBloc, WeatherState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 4,
-            ),
-            Text(
-              '${geTimeString(widget.task.timeStart)}',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14 * byWithScale(context),
-                  fontWeight: FontWeight.w400),
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Text(
-              widget.task.title,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14 * byWithScale(context),
-                  fontWeight: FontWeight.w400,
-                  decoration: widget.task.isDone
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none),
-            ),
-            Text(
-              widget.task.subtitle,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12 * byWithScale(context),
-                  fontWeight: FontWeight.w400),
-            ),
-          ],
-        );
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 4,
+        ),
+        Text(
+          '${geTimeString(widget.task.timeStart)}',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 14 * byWithScale(context),
+              fontWeight: FontWeight.w400),
+        ),
+        SizedBox(
+          height: 4,
+        ),
+        Text(
+          widget.task.title,
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 14 * byWithScale(context),
+              fontWeight: FontWeight.w400,
+              decoration: widget.task.isDone
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none),
+        ),
+        Text(
+          widget.task.subtitle,
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 12 * byWithScale(context),
+              fontWeight: FontWeight.w400),
+        ),
+      ],
     );
   }
 }

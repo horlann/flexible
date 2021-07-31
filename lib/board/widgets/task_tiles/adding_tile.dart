@@ -1,13 +1,5 @@
-import 'dart:math';
-
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
-import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/task_editor/new_task_editor.dart';
-import 'package:flexible/subscription/subscribe_page.dart';
-import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/utils/colors.dart';
-import 'package:flexible/weather/bloc/weather_bloc.dart';
-import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

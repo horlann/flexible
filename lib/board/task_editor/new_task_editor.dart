@@ -63,7 +63,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   }
 
   bool isUnSubscribed() =>
-      (BlocProvider.of<SubscribeBloc>(context).state is UnSubscribed);
+      (BlocProvider.of<SubscribeBloc>(context).state is! Subscribed);
 
   @override
   Widget build(BuildContext context) {
