@@ -51,6 +51,7 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
                 showCalendarPicker = false;
               });
             },
+            header: 'Copy task to:',
           )
         : buildCopyStage();
   }
@@ -72,7 +73,7 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
-                  color: Color(0xffF66868),
+                  color: Colors.white,
                   child: Column(
                     children: [
                       SizedBox(
@@ -84,11 +85,11 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Copy task on',
+                              'Copy task on:',
                               style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w900,
-                                  color: Colors.white),
+                                  color: Color(0xffE24F4F)),
                             ),
                             GestureDetector(
                               onTap: () => Navigator.pop(context),
@@ -113,7 +114,7 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.white),
+                                  color: Color(0xffE24F4F)),
                             ),
                             SizedBox(
                               width: 8,
@@ -125,7 +126,7 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.white.withOpacity(0.75)),
+                                  color: Color(0xffE24F4F).withOpacity(0.75)),
                             ),
                             SizedBox(
                               width: 8,
@@ -135,7 +136,7 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.white),
+                                  color: Color(0xffE24F4F)),
                             ),
                             SizedBox(
                               width: 8,
@@ -147,7 +148,7 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
-                                  color: Colors.white.withOpacity(0.75)),
+                                  color: Color(0xffE24F4F).withOpacity(0.75)),
                             ),
                             Spacer(
                               flex: 1,
@@ -162,8 +163,8 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 6, vertical: 4),
                                 decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(6)),
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(10)),
                                 child: Text('Select date'),
                               ),
                             )
@@ -203,7 +204,7 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: Colors.white)),
+                color: Color(0xffE24F4F))),
       );
     } else {
       return GestureDetector(
@@ -213,12 +214,13 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
           width: double.maxFinite,
           margin: EdgeInsets.symmetric(horizontal: 40),
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              color: Color(0xffE24F4F),
+              borderRadius: BorderRadius.circular(30)),
           child: Center(
             child: Text(
               'Copy Task',
               style: TextStyle(
-                  color: Color(0xffF66868),
+                  color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.w700),
             ),

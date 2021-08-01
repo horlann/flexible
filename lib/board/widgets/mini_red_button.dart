@@ -29,3 +29,31 @@ class MiniRedButton extends StatelessWidget {
     );
   }
 }
+
+class MiniWhiteButton extends StatelessWidget {
+  final VoidCallback callback;
+  final String text;
+  const MiniWhiteButton({
+    Key? key,
+    required this.callback,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => callback(),
+      child: Container(
+          padding: EdgeInsets.symmetric(
+              horizontal: 8 * byWithScale(context),
+              vertical: 4 * byWithScale(context)),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(12)),
+          child: Text(text,
+              style: TextStyle(
+                  fontSize: 10 * byWithScale(context),
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900))),
+    );
+  }
+}

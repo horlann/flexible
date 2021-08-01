@@ -31,7 +31,7 @@ class ColorPickerRow extends StatelessWidget {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                  //border: Border.all(color: Colors.black),
+                    //border: Border.all(color: Colors.black),
                     color: color,
                     borderRadius: BorderRadius.circular(10)),
               ),
@@ -46,33 +46,16 @@ class ColorPickerRow extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            colorPart(color: Colors.lime, name: ''),
-            SizedBox(
-              width: 10,
-            ),
-            colorPart(color: Colors.redAccent, name: ''),
-            SizedBox(
-              width: 10,
-            ),
-            colorPart(color: Colors.indigo, name: ''),
-            SizedBox(
-              width: 10,
-            ),
-            colorPart(color: Colors.cyan, name: ''),
-            SizedBox(
-              width: 10,
-            ),
-            colorPart(color: Colors.amber, name: ''),
-            SizedBox(
-              width: 10,
-            ),
-            colorPart(color: Colors.deepPurple, name: ''),
-          ],
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          colorPart(color: Colors.lime, name: ''),
+          colorPart(color: Colors.redAccent, name: ''),
+          colorPart(color: Colors.indigo, name: ''),
+          colorPart(color: Colors.cyan, name: ''),
+          colorPart(color: Colors.amber, name: ''),
+          colorPart(color: Colors.deepPurple, name: ''),
+        ],
       ),
     );
   }

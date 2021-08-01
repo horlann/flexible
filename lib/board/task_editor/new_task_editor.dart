@@ -70,8 +70,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffE9E9E9),
-      body: SafeArea(
-          child: SizedBox.expand(
+      body: SizedBox.expand(
         child: Container(
           decoration: BoxDecoration(
             gradient: mainBackgroundGradient,
@@ -89,13 +88,13 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                     height: double.maxFinite,
                     child: WeatherBg(),
                   ),
-                  buildBody(context)
+                  SafeArea(child: buildBody(context))
                 ]),
               ),
             ],
           ),
         ),
-      )),
+      ),
     );
   }
 
@@ -134,6 +133,9 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                     isUnSubscribed()
                         ? SizedBox()
                         : buildTaskTypeSwitcher(context),
+                    SizedBox(
+                      height: 10 * byWithScale(context),
+                    ),
                     Expanded(
                       child: PageView(
                         onPageChanged: (value) {
@@ -340,7 +342,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
   Widget typeTaskWidget() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
-      child: Wrap(
+      child: Row(
         children: [
           TaskIconInRound(
             iconId: editableRegularTask.iconId,
@@ -350,21 +352,23 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           SizedBox(
             width: 20 * byWithScale(context),
           ),
-          Container(
-            width: byWithScale(context) * 150,
-            height: byWithScale(context) * 35,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(25))),
-            child: TitleInputSection(
-              initValue: editableRegularTask.title,
-              onChange: (String text) {
-                setState(() {
-                  editableRegularTask =
-                      editableRegularTask.copyWith(title: text);
-                });
-              },
-              child: Container(),
+          Expanded(
+            child: Container(
+              // width: byWithScale(context) * 150,
+              // height: byWithScale(context) * 35,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              child: TitleInputSection(
+                initValue: editableRegularTask.title,
+                onChange: (String text) {
+                  setState(() {
+                    editableRegularTask =
+                        editableRegularTask.copyWith(title: text);
+                  });
+                },
+                child: Container(),
+              ),
             ),
           ),
         ],
@@ -378,71 +382,63 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        typeTaskWidget(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 32 / pRatio(context)),
+          child: typeTaskWidget(),
+        ),
         Text(
           'When do you want to do it...',
           style: TextStyle(
-              fontSize: 12 * byWithScale(context),
+              fontSize: 48 / pRatio(context),
               fontWeight: FontWeight.w500,
               color: Colors.white),
         ),
         Container(
-            width: 150 * byWithScale(context),
-            height: 100 * byWithScale(context),
+            margin: EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
+            padding: EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(25)),
-            child: SizedBox(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(15 * byWithScale(context)))),
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width * 0.03,
-                        // top: MediaQuery.of(context).size.width * 0.005,
-                      ),
-                      child: Align(
-                        child: Text(
-                          ":",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        alignment: Alignment.center,
-                      ),
-                    ),
-                    Center(
-                      child: TimePickerSpinner(
-                        isForce2Digits: true,
-                        is24HourMode: true,
-                        itemHeight: 30 * byWithScale(context),
-                        itemWidth: 30 * byWithScale(context),
-                        normalTextStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 15 * byWithScale(context)),
-                        highlightedTextStyle: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15 * byWithScale(context)),
-                        spacing: 40,
-                        minutesInterval: 1,
-                        onTimeChange: (time) {
-                          setState(() {
-                            editableRegularTask =
-                                editableRegularTask.copyWith(timeStart: time);
-                            //DateTime wakeUpTime =
-                            //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
-                            //_dateTime = time;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  15 * byWithScale(context),
                 ),
               ),
-            )
-//
             ),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Align(
+                    child: Text(
+                      ":",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    alignment: Alignment.center,
+                  ),
+                ),
+                TimePickerSpinner(
+                  alignment: Alignment.center,
+                  isForce2Digits: true,
+                  is24HourMode: true,
+                  itemHeight: 30 * byWithScale(context),
+                  itemWidth: 20 * byWithScale(context),
+                  normalTextStyle: TextStyle(
+                      color: Colors.grey, fontSize: 48 / pRatio(context)),
+                  highlightedTextStyle: TextStyle(
+                      color: Colors.black, fontSize: 48 / pRatio(context)),
+                  spacing: 20 * byWithScale(context),
+                  minutesInterval: 1,
+                  onTimeChange: (time) {
+                    setState(() {
+                      editableRegularTask =
+                          editableRegularTask.copyWith(timeStart: time);
+                      //DateTime wakeUpTime =
+                      //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
+                      //_dateTime = time;
+                    });
+                  },
+                ),
+              ],
+            )),
         Wrap(
           children: [
             Text(
@@ -489,10 +485,11 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           height: 10 * byWithScale(context),
         ),
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 15),
+          margin: EdgeInsets.symmetric(horizontal: 16 * byWithScale(context)),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(25)),
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          padding: EdgeInsets.symmetric(
+              horizontal: 5, vertical: 8 * byWithScale(context)),
           child: Column(
             children: [
               Text(
@@ -511,31 +508,6 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
             ],
           ),
         ),
-//         GestureDetector(
-// //          onTap: () {
-// //            BlocProvider.of<DailytasksBloc>(context).add(
-// //                DailytasksUpdateDayOptions(
-// //                    dayOptions: editableRegularTask));
-// //            Navigator.pop(context);
-// //          },
-//           child: Container(
-//             height: 35,
-//             width: double.maxFinite,
-//             margin: EdgeInsets.symmetric(horizontal: 70),
-//             decoration: BoxDecoration(
-//                 color: Color(0xffE24F4F),
-//                 borderRadius: BorderRadius.circular(30)),
-//             child: Center(
-//               child: Text(
-//                 'CREATE TASK',
-//                 style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 18,
-//                     fontWeight: FontWeight.w700),
-//               ),
-//             ),
-//           ),
-//         ),
       ],
     );
   }
@@ -621,36 +593,8 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
-          child: Wrap(
-            children: [
-              TaskIconInRound(
-                iconId: editableSuperTask.iconId,
-                taskColor: editableSuperTask.color,
-                onTap: () => openImgPicker(),
-              ),
-              SizedBox(
-                width: 20 * byWithScale(context),
-              ),
-              Container(
-                width: byWithScale(context) * 150,
-                height: byWithScale(context) * 35,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(25))),
-                child: TitleInputSection(
-                  initValue: editableSuperTask.title,
-                  onChange: (String text) {
-                    setState(() {
-                      editableSuperTask =
-                          editableSuperTask.copyWith(title: text);
-                    });
-                  },
-                  child: Container(),
-                ),
-              ),
-            ],
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 32 / pRatio(context)),
+          child: typeTaskWidget(),
         ),
         Text(
           'Choose deadline of your Supertask',
@@ -723,10 +667,11 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
           ],
         ),
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 15),
+          margin: EdgeInsets.symmetric(horizontal: 16 * byWithScale(context)),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(25)),
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          padding: EdgeInsets.symmetric(
+              horizontal: 5, vertical: 8 * byWithScale(context)),
           child: Column(
             children: [
               Text(
@@ -744,38 +689,43 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
             ],
           ),
         ),
-        // Builder(builder: (BuildContext context) {
-        //   if (BlocProvider.of<SubscribeBloc>(context).state is UnSubscribed) {
-        //     return Center(
-        //       child: Text("Text"),
-        //     );
-        //   } else {
-        //     return Container();
-        //   }
-        // }),
-//         Padding(
-//           padding: EdgeInsets.symmetric(horizontal: 80, vertical: 5),
-//           child: WideRoundedButton(
-//               enable: true,
-//               textColor: Colors.white,
-//               enableColor: Color(0xffE24F4F),
-//               disableColor: Color(0xffE24F4F),
-//               callback: () {},
-// //              callback: () {
-// //                if (tasktype == TaskType.Regular) {
-// //                  onSubmitCR.add('submit');
-// //                }
-// //                if (tasktype == TaskType.Super) {
-// //                  onSubmitCS.add('submit');
-// //                }
-// //
-// //                // BlocProvider.of<DailytasksBloc>(context)
-// //                //     .add(DailytasksAddTask(task: editableTask));
-// //                // Navigator.pop(context);
-// //              },
-//               text: 'CREATE TASK'),
-//         ),
       ],
+    );
+  }
+
+  Widget typeTaskWidget() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
+      child: Row(
+        children: [
+          TaskIconInRound(
+            iconId: editableSuperTask.iconId,
+            taskColor: editableSuperTask.color,
+            onTap: () => openImgPicker(),
+          ),
+          SizedBox(
+            width: 20 * byWithScale(context),
+          ),
+          Expanded(
+            child: Container(
+              // width: byWithScale(context) * 150,
+              // height: byWithScale(context) * 35,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              child: TitleInputSection(
+                initValue: editableSuperTask.title,
+                onChange: (String text) {
+                  setState(() {
+                    editableSuperTask = editableSuperTask.copyWith(title: text);
+                  });
+                },
+                child: Container(),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

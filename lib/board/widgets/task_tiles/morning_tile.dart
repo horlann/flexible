@@ -47,14 +47,11 @@ class _TaskTileState extends State<MorningTile> {
             children: [
               Positioned(
                 top: 16,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: Text(geTimeString(widget.showTime),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 9 * byWithScale(context),
-                          fontWeight: FontWeight.w600)),
-                ),
+                child: Text(geTimeString(widget.showTime),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10 * byWithScale(context),
+                        fontWeight: FontWeight.w400)),
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

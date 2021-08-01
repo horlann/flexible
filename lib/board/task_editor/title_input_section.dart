@@ -30,32 +30,31 @@ class TitleInputSection extends StatelessWidget {
             width: 4,
           ),
           Expanded(
-            child: Container(
-                child: SizedBox(
-              height: 20 * byWithScale(context),
-              child: TextFormField(
-                // Change title
-                onChanged: (value) {
-                  onChange(value);
-                },
-
-                decoration: InputDecoration(
-                  labelText: 'Type task here',
-                  labelStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  // contentPadding: EdgeInsets.all(10),
-                ),
-                initialValue: initValue,
-                style: TextStyle(
-                    color: Color(0xff373535),
-                    fontSize: 12 * byWithScale(context)),
+            child: TextFormField(
+              onChanged: (value) {
+                onChange(value);
+              },
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 8 * byWithScale(context)),
+                isCollapsed: true,
+                isDense: true,
+                labelText: 'Type task here',
+                labelStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                // contentPadding: EdgeInsets.all(10),
               ),
-            )),
+              initialValue: initValue,
+              style: TextStyle(
+                  // height: 2,
+                  color: Color(0xff373535),
+                  fontSize: 12 * byWithScale(context)),
+            ),
           )
         ],
       ),

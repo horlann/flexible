@@ -35,150 +35,137 @@ class _TaskEditorState extends State<DayOptionsEditor> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xffE9E9E9),
-      body: SafeArea(
-          child: SizedBox.expand(
-            child: Container(
-              decoration: BoxDecoration(
-            color: Colors.green,
-            // gradient: mainBackgroundGradient,
-          ),
-              child: Stack(
-                children: [
-              Container(
-                child: WeatherBg(),
-                width: double.infinity,
-                height: double.infinity,
-              ),
-              Padding(
+      body: SizedBox.expand(
+        child: Stack(
+          children: [
+            Container(
+              child: WeatherBg(),
+              width: double.infinity,
+              height: double.infinity,
+            ),
+            SafeArea(
+              child: Padding(
                 padding: EdgeInsets.all(18),
-                    // Stack uses for make layer of glass
-                    child: Stack(
-                      children: [
-                        // the glass layer
-                        // fill uses for adopt is size
-                        Positioned.fill(child: GlassmorphLayer()),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15 * byWithScale(
-                              context)),
-                          child: buildCloseButton(),
-                        ),
+                // Stack uses for make layer of glass
+                child: Stack(
+                  children: [
+                    // the glass layer
+                    // fill uses for adopt is size
+                    Positioned.fill(child: GlassmorphLayer()),
+                    buildCloseButton(),
 
-                        Column(
-                          children: [
-                            Text(
-                              'Edit Daytime',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                    Column(
+                      children: [
+                        Spacer(
+                          flex: 1,
+                        ),
+                        Text(
+                          'Edit Day time',
+                          style: TextStyle(
+                            fontSize: 80 / pRatio(context),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Spacer(
+                          flex: 2,
+                        ),
+                        Text(
+                          'When do you want to do wake up',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 48 / pRatio(context),
+                              fontWeight: FontWeight.w400),
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        buildWakeTimePicker(),
+                        Spacer(
+                          flex: 2,
+                        ),
+                        Text(
+                          'When do you want to go sleep',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 48 / pRatio(context),
+                              fontWeight: FontWeight.w400),
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
+                        buildSleepTimePicker(),
+                        Spacer(
+                          flex: 5,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            BlocProvider.of<DailytasksBloc>(context).add(
+                                DailytasksUpdateDayOptions(
+                                    dayOptions: editableOptions));
+                            Navigator.pop(context);
+                          },
+                          child: Center(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 32 * byWithScale(context),
+                                  vertical: 8 * byWithScale(context)),
+                              decoration: BoxDecoration(
+                                  color: Color(0xffE24F4F),
+                                  borderRadius: BorderRadius.circular(30)),
+                              child: Text(
+                                'UPDATE TIME',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 48 / pRatio(context),
+                                    fontWeight: FontWeight.w700),
                               ),
                             ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Text(
-                              'When do you want to do wake up',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            buildWakeTimePicker(),
-                            SizedBox(
-                              height: 56,
-                            ),
-                            Text(
-                              'When do you want to go sleep',
-                              style: TextStyle(color: Colors.white,
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            buildSleepTimePicker(),
-                            SizedBox(
-                              height: 70,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                BlocProvider.of<DailytasksBloc>(context).add(
-                                    DailytasksUpdateDayOptions(
-                                        dayOptions: editableOptions));
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                height: 40,
-                                width: double.maxFinite,
-                                margin: EdgeInsets.symmetric(horizontal: 70),
-                                decoration: BoxDecoration(
-                                    color: Color(0xffE24F4F),
-                                    borderRadius: BorderRadius.circular(30)),
-                                child: Center(
-                                  child: Text(
-                                    'UPDATE TASK',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
+                          ),
+                        ),
+                        Spacer(
+                          flex: 1,
+                        ),
                       ],
-                    ),
-                  ),
-                  buildUpdateDeleteButtons()
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
-          )),
-    );
-  }
-
-  // Sends edited task to bloc
-  Widget buildUpdateDeleteButtons() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 16,
+            // buildUpdateDeleteButtons()
+          ],
         ),
-        SizedBox(
-          height: 16,
-        ),
-      ],
+      ),
     );
   }
 
   SizedBox buildWakeTimePicker() {
     return SizedBox(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 60 * byWithScale(context)),
-        padding: EdgeInsets.symmetric(horizontal: 20 * byWithScale(context)),
+        // height: 150,
+        margin: EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
+        padding: EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
         decoration: BoxDecoration(
             color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: Color(0xff000B2B).withOpacity(0.4),
+                  blurRadius: 8 * byWithScale(context))
+            ],
             borderRadius:
-            BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
+                BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
         child: Stack(
           children: [
             Padding(
               padding: EdgeInsets.only(
-                left: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.03,
-                top: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.105,
+                left: MediaQuery.of(context).size.width * 0.03,
+                top: MediaQuery.of(context).size.width * 0.105,
               ),
               child: Align(
-                child: Text(":", style: TextStyle(fontSize: 20),),
+                child: Text(
+                  ":",
+                  style: TextStyle(fontSize: 20),
+                ),
                 alignment: Alignment.center,
               ),
             ),
@@ -212,28 +199,29 @@ class _TaskEditorState extends State<DayOptionsEditor> {
   SizedBox buildSleepTimePicker() {
     return SizedBox(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 60 * byWithScale(context)),
-        padding: EdgeInsets.symmetric(horizontal: 20 * byWithScale(context)),
+        margin: EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
+        padding: EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
         decoration: BoxDecoration(
             color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: Color(0xff000B2B).withOpacity(0.4),
+                  blurRadius: 8 * byWithScale(context))
+            ],
             borderRadius:
-            BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
+                BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
         child: Stack(
           children: [
             Padding(
               padding: EdgeInsets.only(
-                top: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.105,
-                left: MediaQuery
-                    .of(context)
-                    .size
-                    .width * 0.03,
-
+                top: MediaQuery.of(context).size.width * 0.105,
+                left: MediaQuery.of(context).size.width * 0.03,
               ),
               child: Align(
-                child: Text(":", style: TextStyle(fontSize: 20),),
+                child: Text(
+                  ":",
+                  style: TextStyle(fontSize: 20),
+                ),
                 alignment: Alignment.center,
               ),
             ),
@@ -242,7 +230,6 @@ class _TaskEditorState extends State<DayOptionsEditor> {
                 isForce2Digits: true,
                 is24HourMode: true,
                 time: widget.dayOptions.goToSleepTime,
-
                 itemHeight: 30 * byWithScale(context),
                 itemWidth: 30 * byWithScale(context),
                 normalTextStyle: TextStyle(
@@ -277,10 +264,12 @@ class _TaskEditorState extends State<DayOptionsEditor> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 16, top: 16),
+            padding: EdgeInsets.only(
+                left: 12 * byWithScale(context),
+                top: 12 * byWithScale(context)),
             child: Image.asset(
               'src/icons/close.png',
-              width: 22,
+              width: 18 * byWithScale(context),
               fit: BoxFit.fitWidth,
             ),
           )

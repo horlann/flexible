@@ -82,7 +82,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                       crossFadeState: showCalendar
                           ? CrossFadeState.showFirst
                           : CrossFadeState.showSecond,
-                      firstChild: MiniRedButton(
+                      firstChild: MiniWhiteButton(
                         text: 'Today',
                         callback: () => onTapToday(),
                       ),
@@ -90,7 +90,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                         onTap: () => onTapLeft(),
                         child: Image.asset(
                           'src/icons/arrow_left.png',
-                          width: 20 * byWithScale(context),
+                          width: 18 * byWithScale(context),
                           fit: BoxFit.fitWidth,
                         ),
                       ),
@@ -107,10 +107,10 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                             currentDate(state.showDay),
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 21 * byWithScale(context),
+                                fontSize: 18 * byWithScale(context),
                                 color: weatherState.daylight == DayLight.dark
                                     ? Colors.white
-                                    : Color(0xffF66868)),
+                                    : Color(0xffE24F4F)),
                           );
                         },
                       ),
@@ -120,7 +120,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                       crossFadeState: showCalendar
                           ? CrossFadeState.showFirst
                           : CrossFadeState.showSecond,
-                      firstChild: MiniRedButton(
+                      firstChild: MiniWhiteButton(
                         text: 'Go to Date',
                         callback: () => showCalendarDialog(),
                       ),
@@ -128,7 +128,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                         onTap: () => onTapRight(),
                         child: Image.asset(
                           'src/icons/arrow_right.png',
-                          width: 20 * byWithScale(context),
+                          width: 18 * byWithScale(context),
                           fit: BoxFit.fitWidth,
                         ),
                       ),
