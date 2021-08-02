@@ -54,43 +54,21 @@ class _TaskTileState extends State<SystemTile> {
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
                     width: isLessThen350() ? 40 : 59,
                   ),
                   buildMainIcon(),
-                  SizedBox(
-                    width: 20,
-                  ),
+                  // SizedBox(
+                  //   width: 20,
+                  // ),
                   Expanded(
                     child: buildTextSection(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.title,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12 * byWithScale(context),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          widget.subtitle,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11 * byWithScale(context),
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ],
-                    ),
+                  // buildSubButtons(),
+                  SizedBox(
+                    width: 25,
                   ),
-                  //buildSubButtons(),
-                  Spacer()
                 ],
               ),
             ],
@@ -118,91 +96,31 @@ class _TaskTileState extends State<SystemTile> {
   Widget buildTextSection() {
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 4,
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              '${geTimeString(widget.showTime)}',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w600),
+            ),
           ),
-          Text(
-            '${geTimeString(widget.showTime)}',
-            style: TextStyle(
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              widget.title,
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 12 * byWithScale(context),
-                fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: 4,
-          ),
-          SizedBox(
-            height: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  // Button under task
-  // Shows when user tap on task tile
-  Widget buildSubButtons() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: AnimatedCrossFade(
-        duration: Duration(milliseconds: 200),
-        crossFadeState: showSubButtons
-            ? CrossFadeState.showSecond
-            : CrossFadeState.showFirst,
-        firstChild: SizedBox(),
-        secondChild: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            miniButton(
-                text: 'Edit Time',
-                iconAsset: 'src/icons/edit.png',
-                callback: () => widget.callback()),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget miniButton(
-      {required String text,
-      required String iconAsset,
-      VoidCallback? callback}) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          if (callback != null) {
-            callback();
-          }
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          decoration: BoxDecoration(
-            color: Color(0xff4077C1).withOpacity(0.75),
-            borderRadius: BorderRadius.circular(16),
-            // border: Border.all(color: Color(0xffF66868), width: 2),
-          ),
-          child: Row(
-            children: [
-              Image.asset(
-                iconAsset,
-                width: 16,
-                height: 16,
-                // fit: BoxFit.cover,
-              ),
-              // SizedBox(
-              //   width: 2,
-              // ),
-              // Text(
-              //   text,
-              //   style: TextStyle(fontSize: 8, color: Colors.white),
-              // ),
-            ],
-          ),
-        ),
       ),
     );
   }

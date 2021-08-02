@@ -66,7 +66,9 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
           yield WeatherLoaded(
               wTemp: getWeatherTemp(weather),
               wCode: getWeatherCondition(weather),
-              daylight: getDayLight(weather));
+              daylight: getDayLight(weather),
+              sunrise: weather.sunrise!,
+              sunset: weather.sunset!);
 
 //          yield WeatherLoaded(
 //              wTemp: getWeatherTemp(weather),

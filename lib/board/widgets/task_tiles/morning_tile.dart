@@ -97,145 +97,31 @@ class _TaskTileState extends State<MorningTile> {
   Padding buildTextSection() {
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  '${geTimeString(widget.showTime)}',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12 * byWithScale(context),
-                      fontWeight: FontWeight.w600),
-                ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              '${geTimeString(widget.showTime)}',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w600),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              widget.title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12 * byWithScale(context),
+                fontWeight: FontWeight.w600,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  widget.title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12 * byWithScale(context),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              buildSubButtons(),
-            ],
-          ),
-          SizedBox(
-            height: 4,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // showSubButtons
-              //     ? InkWell(
-              //         child: showWeather
-              //             ? Icon(Icons.close)
-              //             : Icon(Icons.add_rounded),
-              //         onTap: () {
-              //           setState(() {
-              //             showWeather = !showWeather;
-              //           });
-              //         },
-              //       )
-              //     : SizedBox(),
-            ],
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 20),
-          //   child: Text(
-          //     widget.subtitle,
-          //     style: TextStyle(
-          //         color: Color(0xff545353),
-          //         fontSize: 12 * byWithScale(context),
-          //         fontWeight: FontWeight.w400),
-          //   ),
-          // ),
-          SizedBox(
-            height: 4,
-          ),
-          // AnimatedCrossFade(
-          //     firstChild: SizedBox(),
-          //     secondChild: WeatherWidget(),
-          //     crossFadeState: !showWeather
-          //         ? CrossFadeState.showFirst
-          //         : CrossFadeState.showSecond,
-          //     duration: Duration(milliseconds: 200)),
-          SizedBox(
-            height: 16,
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  // Button under task
-  // Shows when user tap on task tile
-  Widget buildSubButtons() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4),
-      child: AnimatedCrossFade(
-        duration: Duration(milliseconds: 200),
-        crossFadeState: showSubButtons
-            ? CrossFadeState.showSecond
-            : CrossFadeState.showFirst,
-        firstChild: SizedBox(),
-        secondChild: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            miniButton(
-                text: 'Edit Time',
-                iconAsset: 'src/icons/edit.png',
-                callback: () => widget.callback()),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget miniButton(
-      {required String text,
-      required String iconAsset,
-      VoidCallback? callback}) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          if (callback != null) {
-            callback();
-          }
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          decoration: BoxDecoration(
-            color: Color(0xff4077C1).withOpacity(0.75),
-            borderRadius: BorderRadius.circular(16),
-            // border: Border.all(color: Color(0xffF66868), width: 2),
-          ),
-          child: Row(
-            children: [
-              Image.asset(
-                iconAsset,
-                width: 16,
-                height: 16,
-                // fit: BoxFit.cover,
-              ),
-              // SizedBox(
-              //   width: 2,
-              // ),
-              // Text(
-              //   text,
-              //   style: TextStyle(fontSize: 8, color: Colors.white),
-              // ),
-            ],
-          ),
-        ),
       ),
     );
   }

@@ -3,6 +3,8 @@ import 'package:flexible/board/models/day_options.dart';
 import 'package:flexible/board/widgets/sliver_persistant_header.dart';
 import 'package:flexible/board/widgets/task_tiles/adding_tile.dart';
 import 'package:flexible/board/widgets/task_tiles/morning_tile.dart';
+import 'package:flexible/board/widgets/task_tiles/sunrise_tile.dart';
+import 'package:flexible/board/widgets/task_tiles/sunset_tile.dart';
 import 'package:flexible/board/widgets/task_tiles/system_tile.dart';
 import 'package:flexible/utils/modal.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
@@ -137,6 +139,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
               // Good night
               SliverList(
                   delegate: SliverChildListDelegate([
+                SusetTile(callback: () {}),
                 SystemTile(
                     key: nightKey,
                     showTime: widget.dayOptions.goToSleepTime,
@@ -201,7 +204,8 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                                       dayOptions: widget.dayOptions),
                                 ));
                           }));
-                    })
+                    }),
+                SunriseTile(callback: () {})
               ])),
             ],
           ),
