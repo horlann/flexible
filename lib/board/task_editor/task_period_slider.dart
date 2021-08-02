@@ -68,6 +68,7 @@ class TaskPeriodSlider extends StatelessWidget {
               onChanged: (v) => callback(
                 Duration(hours: v.toInt()),
               ),
+              divisions: 8,
             ),
           ),
         ),
