@@ -37,6 +37,10 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
   double bottomLinePadding = 48;
   GlobalKey morningKey = GlobalKey();
   GlobalKey nightKey = GlobalKey();
+  GlobalKey sunsetkey = GlobalKey();
+  GlobalKey sunrisekey = GlobalKey();
+  bool isSunrise = true;
+  bool isSunset = true;
 
   Rect? _getOffset(GlobalKey? key) {
     if (key == null) return null;
@@ -139,7 +143,23 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
               // Good night
               SliverList(
                   delegate: SliverChildListDelegate([
-                SusetTile(callback: () {}),
+                Builder(builder: (BuildContext context) {
+                  if (isSunset) {
+                    return SusetTile(callback: () {
+                      showModal(
+                          context,
+                          DailyTaskModal(widget.dayOptions,
+                              _getOffset(sunsetkey)?.top ?? 250, () {
+                            setState(() {
+                              isSunset = !isSunset;
+                            });
+                            ;
+                          }, "Delete"));
+                    });
+                  } else {
+                    return Container();
+                  }
+                }),
                 SystemTile(
                     key: nightKey,
                     showTime: widget.dayOptions.goToSleepTime,
@@ -161,7 +181,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                                   builder: (context) => DayOptionsEditor(
                                       dayOptions: widget.dayOptions),
                                 ));
-                          }));
+                              }, 'Edit'));
                     })
               ])),
               // Adding section with last tile
@@ -183,6 +203,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
               // Good morning
               SliverList(
                   delegate: SliverChildListDelegate([
+
                 MorningTile(
                     key: morningKey,
                     showTime: widget.dayOptions.wakeUpTime,
@@ -203,9 +224,29 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                                   builder: (context) => DayOptionsEditor(
                                       dayOptions: widget.dayOptions),
                                 ));
-                          }));
+                              }, 'Edit'));
                     }),
-                SunriseTile(callback: () {})
+                    Builder(builder: (BuildContext context) {
+                      if (isSunrise) {
+                        return SunriseTile(callback: () {
+                          showModal(
+                              context,
+                              DailyTaskModal(widget.dayOptions,
+                                  _getOffset(sunrisekey)?.top ?? 40, () {
+                                    setState(() {
+                                      isSunrise = !isSunrise;
+                                    });
+                                    ;
+                                  }, "Delete"));
+                        });
+                      }
+
+                      else {
+                        return Container();
+                      }
+                    }
+                    ),
+
               ])),
             ],
           ),

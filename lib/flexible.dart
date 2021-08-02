@@ -69,6 +69,7 @@ class FlexibleApp extends StatelessWidget {
           BlocProvider(create: (context) => WeatherBloc()..add(WeatherUpdate()))
         ],
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(fontFamily: 'Mikado'),
           // Force app to minimize on last pop
           home: WillPopScope(

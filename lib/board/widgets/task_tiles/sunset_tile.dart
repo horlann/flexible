@@ -42,7 +42,7 @@ class _SusetTile extends State<SusetTile> {
                   children: [
                     Positioned(
                       top: 16,
-                      child: Text(geTimeString(state.sunrise),
+                      child: Text(geTimeString(state.sunset),
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 10 * byWithScale(context),

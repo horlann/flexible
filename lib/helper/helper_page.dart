@@ -44,6 +44,9 @@ class _HelperPageState extends State<HelperPage> {
       Helper1(
         callback: () => onContinue(),
       ),
+      Helper6(
+        callback: () => onContinue(),
+      ),
       Helper4(
         callback: () => onContinue(),
       ),
@@ -396,6 +399,85 @@ class Helper4 extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Text(
             'You can change this later in the settings',
+            style: TextStyle(
+                color: Color(0xffE24F4F),
+                fontSize: 14,
+                fontWeight: FontWeight.w400),
+          ),
+        ),
+        Spacer(
+          flex: 3,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 60),
+          child: WideRoundedButton(
+            text: 'CONTINUE',
+            enable: true,
+            textColor: Colors.white,
+            enableColor: Color(0xffE24F4F),
+            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+            callback: () => callback(),
+          ),
+        ),
+        SizedBox(
+          height: 16 * byWithScale(context),
+        )
+      ],
+    );
+  }
+}
+
+class Helper6 extends StatelessWidget {
+  final VoidCallback callback;
+
+  const Helper6({
+    Key? key,
+    required this.callback,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Spacer(
+          flex: 1,
+        ),
+        FlexibleText(),
+        Spacer(
+          flex: 2,
+        ),
+        // ignore: unrelated_type_equality_checks
+        Text(
+          'Plan',
+          style: TextStyle(
+              color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700),
+        ),
+        Spacer(
+          flex: 1,
+        ),
+        Text(
+          'Start with a simple task',
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
+        ),
+//        Image.asset(
+//          'src/helper/helper_morning.png',
+//          height: 500 / hpRatio(context),
+//        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          height: 350 / hpRatio(context),
+          child: Image.asset(
+            'src/helper/helper_task.png',
+            fit: BoxFit.contain,
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Text(
+            'Stop wasting time - divide your day into small tasks',
             style: TextStyle(
                 color: Color(0xffE24F4F),
                 fontSize: 14,

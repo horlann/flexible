@@ -1,9 +1,7 @@
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
-import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/widgets/circular_snakbar.dart';
 import 'package:flexible/widgets/error_snakbar.dart';
 import 'package:flexible/widgets/message_snakbar.dart';
@@ -11,7 +9,9 @@ import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:otp_autofill/otp_autofill.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class CodeVerificationPage extends StatefulWidget {
   final bool afterError;
@@ -25,6 +25,11 @@ class CodeVerificationPage extends StatefulWidget {
 class _CodeVerificationPageState extends State<CodeVerificationPage> {
   final TextEditingController pincodeController = TextEditingController();
   String pincode = '';
+  String _textContent = "";
+  String? appSignature;
+
+  late OTPTextEditController controller;
+  final scaffoldKey = GlobalKey();
 
   bool get pinValid {
     if (pincode.length == 6) {
@@ -43,9 +48,31 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
     BlocProvider.of<AuthBloc>(context).add(ResendCode(number: number));
   }
 
+  String? otpCode;
+
   @override
   void initState() {
     super.initState();
+    OTPInteractor.getAppSignature()
+        //ignore: avoid_print
+        .then((value) => print('signature - $value'));
+    controller = OTPTextEditController(
+      codeLength: 6,
+
+      //ignore: avoid_print
+      onCodeReceive: (code) => print('Your Application receive code - $code'),
+    )..startListenUserConsent(
+        (code) {
+          final exp = RegExp(r'(\d{5})');
+          return exp.stringMatch(code ?? '') ?? '';
+        },
+      );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    //cancel();
   }
 
   @override
@@ -58,6 +85,15 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
   void didChangeDependencies() {
     print('asdasd');
     super.didChangeDependencies();
+  }
+
+  void _listenotp() async {
+    await SmsAutoFill().listenForCode;
+  }
+
+  void _listenSignature() async {
+    final signCode = await SmsAutoFill().getAppSignature;
+    print(signCode);
   }
 
   @override
@@ -206,6 +242,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: PinCodeTextField(
@@ -231,7 +268,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                               ),
                               animationDuration: Duration(milliseconds: 100),
                               enableActiveFill: true,
-                              controller: pincodeController,
+                              controller: controller,
                               onCompleted: (v) {
                                 print("Completed");
                               },

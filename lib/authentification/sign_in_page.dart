@@ -174,7 +174,7 @@ class _SignInPageState extends State<SignInPage> {
             child: Wrap(
               children: [
                 Text(
-                  'Don\'t have account yet? ',
+                  'Don`t have an account yet? ',
                   style: TextStyle(
                       color: Colors.white, fontSize: 11 * byWithScale(context)),
                 ),
