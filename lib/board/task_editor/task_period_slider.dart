@@ -6,6 +6,7 @@ class TaskPeriodSlider extends StatelessWidget {
   final Function(Duration) callback;
 
   final List<Duration> durations = [
+    Duration(minutes: 0),
     Duration(minutes: 5),
     Duration(minutes: 15),
     Duration(minutes: 30),
@@ -21,7 +22,7 @@ class TaskPeriodSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(period.inHours.toString() + ' vb');
+    //print(period.inHours.toString() + ' vb');
     return Column(
       children: [
         Padding(
@@ -75,21 +76,28 @@ class TaskPeriodSlider extends StatelessWidget {
           child: SizedBox(
             height: 30 * byWithScale(context),
             child: Slider(
-              max: 8,
+              max: 9,
               min: 0,
-              value: period.inHours.toDouble(),
+              value: durations.indexOf(period).toDouble(),
               // activeColor: Colors.grey,
               // inactiveColor: Colors.grey,
-              onChanged: (v) => callback(
-                Duration(hours: v.toInt()),
-              ),
-              divisions: 8,
+              onChanged: (v) =>
+              {
+                print(durations[v.toInt()].toString() + " int"),
+                callback(durations[v.toInt()]),
+              },
+              divisions: 9,
             ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 22, right: 18),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          child:
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(
+              '0 ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
             Text(
               '5 ',
               style: TextStyle(fontSize: 8 * byWithScale(context)),

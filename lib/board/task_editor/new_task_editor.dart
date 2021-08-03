@@ -39,6 +39,18 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   late Stream submitR;
   StreamController onSubmitCS = StreamController();
   late Stream submitS;
+  final List<Duration> durations = [
+    Duration(minutes: 0),
+    Duration(minutes: 5),
+    Duration(minutes: 15),
+    Duration(minutes: 30),
+    Duration(minutes: 45),
+    Duration(hours: 1),
+    Duration(hours: 2),
+    Duration(hours: 3),
+    Duration(hours: 4),
+    Duration(hours: 5),
+  ];
 
   @override
   void initState() {
@@ -306,7 +318,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           timeStart: DateUtils.dateOnly(
                   BlocProvider.of<DailytasksBloc>(context).state.showDay)
               .add(Duration(hours: DateTime.now().hour)),
-          period: Duration(minutes: 20),
+          period: Duration(hours: 1),
           isDone: false,
           isDonable: true,
           timeLock: false,
