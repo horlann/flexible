@@ -26,13 +26,42 @@ class RegularTaskTile extends StatefulWidget {
 }
 
 class _RegularTaskTileState extends State<RegularTaskTile> {
-  // DateTime currentTime = DateTime.now();
-  bool showSubButtons = false;
+  Image taskImage = Image.asset(
+    'src/task_icons/noimage.png',
+    width: 24,
+    height: 24,
+    gaplessPlayback: true,
+  );
 
   @override
   void initState() {
     super.initState();
+    loadImg();
   }
+
+  @override
+  void didUpdateWidget(covariant RegularTaskTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    loadImg();
+  }
+
+  loadImg() async {
+    try {
+      Uint8List imageData = await RepositoryProvider.of<ImageRepoMock>(context)
+          .imageById(widget.task.iconId);
+
+      taskImage = Image.memory(
+        imageData,
+        width: 24,
+        height: 24,
+        gaplessPlayback: true,
+      );
+      setState(() {});
+    } catch (e) {}
+  }
+
+  // DateTime currentTime = DateTime.now();
+  bool showSubButtons = false;
 
   bool isUnSubscribed() =>
       (BlocProvider.of<SubscribeBloc>(context).state is! Subscribed);
@@ -202,29 +231,7 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
           borderRadius: BorderRadius.circular(25),
         ),
         child: InvertColors(
-          child: Center(
-            child: FutureBuilder(
-              future: RepositoryProvider.of<ImageRepoMock>(context)
-                  .imageById(widget.task.iconId),
-              builder: (context, AsyncSnapshot<Uint8List> snapshot) {
-                if (snapshot.hasData) {
-                  return Image.memory(
-                    snapshot.data!,
-                    width: 24,
-                    height: 24,
-                    gaplessPlayback: true,
-                  );
-                }
-
-                return Image.asset(
-                  'src/task_icons/noimage.png',
-                  width: 24,
-                  height: 24,
-                  gaplessPlayback: true,
-                );
-              },
-            ),
-          ),
+          child: Center(child: taskImage),
         ));
   }
 
