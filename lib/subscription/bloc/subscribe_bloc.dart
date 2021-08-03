@@ -126,6 +126,16 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
         yield RegisterAndProcess(continueRestore: true);
       }
     }
+
+    if (event is DebugRestore) {
+      bool isAuthed = fireAuthService.isAuthenticated;
+      if (isAuthed) {
+        yield Subscribed();
+      } else {
+        // Start auth and continue then
+        yield RegisterAndProcess(continueRestore: true);
+      }
+    }
   }
 
   Stream<SubscribeState> mapCheckForSub() async* {

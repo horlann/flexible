@@ -14,3 +14,5 @@ class Decline extends SubscribeEvent {}
 class Subscribe extends SubscribeEvent {}
 
 class Restore extends SubscribeEvent {}
+
+class DebugRestore extends SubscribeEvent {}
