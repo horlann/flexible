@@ -3,7 +3,9 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flexible/authentification/models/user_data_model.dart';
 import 'package:flexible/authentification/services/firebase_auth.dart';
+import 'package:flexible/authentification/services/users_data_repository.dart';
 import 'package:flexible/subscription/remoteconf_repository.dart';
 import 'package:flexible/subscription/subscribe_service_qon.dart';
 
@@ -11,7 +13,8 @@ part 'subscribe_event.dart';
 part 'subscribe_state.dart';
 
 class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
-  SubscribeBloc({required this.fireAuthService}) : super(SubscribeInitial()) {
+  SubscribeBloc({required this.fireAuthService, required this.usersDataRepo})
+      : super(SubscribeInitial()) {
     // Launch Qonversion first
     initQonverion().then((value) => add(Update()));
   }
@@ -19,6 +22,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
   RemoteConfigRepository remoteConfigRepository = RemoteConfigRepository();
   SubscribeServiceQon subscribeService = SubscribeServiceQon();
   late FireAuthService fireAuthService;
+  late UsersDataRepo usersDataRepo;
 
   // Qonversion wont work if network connection is off
   bool qonLaunched = false;
@@ -29,6 +33,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
       qonLaunched = true;
     } catch (e) {
       qonLaunched = false;
+      print(e);
     }
   }
 
@@ -39,10 +44,23 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
     if (event is Update) {
       // If network issue use last saved data
       if (qonLaunched == false) {
-        bool didSubscribedBefore = await subscribeService.didSubscribed;
-        if (didSubscribedBefore) {
-          yield Subscribed();
-          return;
+        bool isAuthed = fireAuthService.isAuthenticated;
+        if (isAuthed) {
+          UserData? userData =
+              await usersDataRepo.getUser(fireAuthService.getUser()!.uid);
+          if (userData != null) {
+            bool didSubscribedBefore = userData.subscribed;
+            if (didSubscribedBefore) {
+              yield Subscribed();
+              return;
+            } else {
+              yield UnSubscribed();
+              return;
+            }
+          } else {
+            yield UnSubscribed();
+            return;
+          }
         } else {
           yield UnSubscribed();
           return;
@@ -108,14 +126,33 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
         yield RegisterAndProcess(continueRestore: true);
       }
     }
+
+    if (event is DebugRestore) {
+      bool isAuthed = fireAuthService.isAuthenticated;
+      if (isAuthed) {
+        yield Subscribed();
+      } else {
+        // Start auth and continue then
+        yield RegisterAndProcess(continueRestore: true);
+      }
+    }
   }
 
   Stream<SubscribeState> mapCheckForSub() async* {
     bool isActive = await subscribeService
         .checkSubMonth()
         .onError((error, stackTrace) => false);
-    // Save localy subscribe state for offline mode
-    subscribeService.saveSubStateLocaly(didSubscribed: isActive);
+
+    // save last subscribe state to firebase
+    try {
+      UserData? userData =
+          await usersDataRepo.getUser(fireAuthService.getUser()!.uid);
+      usersDataRepo.setUser(userData!.copyWith(subscribed: isActive));
+      print('Save last sub state succes > $isActive');
+    } catch (e) {
+      print('Save last sub state error >$e');
+    }
+
     if (isActive) {
       yield Subscribed();
     } else {

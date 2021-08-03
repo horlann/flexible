@@ -217,6 +217,15 @@ class _SubscribePageState extends State<SubscribePage> {
                         callback: () => restoreSub(),
                       ),
                     ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<SubscribeBloc>(context)
+                              .add(DebugRestore());
+                        },
+                        child: Text('Debug restore')),
                     Spacer(
                       flex: 2,
                     ),
