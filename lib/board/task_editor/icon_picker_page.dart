@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/widgets/weather_bg.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -217,11 +218,19 @@ class _IconPickerPageState extends State<IconPickerPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 16, top: 16, left: 16),
-            child: Image.asset(
-              'src/icons/return.png',
-              width: 20,
-              fit: BoxFit.fitWidth,
+            padding: EdgeInsets.only(
+                left: 16 * byWithScale(context),
+                right: 16 * byWithScale(context),
+                top: 12 * byWithScale(context)),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Icon(
+                Icons.close,
+                size: 18 * byWithScale(context),
+              ),
             ),
           )
         ],
