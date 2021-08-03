@@ -115,7 +115,7 @@ class _State extends State<RegularTaskModal> {
                                                                   "Edit",
                                                                   style: TextStyle(
                                                                       fontSize:
-                                                                          30,
+                                                                          25,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold,
@@ -153,7 +153,7 @@ class _State extends State<RegularTaskModal> {
                                                           },
                                                           showLock: true,
                                                           color: redMain,
-                                                          size: 32)),
+                                                          size: 25)),
                                                   GestureDetector(
                                                       onTapCancel: () {
                                                         setState(() =>
@@ -197,7 +197,7 @@ class _State extends State<RegularTaskModal> {
                                                                       child: Text(
                                                                           "Copy",
                                                                           style: TextStyle(
-                                                                              fontSize: 30,
+                                                                              fontSize: 25,
                                                                               fontWeight: FontWeight.bold,
                                                                               fontFamily: "Mikado",
                                                                               color: copyButtonHold == true ? Colors.white : redMain)))),

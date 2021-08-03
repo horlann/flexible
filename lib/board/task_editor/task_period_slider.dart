@@ -5,10 +5,23 @@ class TaskPeriodSlider extends StatelessWidget {
   final Duration period;
   final Function(Duration) callback;
 
-  const TaskPeriodSlider({required this.period, required this.callback});
+  final List<Duration> durations = [
+    Duration(minutes: 5),
+    Duration(minutes: 15),
+    Duration(minutes: 30),
+    Duration(minutes: 45),
+    Duration(hours: 1),
+    Duration(hours: 2),
+    Duration(hours: 3),
+    Duration(hours: 4),
+    Duration(hours: 5),
+  ];
+
+  TaskPeriodSlider({required this.period, required this.callback});
 
   @override
   Widget build(BuildContext context) {
+    print(period.inHours.toString() + ' vb');
     return Column(
       children: [
         Padding(
@@ -17,7 +30,9 @@ class TaskPeriodSlider extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${period.inHours.toString()} hours',
+                period.inHours < 1
+                    ? '${period.inMinutes.toString()} minutes'
+                    : '${period.inHours.toString()} hours',
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
@@ -73,15 +88,45 @@ class TaskPeriodSlider extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                  9,
-                  (index) => Text(
-                        '$index h',
-                        style: TextStyle(fontSize: 8 * byWithScale(context)),
-                      ))),
+          padding: const EdgeInsets.only(left: 22, right: 18),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(
+              '5 ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '15',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '30',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '45',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '1h',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '2h',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '3h',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              ' 4h',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '5h',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+          ]),
         )
       ],
     );

@@ -16,6 +16,8 @@ class IconPickerPage extends StatefulWidget {
 }
 
 class _IconPickerPageState extends State<IconPickerPage> {
+  bool switchValue = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,8 +117,8 @@ class _IconPickerPageState extends State<IconPickerPage> {
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
-                          child: buildImageLoader(context, e),
-                        ))
+                  child: buildImageLoader(context, e),
+                ))
                     .toList(),
               ),
             );
@@ -162,7 +164,13 @@ class _IconPickerPageState extends State<IconPickerPage> {
         child: Row(children: [
           Text("Improve smart icons", style: TextStyle(color: Colors.white),),
           Spacer(),
-          Switch(value: true, onChanged: (onChanged) {})
+          Switch(
+              value: switchValue,
+              onChanged: (onChanged) {
+                setState(() {
+                  switchValue = !switchValue;
+                });
+              })
         ],),
       ),
     );

@@ -379,7 +379,7 @@ class Helper4 extends StatelessWidget {
           flex: 1,
         ),
         Text(
-          'When do you  usually wake up',
+          'When do you  usually wake up?',
           style: TextStyle(
               color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
         ),
@@ -536,7 +536,7 @@ class Helper5 extends StatelessWidget {
           flex: 1,
         ),
         Text(
-          'When do you  usually wake up',
+          'When do you  usually wake up?',
           style: TextStyle(
               color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),
         ),

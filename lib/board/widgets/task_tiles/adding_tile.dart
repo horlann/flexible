@@ -70,7 +70,7 @@ class _AddingTileState extends State<AddingTile> {
 //                  ),
 //                ),
             Container(
-              margin: EdgeInsets.only(top: 50, left: 32),
+              margin: EdgeInsets.only(top: 40, left: 32),
               clipBehavior: Clip.none,
               height: 80,
               width: double.maxFinite,

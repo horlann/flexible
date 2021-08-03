@@ -145,15 +145,17 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                   delegate: SliverChildListDelegate([
                 Builder(builder: (BuildContext context) {
                   if (isSunset) {
-                    return SusetTile(callback: () {
-                      showModal(
-                          context,
+                    return SusetTile(
+                        key: sunsetkey,
+                        callback: () {
+                          showModal(
+                              context,
                           DailyTaskModal(widget.dayOptions,
                               _getOffset(sunsetkey)?.top ?? 250, () {
                             setState(() {
                               isSunset = !isSunset;
                             });
-                            ;
+
                           }, "Delete"));
                     });
                   } else {
@@ -228,7 +230,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                     }),
                     Builder(builder: (BuildContext context) {
                       if (isSunrise) {
-                        return SunriseTile(callback: () {
+                        return SunriseTile(key: sunrisekey, callback: () {
                           showModal(
                               context,
                               DailyTaskModal(widget.dayOptions,

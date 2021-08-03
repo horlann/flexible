@@ -180,7 +180,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 GestureDetector(
                   child: Text(
-                    'Register',
+                    'Registration',
                     style: TextStyle(
                         color: Color(0xffE24F4F),
                         decoration: TextDecoration.underline,

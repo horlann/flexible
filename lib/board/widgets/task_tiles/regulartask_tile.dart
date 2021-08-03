@@ -229,40 +229,39 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
   }
 
   Widget buildTextSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 4,
-        ),
-        Text(
-          '${geTimeString(widget.task.timeStart)}',
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w400),
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        Text(
-          widget.task.title,
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w400,
-              decoration: widget.task.isDone
-                  ? TextDecoration.lineThrough
-                  : TextDecoration.none),
-        ),
-        Text(
-          widget.task.subtitle,
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 12 * byWithScale(context),
-              fontWeight: FontWeight.w400),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0),
+      child: Row(
+        children: [
+          Text(
+            '${geTimeString(widget.task.timeStart)}',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 12 * byWithScale(context),
+                fontWeight: FontWeight.w600),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            widget.task.title,
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 12 * byWithScale(context),
+                fontWeight: FontWeight.w600,
+                decoration: widget.task.isDone
+                    ? TextDecoration.lineThrough
+                    : TextDecoration.none),
+          ),
+          Text(
+            widget.task.subtitle,
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 12 * byWithScale(context),
+                fontWeight: FontWeight.w400),
+          ),
+        ],
+      ),
     );
   }
 }

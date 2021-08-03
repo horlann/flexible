@@ -131,7 +131,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                       height: 10 * byWithScale(context),
                     ),
                     isUnSubscribed()
-                        ? SizedBox()
+                        ? SizedBox() //TODO
                         : buildTaskTypeSwitcher(context),
                     SizedBox(
                       height: 10 * byWithScale(context),
@@ -306,7 +306,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           timeStart: DateUtils.dateOnly(
                   BlocProvider.of<DailytasksBloc>(context).state.showDay)
               .add(Duration(hours: DateTime.now().hour)),
-          period: Duration(),
+          period: Duration(minutes: 20),
           isDone: false,
           isDonable: true,
           timeLock: false,

@@ -8,7 +8,8 @@ class SusetTile extends StatefulWidget {
   final VoidCallback callback;
   SusetTile({
     required this.callback,
-  });
+    Key? key,
+  }) : super(key: key);
   @override
   _SusetTile createState() => _SusetTile();
 }

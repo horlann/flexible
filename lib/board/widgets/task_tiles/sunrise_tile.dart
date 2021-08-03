@@ -6,9 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SunriseTile extends StatefulWidget {
   final VoidCallback callback;
-  SunriseTile({
-    required this.callback,
-  });
+  SunriseTile({required this.callback, Key? key}) : super(key: key);
   @override
   _SunriseTile createState() => _SunriseTile();
 }
