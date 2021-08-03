@@ -569,7 +569,7 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
               .state
               .showDay
               .add(Duration(days: 7)),
-          globalDuration: Duration(hours: 10),
+          globalDuration: Duration(hours: 1),
           globalDurationLeft: Duration(),
           priority: 1);
     }
