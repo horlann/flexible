@@ -64,7 +64,8 @@ class FlexibleApp extends StatelessWidget {
           BlocProvider(
             create: (context) => SubscribeBloc(
                 fireAuthService:
-                    RepositoryProvider.of<FireAuthService>(context)),
+                    RepositoryProvider.of<FireAuthService>(context),
+                usersDataRepo: RepositoryProvider.of<UsersDataRepo>(context)),
           ),
           BlocProvider(create: (context) => WeatherBloc()..add(WeatherUpdate()))
         ],

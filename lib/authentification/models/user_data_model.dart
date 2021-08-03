@@ -10,12 +10,14 @@ class UserData {
   final String email;
   final String phoneNumber;
   final Uint8List? photo;
+  final bool subscribed;
   UserData({
     String? uid,
     required this.fullName,
     required this.email,
     required this.phoneNumber,
     required this.photo,
+    this.subscribed = false,
   }) : this.uid = uid ?? Uuid().v1();
 
   UserData copyWith({
@@ -24,6 +26,7 @@ class UserData {
     String? email,
     String? phoneNumber,
     Uint8List? photo,
+    bool? subscribed,
   }) {
     return UserData(
       uid: uid ?? this.uid,
@@ -31,6 +34,7 @@ class UserData {
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       photo: photo ?? this.photo,
+      subscribed: subscribed ?? this.subscribed,
     );
   }
 
@@ -40,6 +44,7 @@ class UserData {
       'fullName': fullName,
       'email': email,
       'phoneNumber': phoneNumber,
+      'subscribed': subscribed,
       'photo': this.photo != null ? Blob(this.photo!) : null,
     };
   }
@@ -50,6 +55,7 @@ class UserData {
       'fullName': fullName,
       'email': email,
       'phoneNumber': phoneNumber,
+      'subscribed': subscribed,
     };
   }
 
@@ -60,6 +66,7 @@ class UserData {
       email: map['email'],
       phoneNumber: map['phoneNumber'],
       photo: map['photo']?.bytes,
+      subscribed: map['subscribed'] ?? false,
     );
   }
 
@@ -70,7 +77,7 @@ class UserData {
 
   @override
   String toString() {
-    return 'UserData(uid: $uid, fullName: $fullName, email: $email, phoneNumber: $phoneNumber, photo: $photo)';
+    return 'UserData(uid: $uid, fullName: $fullName, email: $email, phoneNumber: $phoneNumber, photo: $photo, subscribed: $subscribed)';
   }
 
   @override
@@ -82,7 +89,8 @@ class UserData {
         other.fullName == fullName &&
         other.email == email &&
         other.phoneNumber == phoneNumber &&
-        other.photo == photo;
+        other.photo == photo &&
+        other.subscribed == subscribed;
   }
 
   @override
@@ -91,6 +99,7 @@ class UserData {
         fullName.hashCode ^
         email.hashCode ^
         phoneNumber.hashCode ^
-        photo.hashCode;
+        photo.hashCode ^
+        subscribed.hashCode;
   }
 }
