@@ -137,6 +137,40 @@ class TileBody extends StatefulWidget {
 }
 
 class _TileBodyState extends State<TileBody> {
+  Image taskImage = Image.asset(
+    'src/task_icons/noimage.png',
+    width: 24,
+    height: 24,
+    gaplessPlayback: true,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    loadImg();
+  }
+
+  @override
+  void didUpdateWidget(covariant TileBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    loadImg();
+  }
+
+  loadImg() async {
+    try {
+      Uint8List imageData = await RepositoryProvider.of<ImageRepoMock>(context)
+          .imageById(widget.task.iconId);
+
+      taskImage = Image.memory(
+        imageData,
+        width: 24,
+        height: 24,
+        gaplessPlayback: true,
+      );
+      setState(() {});
+    } catch (e) {}
+  }
+
   Rect? _getOffset(GlobalKey? key) {
     if (key == null) return null;
     final renderObject = key.currentContext?.findRenderObject();
@@ -353,27 +387,7 @@ class _TileBodyState extends State<TileBody> {
         width: 50,
         child: InvertColors(
           child: Center(
-            child: FutureBuilder(
-              future: RepositoryProvider.of<ImageRepoMock>(context)
-                  .imageById(task.iconId),
-              builder: (context, AsyncSnapshot<Uint8List> snapshot) {
-                if (snapshot.hasData) {
-                  return Image.memory(
-                    snapshot.data!,
-                    width: 24,
-                    height: 24,
-                    gaplessPlayback: true,
-                  );
-                }
-
-                return Image.asset(
-                  'src/task_icons/noimage.png',
-                  width: 24,
-                  height: 24,
-                  gaplessPlayback: true,
-                );
-              },
-            ),
+            child: taskImage,
           ),
         ));
   }
