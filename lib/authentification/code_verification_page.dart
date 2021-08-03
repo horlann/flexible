@@ -63,7 +63,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
       onCodeReceive: (code) => print('Your Application receive code - $code'),
     )..startListenUserConsent(
         (code) {
-          final exp = RegExp(r'(\d{5})');
+          final exp = RegExp(r'(\d{6})');
           return exp.stringMatch(code ?? '') ?? '';
         },
       );
@@ -242,7 +242,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: PinCodeTextField(
