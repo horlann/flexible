@@ -141,51 +141,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                       maxExtent: bottomOverscroll,
                       child: SizedBox())),
               // Good night
-              SliverList(
-                  delegate: SliverChildListDelegate([
-                Builder(builder: (BuildContext context) {
-                  if (isSunset) {
-                    return SusetTile(
-                        key: sunsetkey,
-                        callback: () {
-                          showModal(
-                              context,
-                          DailyTaskModal(widget.dayOptions,
-                              _getOffset(sunsetkey)?.top ?? 250, () {
-                            setState(() {
-                              isSunset = !isSunset;
-                            });
-
-                          }, "Delete"));
-                    });
-                  } else {
-                    return Container();
-                  }
-                }),
-                SystemTile(
-                    key: nightKey,
-                    showTime: widget.dayOptions.goToSleepTime,
-                    title: 'Good night',
-                    subtitle: 'Sleep well',
-                    image: Image.asset(
-                      'src/task_icons/goodnight.png',
-                      scale: 1.1,
-                    ),
-                    callback: () {
-                      showModal(
-                          context,
-                          DailyTaskModal(
-                              widget.dayOptions, _getOffset(nightKey)?.top ?? 0,
-                              () {
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => DayOptionsEditor(
-                                      dayOptions: widget.dayOptions),
-                                ));
-                              }, 'Edit'));
-                    })
-              ])),
+              buildGoonNightAndSunset(context),
               // Adding section with last tile
               // grows up when main sliver is fully scrolled
               SliverPersistentHeader(
@@ -203,57 +159,118 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                         widget.tasks.reversed.toList())),
               ),
               // Good morning
-              SliverList(
-                  delegate: SliverChildListDelegate([
-
-                MorningTile(
-                    key: morningKey,
-                    showTime: widget.dayOptions.wakeUpTime,
-                    title: 'Good morning',
-                    subtitle: 'Have a nice day',
-                    image: Image.asset(
-                      'src/task_icons/morning.png',
-                      scale: 1.1,
-                    ),
-                    callback: () {
-                      showModal(
-                          context,
-                          DailyTaskModal(widget.dayOptions,
-                              _getOffset(morningKey)?.top ?? 0, () {
-                            Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => DayOptionsEditor(
-                                      dayOptions: widget.dayOptions),
-                                ));
-                              }, 'Edit'));
-                    }),
-                    Builder(builder: (BuildContext context) {
-                      if (isSunrise) {
-                        return SunriseTile(key: sunrisekey, callback: () {
-                          showModal(
-                              context,
-                              DailyTaskModal(widget.dayOptions,
-                                  _getOffset(sunrisekey)?.top ?? 40, () {
-                                    setState(() {
-                                      isSunrise = !isSunrise;
-                                    });
-                                    ;
-                                  }, "Delete"));
-                        });
-                      }
-
-                      else {
-                        return Container();
-                      }
-                    }
-                    ),
-
-              ])),
+              buildMorningAndSunrise(context),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildGoonNightAndSunset(BuildContext context) {
+    List<Widget> w = [
+      SystemTile(
+          key: nightKey,
+          showTime: widget.dayOptions.goToSleepTime,
+          title: 'Good night',
+          subtitle: 'Sleep well',
+          image: Image.asset(
+            'src/task_icons/goodnight.png',
+            scale: 1.1,
+          ),
+          callback: () {
+            showModal(
+                context,
+                DailyTaskModal(
+                    widget.dayOptions, _getOffset(nightKey)?.top ?? 0, () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) =>
+                            DayOptionsEditor(dayOptions: widget.dayOptions),
+                      ));
+                }, 'Edit'));
+          }),
+      // Check if disabled
+      if (isSunset)
+        SusetTile(
+            key: sunsetkey,
+            callback: () {
+              showModal(
+                  context,
+                  DailyTaskModal(
+                      widget.dayOptions, _getOffset(sunsetkey)?.top ?? 250, () {
+                    setState(() {
+                      isSunset = !isSunset;
+                    });
+                  }, "Delete"));
+            }),
+    ];
+
+    // Reverse position of goodnight and sunset by time
+    return BlocBuilder<WeatherBloc, WeatherState>(
+      builder: (context, state) {
+        if (state is WeatherLoaded &&
+            widget.dayOptions.goToSleepTime
+                .difference(state.sunset)
+                .isNegative) {
+          w = w.reversed.toList();
+        }
+        return SliverList(delegate: SliverChildListDelegate(w));
+      },
+    );
+  }
+
+  Widget buildMorningAndSunrise(BuildContext context) {
+    List<Widget> w = [
+      MorningTile(
+          key: morningKey,
+          showTime: widget.dayOptions.wakeUpTime,
+          title: 'Good morning',
+          subtitle: 'Have a nice day',
+          image: Image.asset(
+            'src/task_icons/morning.png',
+            scale: 1.1,
+          ),
+          callback: () {
+            showModal(
+                context,
+                DailyTaskModal(
+                    widget.dayOptions, _getOffset(morningKey)?.top ?? 0, () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) =>
+                            DayOptionsEditor(dayOptions: widget.dayOptions),
+                      ));
+                }, 'Edit'));
+          }),
+      // Check if disabled
+      if (isSunrise)
+        SunriseTile(
+            key: sunrisekey,
+            callback: () {
+              showModal(
+                  context,
+                  DailyTaskModal(
+                      widget.dayOptions, _getOffset(sunrisekey)?.top ?? 40, () {
+                    setState(() {
+                      isSunrise = !isSunrise;
+                    });
+                    ;
+                  }, "Delete"));
+            }),
+    ];
+
+    // Reverse position of morning and sunrise by time
+    return BlocBuilder<WeatherBloc, WeatherState>(
+      builder: (context, state) {
+        if (state is WeatherLoaded &&
+            widget.dayOptions.wakeUpTime.difference(state.sunrise).isNegative) {
+          w = w.reversed.toList();
+        }
+        return SliverList(delegate: SliverChildListDelegate(w));
+      },
     );
   }
 }

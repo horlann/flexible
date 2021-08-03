@@ -13,9 +13,7 @@ part 'weather_state.dart';
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   WeatherBloc() : super(WeatherLoading()) {
     // Auto update weather
-    Timer.periodic(Duration(hours: 1), (t) {
-      this.add(WeatherUpdate());
-    });
+    dynamicUpdate();
   }
 
   WeatherFactory wf = WeatherFactory('3634c96c808f11aff43c536ee9abeb05');
@@ -47,6 +45,22 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     } else {
       return DayLight.light;
     }
+  }
+
+  dynamicUpdate() {
+    // If weather not loaded increase refresh rate
+    Duration d;
+    if (state is WeatherLoaded) {
+      d = Duration(hours: 1);
+    } else {
+      d = Duration(seconds: 5);
+    }
+
+    print('Weather update tick > $d');
+
+    Timer(d, () => dynamicUpdate());
+
+    this.add(WeatherUpdate());
   }
 
   @override
