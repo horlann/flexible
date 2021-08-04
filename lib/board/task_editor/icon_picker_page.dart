@@ -1,16 +1,19 @@
 import 'dart:typed_data';
 
 import 'package:flexible/board/repository/image_repo_mock.dart';
+import 'package:flexible/board/widgets/close_button.dart';
 import 'package:flexible/board/widgets/weather_bg.dart';
-import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IconPickerPage extends StatefulWidget {
-  const IconPickerPage({Key? key}) : super(key: key);
+  const IconPickerPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _IconPickerPageState createState() => _IconPickerPageState();
@@ -18,6 +21,13 @@ class IconPickerPage extends StatefulWidget {
 
 class _IconPickerPageState extends State<IconPickerPage> {
   bool switchValue = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getSwitchValues();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,26 +70,26 @@ class _IconPickerPageState extends State<IconPickerPage> {
           Positioned.fill(child: buildGlassmorphicLayer()),
           Column(
             children: [
-              Row(children: [
-                buildCloseButton(),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: Center(
-                      child: Text(
-
-                        ' Give it an icon',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
+              Row(
+                children: [
+                  CloseButtonn(),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: Center(
+                        child: Text(
+                          ' Give it an icon',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],),
-
+                ],
+              ),
               SizedBox(
                 height: 16,
               ),
@@ -162,19 +172,49 @@ class _IconPickerPageState extends State<IconPickerPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 35),
       child: Center(
-        child: Row(children: [
-          Text("Improve smart icons", style: TextStyle(color: Colors.white),),
-          Spacer(),
-          Switch(
+        child: Row(
+          children: [
+            Text(
+              "Improve smart icons",
+              style: TextStyle(color: Colors.white),
+            ),
+            Spacer(),
+            Switch(
               value: switchValue,
               onChanged: (onChanged) {
                 setState(() {
-                  switchValue = !switchValue;
+                  switchValue = onChanged;
+                  saveSwitchState(onChanged);
+                  print('Saved state is $switchValue');
+                  //switch works
                 });
-              })
-        ],),
+                print(switchValue);
+              },
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  getSwitchValues() async {
+    switchValue = await getSwitchState();
+    setState(() {});
+  }
+
+  Future<bool> saveSwitchState(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("switchState", value);
+    print('Switch Value saved $value');
+    return prefs.setBool("switchState", value);
+  }
+
+  Future<bool> getSwitchState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isSwitchedFT = prefs.getBool("switchState");
+    print(isSwitchedFT);
+
+    return isSwitchedFT!;
   }
 
   GlassmorphicContainer buildGlassmorphicLayer() {
@@ -204,35 +244,6 @@ class _IconPickerPageState extends State<IconPickerPage> {
           Color(0xFFffffff).withOpacity(0.15),
           Color(0xFFffffff).withOpacity(0.15),
           Color(0xFFFFFFFF).withOpacity(0.15),
-        ],
-      ),
-    );
-  }
-
-  Widget buildCloseButton() {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-                left: 16 * byWithScale(context),
-                right: 16 * byWithScale(context),
-                top: 12 * byWithScale(context)),
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-              ),
-              child: Icon(
-                Icons.close,
-                size: 18 * byWithScale(context),
-              ),
-            ),
-          )
         ],
       ),
     );

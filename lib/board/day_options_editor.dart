@@ -1,5 +1,6 @@
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/day_options.dart';
+import 'package:flexible/board/widgets/close_button.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
@@ -52,7 +53,7 @@ class _TaskEditorState extends State<DayOptionsEditor> {
                     // the glass layer
                     // fill uses for adopt is size
                     Positioned.fill(child: GlassmorphLayer()),
-                    buildCloseButton(),
+                    CloseButtonn(),
 
                     Column(
                       children: [
@@ -251,29 +252,6 @@ class _TaskEditorState extends State<DayOptionsEditor> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget buildCloseButton() {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-                left: 12 * byWithScale(context),
-                top: 12 * byWithScale(context)),
-            child: Image.asset(
-              'src/icons/close.png',
-              width: 18 * byWithScale(context),
-              fit: BoxFit.fitWidth,
-            ),
-          )
-        ],
       ),
     );
   }

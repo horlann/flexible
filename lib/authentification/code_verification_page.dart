@@ -78,7 +78,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
   }
 
   void startTimer() {
-    _start = 10;
+    _start = 60;
     _canSendAgain = false;
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
@@ -173,6 +173,9 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
           //    ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
           //     text: 'Processing',
           //    ));
+          // ignore: deprecated_member_use
+          Scaffold.of(context).hideCurrentSnackBar();
+
           showTopSnackBar(
             context,
             CustomSnackBar.info(
@@ -193,6 +196,8 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
           //   ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
           //     text: state.error,
           //   ));
+          Scaffold.of(context).hideCurrentSnackBar();
+
           showTopSnackBar(
             context,
             CustomSnackBar.info(
@@ -213,6 +218,8 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
           //  ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
           //    text: state.message,
           //   ));
+          Scaffold.of(context).hideCurrentSnackBar();
+
           showTopSnackBar(
             context,
             CustomSnackBar.info(
@@ -356,7 +363,9 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                             visible: _alwaysShowTimer,
                             child: Visibility(
                               child: Text(
-                                  " You can resend code per $_start seconds"),
+                                " You can resend code per $_start seconds",
+                                style: TextStyle(color: Colors.white),
+                              ),
                               visible: !_canSendAgain,
                             ),
                           ),

@@ -31,7 +31,7 @@ class _ColorPickerRowState extends State<ColorPickerRow> {
           onTap: () {
             widget.callback(color, pos!);
             isActiveArray = [false, false, true, false, false, false];
-            isActiveArray[pos!] = true;
+            isActiveArray[pos] = true;
             isActiveArray.forEach((element) => print(element));
 
           },

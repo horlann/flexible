@@ -76,40 +76,62 @@ class _State extends State<SuperTaskModal> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
-                                                    InkWell(
-                                                        borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(8)),
-                                                        splashColor: redMain,
-                                                        highlightColor:
-                                                        Colors.transparent,
-                                                        child: Container(
-                                                            height: 52,
-                                                            width: 100,
-                                                            child: Center(
-                                                                child: Text(
-                                                                    "Edit",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                        25,
-                                                                        fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                        fontFamily:
-                                                                        "Mikado",
-                                                                        color: editButtonHold ==
-                                                                            true
-                                                                            ? Colors
-                                                                            .white
-                                                                            : redMain)))),
-                                                        onTap: () async {
-                                                          //Navigator.pop(context);
-                                                          //await widget.onEditTap
-                                                          //     .call();
-                                                        }),
-                                                    Container(
-                                                        margin: EdgeInsets.symmetric(horizontal: 10),
-                                                        child: HidableTimeLock(
+//                                                    GestureDetector(
+//                                                      onTapCancel: () {
+//                                                        setState(
+//                                                                () => editButtonHold = false);
+//                                                      },
+//                                                      onTapUp: (d) {
+//                                                        setState(
+//                                                                () => editButtonHold = false);
+//                                                      },
+//                                                      onTapDown: (d) {
+//                                                        setState(
+//                                                                () => editButtonHold = true);
+//                                                      },
+//                                                      child: Material(
+//                                                        animationDuration:
+//                                                        Duration(milliseconds: 250),
+//                                                        color: Colors.white,
+//                                                        borderRadius: BorderRadius.all(
+//                                                            Radius.circular(8)),
+//                                                        child: InkWell(
+//                                                            borderRadius:
+//                                                            BorderRadius.all(
+//                                                                Radius.circular(8)),
+//                                                            splashColor: redMain,
+//                                                            highlightColor:
+//                                                            Colors.transparent,
+//                                                            child: Container(
+//                                                                height: 52,
+//                                                                width: 100,
+//                                                                child: Center(
+//                                                                    child: Text(
+//                                                                        "Edit",
+//                                                                        style: TextStyle(
+//                                                                            fontSize:
+//                                                                            25,
+//                                                                            fontWeight:
+//                                                                            FontWeight
+//                                                                                .bold,
+//                                                                            fontFamily:
+//                                                                            "Mikado",
+//                                                                            color: editButtonHold ==
+//                                                                                true
+//                                                                                ? Colors
+//                                                                                .white
+//                                                                                : redMain)))),
+//                                                            onTap: () async {
+//                                                              //Navigator.pop(context);
+//                                                              //await widget.onEditTap
+//                                                              //     .call();
+//                                                            }),
+//                                                      ),
+//                                                    ),
+                                        Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: HidableTimeLock(
                                                             locked: widget.task.timeLock,
                                                             onTap: () async {
                                                               Navigator.pop(context);
