@@ -6,6 +6,7 @@ import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/repository/day_options_interface.dart';
 import 'package:flexible/board/repository/tasts_repo_interface.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/models/tasks/task.dart';
@@ -40,15 +42,15 @@ class _BoardState extends State<Board> {
         child: BlocConsumer<DailytasksBloc, DailytasksState>(
       listener: (context, state) {
         if (state is DailytasksCommon) {
-          if (state.askForSuperInsert) {
-            print('ask user');
+          // if (state.askForSuperInsert) {
+          //   print('ask user');
 
-            ScaffoldMessenger.of(context).showSnackBar(buildSuperAsk(context));
-          }
-          if (state.message.isNotEmpty) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(messageSnakbar(text: state.message));
-          }
+          //   ScaffoldMessenger.of(context).showSnackBar(buildSuperAsk(context));
+          // }
+          // if (state.message.isNotEmpty) {
+          //   ScaffoldMessenger.of(context)
+          //       .showSnackBar(messageSnakbar(text: state.message));
+          // }
         }
       },
       builder: (context, state) {
@@ -79,7 +81,8 @@ class _BoardState extends State<Board> {
 
           return TurboAnimatedScrollView(
             // key: Key(Random().nextInt(9999).toString()),
-            tasks: tasks, dayOptions: state.dayOptions,
+            tasks: tasks,
+            dayOptions: state.dayOptions,
           );
         }
         // TODO loading
