@@ -4,6 +4,7 @@ import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
+import 'package:flexible/board/widgets/task_tiles/components/cached_icon.dart';
 import 'package:flexible/board/widgets/task_tiles/components/done_checkbox.dart';
 import 'package:flexible/board/widgets/task_tiles/components/hidable_lock.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
@@ -23,40 +24,15 @@ class SuperTaskTile extends StatefulWidget {
 }
 
 class _SuperTaskTileState extends State<SuperTaskTile> {
-  Image taskImage = Image.asset(
-    'src/task_icons/noimage.png',
-    width: 24,
-    height: 24,
-    gaplessPlayback: true,
-  );
-
   @override
   void initState() {
     super.initState();
-    loadImg();
-
     updateUi();
   }
 
   @override
   void didUpdateWidget(covariant SuperTaskTile oldWidget) {
     super.didUpdateWidget(oldWidget);
-    loadImg();
-  }
-
-  loadImg() async {
-    try {
-      Uint8List imageData = await RepositoryProvider.of<ImageRepoMock>(context)
-          .imageById(widget.task.iconId);
-
-      taskImage = Image.memory(
-        imageData,
-        width: 24,
-        height: 24,
-        gaplessPlayback: true,
-      );
-      setState(() {});
-    } catch (e) {}
   }
 
   // DateTime currentTime = DateTime.now();
@@ -80,15 +56,7 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
         .add(DailytasksSuperTaskIteration(task: widget.task));
   }
 
-  onEditClicked(BuildContext context) {
-    // Navigator.push(
-    //         context,
-    //         CupertinoPageRoute(
-    //           builder: (context) => TaskEditor(task: widget.task),
-    //         ))
-    //     .then((value) =>
-    //         BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdate()));
-  }
+  onEditClicked(BuildContext context) {}
 
   onDeleteClicked(BuildContext context) {
     BlocProvider.of<DailytasksBloc>(context)
@@ -216,11 +184,9 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                                         locked: widget.task.timeLock,
                                         showLock: showSubButtons,
                                         onTap: () => onLockClicked(context)),
-                                widget.task.isDonable
-                                    ? DoneCheckbox(
-                                        checked: widget.task.isDone,
-                                        onClick: () => onCheckClicked(context))
-                                    : SizedBox(),
+                                DoneCheckbox(
+                                    checked: widget.task.isDone,
+                                    onClick: () => onCheckClicked(context))
                               ],
                             ),
                           ],
@@ -290,7 +256,9 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
             width: 50,
             child: InvertColors(
               child: Center(
-                child: taskImage,
+                child: CachedIcon(
+                  imageID: widget.task.iconId,
+                ),
               ),
             )),
       ],
@@ -298,6 +266,9 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
   }
 
   Widget buildTextSection() {
+    String iTime = widget.task.globalDurationLeft.toString().substring(0, 4);
+    String allTime = widget.task.globalDuration.toString().substring(0, 4);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -325,9 +296,9 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                   : TextDecoration.none),
         ),
         Text(
-          '${widget.task.globalDurationLeft.inHours}h/${widget.task.globalDuration.inHours}h',
+          '$iTime/$allTime',
           style: TextStyle(
-              color: Color(0xff545353),
+              color: Colors.white,
               fontSize: 12 * byWithScale(context),
               fontWeight: FontWeight.w400),
         ),

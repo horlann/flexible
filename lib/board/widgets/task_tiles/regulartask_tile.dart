@@ -5,6 +5,7 @@ import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/task_editor.dart';
+import 'package:flexible/board/widgets/task_tiles/components/cached_icon.dart';
 import 'package:flexible/board/widgets/task_tiles/components/hidable_btns_wrapper.dart';
 import 'package:flexible/board/widgets/task_tiles/components/hidable_lock.dart';
 import 'package:flexible/board/widgets/task_tiles/components/mini_buttons_with_icon.dart';
@@ -26,38 +27,14 @@ class RegularTaskTile extends StatefulWidget {
 }
 
 class _RegularTaskTileState extends State<RegularTaskTile> {
-  Image taskImage = Image.asset(
-    'src/task_icons/noimage.png',
-    width: 24,
-    height: 24,
-    gaplessPlayback: true,
-  );
-
   @override
   void initState() {
     super.initState();
-    loadImg();
   }
 
   @override
   void didUpdateWidget(covariant RegularTaskTile oldWidget) {
     super.didUpdateWidget(oldWidget);
-    loadImg();
-  }
-
-  loadImg() async {
-    try {
-      Uint8List imageData = await RepositoryProvider.of<ImageRepoMock>(context)
-          .imageById(widget.task.iconId);
-
-      taskImage = Image.memory(
-        imageData,
-        width: 24,
-        height: 24,
-        gaplessPlayback: true,
-      );
-      setState(() {});
-    } catch (e) {}
   }
 
   // DateTime currentTime = DateTime.now();
@@ -231,7 +208,11 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
           borderRadius: BorderRadius.circular(25),
         ),
         child: InvertColors(
-          child: Center(child: taskImage),
+          child: Center(
+            child: CachedIcon(
+              imageID: widget.task.iconId,
+            ),
+          ),
         ));
   }
 
