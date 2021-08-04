@@ -6,6 +6,7 @@ import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/repository/day_options_interface.dart';
 import 'package:flexible/board/repository/tasts_repo_interface.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
@@ -136,15 +137,15 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
     if (event is DailytasksSuperTaskIteration) {
       SuperTask task = event.task.copyWith(
           // globalDurationLeft: event.task.globalDurationLeft + event.task.period,
-          isDonable: false,
           timeLock: true,
-          isDone: true);
+          isDone: !event.task.isDone);
 
       await tasksRepo.setTask(task);
 
       // Update
       this.add(DailytasksUpdate());
     }
+
     if (event is DailytasksSuperTaskAdd) {
       await tasksRepo.setSuperTaskToQueue(event.task);
 

@@ -42,6 +42,24 @@ class DailytasksCommon extends DailytasksState {
         showDay: showDay ?? this.showDay,
         message: message ?? this.message);
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is DailytasksCommon &&
+        other.askForSuperInsert == askForSuperInsert &&
+        other.message == message &&
+        other.dayOptions == dayOptions &&
+        listEquals(other.tasks, tasks);
+  }
+
+  @override
+  int get hashCode {
+    return askForSuperInsert.hashCode ^
+        message.hashCode ^
+        dayOptions.hashCode ^
+        tasks.hashCode;
+  }
 }
 
 class DailytasksFailure extends DailytasksState {

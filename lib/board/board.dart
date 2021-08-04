@@ -44,12 +44,9 @@ class _BoardState extends State<Board> {
         if (state is DailytasksCommon) {
           if (state.askForSuperInsert) {
             print('ask user');
-
             ScaffoldMessenger.of(context).showSnackBar(buildSuperAsk(context));
           }
           if (state.message.isNotEmpty) {
-            //   ScaffoldMessenger.of(context)
-            //       .showSnackBar(messageSnakbar(text: state.message));
             showTopSnackBar(
               context,
               CustomSnackBar.info(

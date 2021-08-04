@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:flexible/utils/modal.dart';
-import 'package:flexible/widgets/modals/regular_task_modal.dart';
+
+import 'package:flexible/board/widgets/task_tiles/components/cached_icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:invert_colors/invert_colors.dart';
+
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
@@ -18,6 +20,8 @@ import 'package:flexible/board/widgets/task_tiles/components/hidable_lock.dart';
 import 'package:flexible/board/widgets/task_tiles/components/mini_buttons_with_icon.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/utils/modal.dart';
+import 'package:flexible/widgets/modals/regular_task_modal.dart';
 
 class GroupedTaskTile extends StatefulWidget {
   final List<Task> tasks;
@@ -73,6 +77,7 @@ class _GroupedTaskTileState extends State<GroupedTaskTile> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLessThen350() => MediaQuery.of(context).size.width < 350;
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -106,18 +111,132 @@ class _GroupedTaskTileState extends State<GroupedTaskTile> {
                         color: Colors.white,
                         fontSize: 10 * byWithScale(context),
                         fontWeight: FontWeight.w400))),
+            // Row(
+            //   children: [
+            //     SizedBox(
+            //       width: isLessThen350() ? 40 : 59,
+            //     ),
+            //     iconsLayerWithMovement(),
+            //     SizedBox(
+            //       width: 20,
+            //     ),
+            //     Expanded(
+            //       child: Column(
+            //           children: widget.tasks
+            //               .map((e) => TileBody(
+            //                   task: e,
+            //                   isFirst: widget.tasks.first == e,
+            //                   isLast: widget.tasks.last == e))
+            //               .toList()),
+            //     ),
+            //   ],
+            // ),
             Column(
                 children: widget.tasks
                     .map((e) => TileBody(
                         task: e,
                         isFirst: widget.tasks.first == e,
                         isLast: widget.tasks.last == e))
-                    .toList()),
+                    .toList())
           ],
         ),
       ),
     );
   }
+
+  Widget iconsLayerWithMovement() {
+    double height = widget.tasks.length * 110;
+    Duration timerange = timeEnd().difference(timeStart());
+
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(1628095968662);
+    print(date);
+
+    Widget donedOverlay() {
+      double offset = 0;
+      double kSize = 0;
+      Color color = Colors.red;
+
+      bool finded = false;
+      widget.tasks.forEach((element) {
+        if (!finded && element.isDone == false) {
+          var timerange = timeEnd().difference(timeStart());
+          // print(timerange);
+          var offsetH = element.timeStart.difference(timeStart());
+          // print(offsetH)
+          offset = height * (offsetH.inMinutes / timerange.inMinutes);
+          // print(offset);
+          var tDiff = date.difference(timeStart());
+          // print(tDiff);
+          var preKSize =
+              (height * (tDiff.inMinutes / timerange.inMinutes)) - offset;
+          // print(kSize);
+          kSize = preKSize < 0 ? 0 : preKSize;
+          finded = true;
+          color = element.color;
+        }
+      });
+
+      return buildColorLayer(height: kSize, offset: offset, color: color);
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(25),
+      child: Stack(
+        children: [
+          // Bottom Layer
+          Container(
+            height: height,
+            width: 50,
+            decoration: BoxDecoration(
+              boxShadow: [BoxShadow(color: Colors.black, blurRadius: 10)],
+              color: Color(0xffCAC8C4),
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+          ...widget.tasks.map((e) {
+            // print(timerange);
+            var offsetH = e.timeStart.difference(timeStart());
+            // print(offsetH)
+            double offset = height * (offsetH.inMinutes / timerange.inMinutes);
+            // print(offset);
+            double tDiff = e.period.inMinutes / timerange.inMinutes;
+            // print(tDiff);
+            double kSize = height * tDiff;
+
+            // kSize = kSize < 50 ? 50 : kSize;
+            print(kSize);
+
+            return buildColorLayer(
+                height: kSize,
+                offset: offset,
+                color: e.color.withOpacity(e.isDone ? 1 : 1));
+          }),
+          // donedOverlay()
+        ],
+      ),
+    );
+  }
+
+  Positioned buildColorLayer(
+      {required double height, required double offset, required Color color}) {
+    return Positioned(
+      top: offset,
+      child: Container(
+        color: color,
+        height: height,
+        width: 50,
+      ),
+    );
+  }
+
+  // Container(
+  //           height: 100,
+  //           width: 50,
+  //           child: InvertColors(
+  //             child: Center(
+  //               child: Icon(Icons.ac_unit),
+  //             ),
+  //           )),
 }
 
 class TileBody extends StatefulWidget {
@@ -137,40 +256,6 @@ class TileBody extends StatefulWidget {
 }
 
 class _TileBodyState extends State<TileBody> {
-  Image taskImage = Image.asset(
-    'src/task_icons/noimage.png',
-    width: 24,
-    height: 24,
-    gaplessPlayback: true,
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    loadImg();
-  }
-
-  @override
-  void didUpdateWidget(covariant TileBody oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    loadImg();
-  }
-
-  loadImg() async {
-    try {
-      Uint8List imageData = await RepositoryProvider.of<ImageRepoMock>(context)
-          .imageById(widget.task.iconId);
-
-      taskImage = Image.memory(
-        imageData,
-        width: 24,
-        height: 24,
-        gaplessPlayback: true,
-      );
-      setState(() {});
-    } catch (e) {}
-  }
-
   Rect? _getOffset(GlobalKey? key) {
     if (key == null) return null;
     final renderObject = key.currentContext?.findRenderObject();
@@ -387,7 +472,9 @@ class _TileBodyState extends State<TileBody> {
         width: 50,
         child: InvertColors(
           child: Center(
-            child: taskImage,
+            child: CachedIcon(
+              imageID: widget.task.iconId,
+            ),
           ),
         ));
   }
