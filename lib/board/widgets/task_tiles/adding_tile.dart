@@ -79,7 +79,7 @@ class _AddingTileState extends State<AddingTile> {
                 children: [
                   GestureDetector(
                     onTap: () => addNewTask(context),
-                    onLongPressEnd: (v) => insertSuperTasks(),
+                    //onLongPressEnd: (v) => insertSuperTasks(),
                     child: Container(
                       width: 60,
                       height: 60,

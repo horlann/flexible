@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -117,23 +119,63 @@ class _RegistrationPageState extends State<RegistrationPage> {
       listener: (context, state) {
         print(state);
         if (state.isBusy) {
-          ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
-            text: 'Processing',
-          ));
+          //    ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
+          //      text: 'Processing',
+          //   ));
+          showTopSnackBar(
+            context,
+            CustomSnackBar.info(
+              backgroundColor: Color(0xffE24F4F),
+              icon: Icon(
+                Icons.announcement_outlined,
+                color: Colors.white,
+                size: 1,
+              ),
+              message: "Processing",
+            ),
+          );
         }
 
         if (state.error.isNotEmpty) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
-            text: state.error,
-          ));
+          //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          //   ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
+          //     text: state.error,
+          //   ));
+          showTopSnackBar(
+            context,
+            CustomSnackBar.info(
+              backgroundColor: Color(0xffE24F4F),
+              icon: Icon(
+                Icons.announcement_outlined,
+                color: Colors.white,
+                size: 1,
+              ),
+              message:
+              state.error,
+            ),
+          );
+
         }
 
         if (state.message.isNotEmpty) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
-            text: state.message,
-          ));
+          //ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          //ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
+          //  text: state.message,
+          // ));
+          showTopSnackBar(
+            context,
+            CustomSnackBar.info(
+              backgroundColor: Color(0xffE24F4F),
+              icon: Icon(
+                Icons.announcement_outlined,
+                color: Colors.white,
+                size: 1,
+              ),
+              message:
+              state.message,
+            ),
+          );
+
         }
       },
       child: buildBody(context),

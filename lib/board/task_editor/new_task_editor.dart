@@ -390,8 +390,9 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
 
   @override
   Widget build(BuildContext context) {
+    int i = 0;
     return Column(
-      mainAxisSize: MainAxisSize.max,
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Padding(
@@ -502,22 +503,26 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
               color: Colors.white, borderRadius: BorderRadius.circular(25)),
           padding: EdgeInsets.symmetric(
               horizontal: 5, vertical: 8 * byWithScale(context)),
-          child: Column(
-            children: [
-              Text(
-                'What color should you task be?',
-                style: TextStyle(
-                    fontSize: 12 * byWithScale(context),
-                    fontWeight: FontWeight.w500),
-              ),
-              SizedBox(height: 14 * byWithScale(context)),
-              ColorPickerRow(callback: (color) {
-                setState(() {
-                  editableRegularTask =
-                      editableRegularTask.copyWith(color: color);
-                });
-              }),
-            ],
+          child: Flexible(
+            child: Column(
+              children: [
+                Text(
+                  'What color should you task be?',
+                  style: TextStyle(
+                      fontSize: 12 * byWithScale(context),
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 14 * byWithScale(context)),
+                ColorPickerRow(callback: (color, pos) {
+                  setState(() {
+                    print(pos.toString() + "pos");
+                    editableRegularTask =
+                        editableRegularTask.copyWith(color: color);
+                    //i=pos;
+                  });
+                }),
+              ],
+            ),
           ),
         ),
       ],
@@ -693,7 +698,7 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
                     fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 14 * byWithScale(context)),
-              ColorPickerRow(callback: (color) {
+              ColorPickerRow(callback: (color, isActive) {
                 setState(() {
                   editableSuperTask = editableSuperTask.copyWith(color: color);
                 });

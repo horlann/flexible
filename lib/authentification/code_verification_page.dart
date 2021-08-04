@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
@@ -12,6 +14,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:otp_autofill/otp_autofill.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class CodeVerificationPage extends StatefulWidget {
   final bool afterError;
@@ -27,7 +31,10 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
   String pincode = '';
   String _textContent = "";
   String? appSignature;
-
+  late Timer _timer;
+  int _start = 60;
+  bool _canSendAgain = false;
+  bool _alwaysShowTimer = false;
   late OTPTextEditController controller;
   final scaffoldKey = GlobalKey();
 
@@ -53,8 +60,9 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
   @override
   void initState() {
     super.initState();
+    startTimer();
     OTPInteractor.getAppSignature()
-        //ignore: avoid_print
+    //ignore: avoid_print
         .then((value) => print('signature - $value'));
     controller = OTPTextEditController(
       codeLength: 6,
@@ -62,17 +70,39 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
       //ignore: avoid_print
       onCodeReceive: (code) => print('Your Application receive code - $code'),
     )..startListenUserConsent(
-        (code) {
-          final exp = RegExp(r'(\d{6})');
-          return exp.stringMatch(code ?? '') ?? '';
-        },
-      );
+          (code) {
+        final exp = RegExp(r'(\d{6})');
+        return exp.stringMatch(code ?? '') ?? '';
+      },
+    );
+  }
+
+  void startTimer() {
+    _start = 10;
+    _canSendAgain = false;
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+            _canSendAgain = true;
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
     //cancel();
+    _timer.cancel();
   }
 
   @override
@@ -109,7 +139,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
       body: SizedBox.expand(
         child: Container(
           decoration: BoxDecoration(
-              // gradient: mainBackgroundGradient,
+            // gradient: mainBackgroundGradient,
               image: DecorationImage(
                   image: AssetImage('src/helper/backgroundimage.png'),
                   fit: BoxFit.cover,
@@ -140,23 +170,62 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
         }
 
         if (state.isBusy) {
-          ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
-            text: 'Processing',
-          ));
+          //    ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
+          //     text: 'Processing',
+          //    ));
+          showTopSnackBar(
+            context,
+            CustomSnackBar.info(
+                backgroundColor: Color(0xffE24F4F),
+                icon: Icon(
+                  Icons.announcement_outlined,
+                  color: Colors.white,
+                  size: 1,
+                ),
+                message:
+                "Processing"
+            ),
+          );
         }
 
         if (state.error.isNotEmpty) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
-            text: state.error,
-          ));
+          //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          //   ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
+          //     text: state.error,
+          //   ));
+          showTopSnackBar(
+            context,
+            CustomSnackBar.info(
+              backgroundColor: Color(0xffE24F4F),
+              icon: Icon(
+                Icons.announcement_outlined,
+                color: Colors.white,
+                size: 1,
+              ),
+              message:
+              state.error,
+            ),
+          );
         }
 
         if (state.message.isNotEmpty) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
-            text: state.message,
-          ));
+          //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          //  ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
+          //    text: state.message,
+          //   ));
+          showTopSnackBar(
+            context,
+            CustomSnackBar.info(
+              backgroundColor: Color(0xffE24F4F),
+              icon: Icon(
+                Icons.announcement_outlined,
+                color: Colors.white,
+                size: 1,
+              ),
+              message:
+              state.message,
+            ),
+          );
         }
       },
       child: buildBody(context),
@@ -254,7 +323,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                               pinTheme: PinTheme(
                                 shape: PinCodeFieldShape.box,
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                BorderRadius.all(Radius.circular(20)),
                                 fieldHeight: 33 * byWithScale(context),
                                 fieldWidth: 29 * byWithScale(context),
                                 inactiveColor: Colors.grey[300],
@@ -283,14 +352,22 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                           SizedBox(
                             height: 8 * byWithScale(context),
                           ),
+                          Visibility(
+                            visible: _alwaysShowTimer,
+                            child: Visibility(
+                              child: Text(
+                                  " You can resend code per $_start seconds"),
+                              visible: !_canSendAgain,
+                            ),
+                          ),
                           widget.afterError
                               ? Text(
-                                  'Invalid code',
-                                  style: TextStyle(
-                                      color: Color(0xffE24F4F),
-                                      fontSize: 12 * byWithScale(context),
-                                      fontWeight: FontWeight.w400),
-                                )
+                            'Invalid code',
+                            style: TextStyle(
+                                color: Color(0xffE24F4F),
+                                fontSize: 12 * byWithScale(context),
+                                fontWeight: FontWeight.w400),
+                          )
                               : SizedBox(),
                           SizedBox(
                             height: 8 * byWithScale(context),
@@ -346,15 +423,38 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                       builder: (context, state) {
                         if (state is CodeSended) {
                           return GestureDetector(
-                            onTap: () =>
-                                !state.isBusy ? onResend(state.number) : {},
+                            onTap: () {
+                              if (_canSendAgain) {
+                                startTimer();
+                                _alwaysShowTimer = true;
+                                print(_canSendAgain);
+                                setState(() {
+
+                                });
+                                !state.isBusy ? onResend(state.number) : {};
+                              } else {
+                                showTopSnackBar(
+                                  context,
+                                  CustomSnackBar.info(
+                                    backgroundColor: Color(0xffE24F4F),
+                                    icon: Icon(
+                                      Icons.announcement_outlined,
+                                      color: Colors.white,
+                                      size: 1,
+                                    ),
+                                    message:
+                                    "You can do it per $_start seconds",
+                                  ),
+                                );
+                              }
+                            },
                             child: Text(
                               'Send again',
                               style: TextStyle(
                                   decoration: TextDecoration.underline,
-                                  color: state.isBusy
-                                      ? Color(0xffE24F4F).withOpacity(0.25)
-                                      : Color(0xffE24F4F),
+                                  color: _canSendAgain
+                                      ? Color(0xffE24F4F)
+                                      : Colors.grey,
                                   fontSize: 12 * byWithScale(context),
                                   fontWeight: FontWeight.w400),
                             ),

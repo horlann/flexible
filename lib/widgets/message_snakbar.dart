@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 SnackBar messageSnakbar({required String text}) {
   return SnackBar(
       backgroundColor: Color(0xffE24F4F),
+      //backgroundColor: Colors.green,
       content: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(

@@ -8,9 +8,6 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
   final Function(Duration duration) onChange;
 
   final List<Duration> durations = [
-    Duration(minutes: 1),
-    Duration(minutes: 5),
-    Duration(minutes: 15),
     Duration(minutes: 30),
     Duration(minutes: 45),
     Duration(hours: 1),
@@ -19,7 +16,10 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
     Duration(hours: 4),
     Duration(hours: 5),
     Duration(hours: 6),
-    Duration(hours: 7)
+    Duration(hours: 7),
+    Duration(hours: 8),
+    Duration(hours: 9),
+    Duration(hours: 10)
   ];
 
   SuperTaskGlobasDurationSlider(

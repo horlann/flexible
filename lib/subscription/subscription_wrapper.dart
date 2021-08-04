@@ -7,6 +7,8 @@ import 'package:flexible/widgets/message_snakbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class SubAndAuthChooser extends StatelessWidget {
   const SubAndAuthChooser({Key? key}) : super(key: key);
@@ -19,8 +21,19 @@ class SubAndAuthChooser extends StatelessWidget {
           // Push pre registration
           // continue process if user authed by state bools
           // or abort if user out from auth
-          ScaffoldMessenger.of(context).showSnackBar(
-              messageSnakbar(text: 'You should auhorize before subscribe'));
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //      messageSnakbar(text: 'You should auhorize before subscribe'));
+          showTopSnackBar(
+            context,
+            CustomSnackBar.info(
+                backgroundColor: Color(0xffE24F4F),
+                icon: Icon(
+                  Icons.announcement_outlined,
+                  color: Colors.white,
+                  size: 1,
+                ),
+                message: 'You should auhorize before subscribe'),
+          );
           Navigator.push(
               context,
               CupertinoPageRoute(
@@ -44,8 +57,21 @@ class SubAndAuthChooser extends StatelessWidget {
         }
         // Message popup listener
         if (state is AskForSubscribe && state.message.isNotEmpty) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(messageSnakbar(text: state.message));
+          //ScaffoldMessenger.of(context)
+          //    .showSnackBar(messageSnakbar(text: state.message));
+          showTopSnackBar(
+            context,
+            CustomSnackBar.info(
+              backgroundColor: Color(0xffE24F4F),
+              icon: Icon(
+                Icons.announcement_outlined,
+                color: Colors.white,
+                size: 1,
+              ),
+              message:
+              state.message,
+            ),
+          );
         }
       },
       builder: (context, state) {

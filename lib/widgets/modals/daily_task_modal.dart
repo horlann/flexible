@@ -116,8 +116,8 @@ class _State extends State<DailyTaskModal> {
                                                                     text,
                                                                     style: TextStyle(
                                                                         fontSize:
-                                                                        28,
-                                                                        fontWeight:
+                                                                        25,
+                                                                    fontWeight:
                                                                         FontWeight
                                                                             .bold,
                                                                         fontFamily:

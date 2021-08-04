@@ -16,6 +16,8 @@ import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/widgets/glassmorphic_bg_shifted.dart';
 import 'package:flexible/board/widgets/task_tiles/periodic_task_tile..dart';
 import 'package:flexible/board/widgets/task_tiles/regulartask_tile.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class Board extends StatefulWidget {
   @override
@@ -46,8 +48,20 @@ class _BoardState extends State<Board> {
             ScaffoldMessenger.of(context).showSnackBar(buildSuperAsk(context));
           }
           if (state.message.isNotEmpty) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(messageSnakbar(text: state.message));
+            //   ScaffoldMessenger.of(context)
+            //       .showSnackBar(messageSnakbar(text: state.message));
+            showTopSnackBar(
+              context,
+              CustomSnackBar.info(
+                backgroundColor: Color(0xffE24F4F),
+                icon: Icon(
+                  Icons.announcement_outlined,
+                  color: Colors.white,
+                  size: 1,
+                ),
+                message: state.message,
+              ),
+            );
           }
         }
       },

@@ -12,6 +12,8 @@ import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -82,18 +84,44 @@ class _SignInPageState extends State<SignInPage> {
       listener: (context, state) {
         print(state);
         if (state.isBusy) {
-          ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
-            text: 'Signing in',
-          ));
+          //   ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
+          //     text: 'Signing in',
+          //   ));
+          showTopSnackBar(
+            context,
+            CustomSnackBar.info(
+              backgroundColor: Color(0xffE24F4F),
+              icon: Icon(
+                Icons.announcement_outlined,
+                color: Colors.white,
+                size: 1,
+              ),
+              message: 'Signing in',
+            ),
+          );
         }
 
         if (state.error.isNotEmpty) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
-            text: state.error,
-          ));
+          //    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          //    ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
+          //      text: state.error,
+          //   ));
+          showTopSnackBar(
+            context,
+            CustomSnackBar.info(
+              backgroundColor: Color(0xffE24F4F),
+              icon: Icon(
+                Icons.announcement_outlined,
+                color: Colors.white,
+                size: 1,
+              ),
+              message:
+              state.error,
+            ),
+          );
         }
       },
+
       child: buildBody(context),
     );
   }

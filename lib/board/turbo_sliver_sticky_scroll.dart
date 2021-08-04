@@ -203,7 +203,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                     setState(() {
                       isSunset = !isSunset;
                     });
-                  }, "Delete"));
+                  }, "Disable"));
             }),
     ];
 
@@ -258,7 +258,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                       isSunrise = !isSunrise;
                     });
                     ;
-                  }, "Delete"));
+                  }, "Disable"));
             }),
     ];
 

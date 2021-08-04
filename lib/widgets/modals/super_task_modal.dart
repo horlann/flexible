@@ -67,8 +67,8 @@ class _State extends State<SuperTaskModal> {
                                           ),
                                           Container(
                                               height: 52,
-                                              width: 58,
-                                              decoration: BoxDecoration(
+                                  //width: 58,
+                                  decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   borderRadius: BorderRadius.circular(8)
                                               ),
@@ -76,6 +76,37 @@ class _State extends State<SuperTaskModal> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
+                                                    InkWell(
+                                                        borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(8)),
+                                                        splashColor: redMain,
+                                                        highlightColor:
+                                                        Colors.transparent,
+                                                        child: Container(
+                                                            height: 52,
+                                                            width: 100,
+                                                            child: Center(
+                                                                child: Text(
+                                                                    "Edit",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                        25,
+                                                                        fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                        fontFamily:
+                                                                        "Mikado",
+                                                                        color: editButtonHold ==
+                                                                            true
+                                                                            ? Colors
+                                                                            .white
+                                                                            : redMain)))),
+                                                        onTap: () async {
+                                                          //Navigator.pop(context);
+                                                          //await widget.onEditTap
+                                                          //     .call();
+                                                        }),
                                                     Container(
                                                         margin: EdgeInsets.symmetric(horizontal: 10),
                                                         child: HidableTimeLock(
@@ -86,7 +117,7 @@ class _State extends State<SuperTaskModal> {
                                                             },
                                                             showLock: true,
                                                             color: redMain,
-                                                            size: 32
+                                                            size: 28
                                                         )
                                                     )
                                                   ]

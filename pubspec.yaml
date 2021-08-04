@@ -28,7 +28,7 @@ dependencies:
   syncfusion_flutter_sliders: ^19.2.49
   sqflite: ^2.0.0+3
   otp_autofill: ^1.1.0
-
+  top_snackbar_flutter: ^1.0.0
   glassmorphism: ^2.0.1
   invert_colors: ^0.0.3-null-safety.0
   equatable: ^2.0.2

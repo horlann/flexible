@@ -189,19 +189,22 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
                                   decoration: BoxDecoration(
                                       color: Color(0xffE24F4F).withOpacity(0.4),
                                       borderRadius: BorderRadius.circular(10)),
-                                  child: Text(
-                                    DateFormat('MMMM').format(DateTime.now()
-                                            .add(Duration(days: 1))) +
-                                        " " +
-                                        DateFormat('d').format(DateTime.now()
-                                            .add(Duration(days: 1))) +
-                                        " " +
-                                        DateFormat('y').format(DateTime.now()
-                                            .add(Duration(days: 1))),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12),
-                                  ),
+//                                  child: Text(
+//                                    DateFormat('MMMM').format(DateTime.now()
+//                                            .add(Duration(days: 1))) +
+//                                        " " +
+//                                        DateFormat('d').format(DateTime.now()
+//                                            .add(Duration(days: 1))) +
+//                                        " " +
+//                                        DateFormat('y').format(DateTime.now()
+//                                            .add(Duration(days: 1))),
+//                                    style: TextStyle(
+//                                        fontWeight: FontWeight.bold,
+//                                        fontSize: 12),
+//                                  ),
+                                  child: Text("Select date", style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12),),
                                 ),
                               )
                             ],

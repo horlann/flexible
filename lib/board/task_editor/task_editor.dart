@@ -238,7 +238,7 @@ class _TaskEditorState extends State<TaskEditor> {
                                 fontWeight: FontWeight.w500),
                           ),
                           SizedBox(height: 14 * byWithScale(context)),
-                          ColorPickerRow(callback: (color) {
+                          ColorPickerRow(callback: (color, isActive) {
                             setState(() {
                               editableTask =
                                   editableTask.copyWith(color: color);
