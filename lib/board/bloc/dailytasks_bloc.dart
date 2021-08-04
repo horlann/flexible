@@ -136,15 +136,15 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
     if (event is DailytasksSuperTaskIteration) {
       SuperTask task = event.task.copyWith(
           // globalDurationLeft: event.task.globalDurationLeft + event.task.period,
-          isDonable: false,
           timeLock: true,
-          isDone: true);
+          isDone: !event.task.isDone);
 
       await tasksRepo.setTask(task);
 
       // Update
       this.add(DailytasksUpdate());
     }
+
     if (event is DailytasksSuperTaskAdd) {
       await tasksRepo.setSuperTaskToQueue(event.task);
 

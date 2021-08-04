@@ -80,15 +80,7 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
         .add(DailytasksSuperTaskIteration(task: widget.task));
   }
 
-  onEditClicked(BuildContext context) {
-    // Navigator.push(
-    //         context,
-    //         CupertinoPageRoute(
-    //           builder: (context) => TaskEditor(task: widget.task),
-    //         ))
-    //     .then((value) =>
-    //         BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdate()));
-  }
+  onEditClicked(BuildContext context) {}
 
   onDeleteClicked(BuildContext context) {
     BlocProvider.of<DailytasksBloc>(context)
@@ -216,11 +208,9 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                                         locked: widget.task.timeLock,
                                         showLock: showSubButtons,
                                         onTap: () => onLockClicked(context)),
-                                widget.task.isDonable
-                                    ? DoneCheckbox(
-                                        checked: widget.task.isDone,
-                                        onClick: () => onCheckClicked(context))
-                                    : SizedBox(),
+                                DoneCheckbox(
+                                    checked: widget.task.isDone,
+                                    onClick: () => onCheckClicked(context))
                               ],
                             ),
                           ],
@@ -298,6 +288,9 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
   }
 
   Widget buildTextSection() {
+    String iTime = widget.task.globalDurationLeft.toString().substring(0, 4);
+    String allTime = widget.task.globalDuration.toString().substring(0, 4);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -325,9 +318,9 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                   : TextDecoration.none),
         ),
         Text(
-          '${widget.task.globalDurationLeft.inHours}h/${widget.task.globalDuration.inHours}h',
+          '$iTime/$allTime',
           style: TextStyle(
-              color: Color(0xff545353),
+              color: Colors.white,
               fontSize: 12 * byWithScale(context),
               fontWeight: FontWeight.w400),
         ),
