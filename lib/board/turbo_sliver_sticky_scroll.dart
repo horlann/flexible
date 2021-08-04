@@ -144,14 +144,14 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
               buildGoonNightAndSunset(context),
               // Adding section with last tile
               // grows up when main sliver is fully scrolled
-              // SliverPersistentHeader(
-              //     pinned: true,
-              //     floating: false,
-              //     delegate: SliverPersisHeader(
-              //       minExtent: 150,
-              //       maxExtent: 150,
-              //       child: AddingTile(),
-              //     )),
+              SliverPersistentHeader(
+                  pinned: true,
+                  floating: false,
+                  delegate: SliverPersisHeader(
+                    minExtent: 150,
+                    maxExtent: 150,
+                    child: AddingTile(),
+                  )),
               // Main sliver
               SliverClip(
                 child: SliverList(
