@@ -29,7 +29,11 @@ class TaskIconInRound extends StatelessWidget {
         height: 35 * byWithScale(context),
         decoration: BoxDecoration(color: taskColor, shape: BoxShape.circle),
         child: InvertColors(
-          child: Center(child: CachedIcon(imageID: iconId)),
+          child: Center(
+              child: CachedIcon(
+            imageID: iconId,
+            key: Key(iconId),
+          )),
         ),
       ),
     );
