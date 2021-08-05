@@ -1,19 +1,17 @@
 import 'dart:typed_data';
 
 import 'package:flexible/board/repository/image_repo_mock.dart';
-import 'package:flexible/board/widgets/close_button.dart';
+import 'package:flexible/board/widgets/task_tiles/components/cached_icon.dart';
 import 'package:flexible/board/widgets/weather_bg.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism/glassmorphism.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class IconPickerPage extends StatefulWidget {
-  const IconPickerPage({
-    Key? key,
-  }) : super(key: key);
+  const IconPickerPage({Key? key}) : super(key: key);
 
   @override
   _IconPickerPageState createState() => _IconPickerPageState();
@@ -23,40 +21,27 @@ class _IconPickerPageState extends State<IconPickerPage> {
   bool switchValue = false;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getSwitchValues();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xffE9E9E9),
-      body: SafeArea(
-          child: SizedBox.expand(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: mainBackgroundGradient,
-          ),
-          child: CustomScrollView(
-            physics: BouncingScrollPhysics(),
-            slivers: [
-              SliverFillRemaining(
-                hasScrollBody: true,
-                child: Stack(children: [
-                  Container(
-                    child: WeatherBg(),
-                    width: double.maxFinite,
-                  ),
-                  buildBody(context)
-                ]),
-              ),
-            ],
-          ),
+      resizeToAvoidBottomInset: true,
+      body: SizedBox.expand(
+        child: CustomScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: true,
+              child: Stack(children: [
+                Container(
+                  child: WeatherBg(),
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                ),
+                SafeArea(child: buildBody(context))
+              ]),
+            ),
+          ],
         ),
-      )),
+      ),
     );
   }
 
@@ -72,7 +57,7 @@ class _IconPickerPageState extends State<IconPickerPage> {
             children: [
               Row(
                 children: [
-                  CloseButtonn(),
+                  buildCloseButton(),
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 15.0),
@@ -112,8 +97,6 @@ class _IconPickerPageState extends State<IconPickerPage> {
         future: RepositoryProvider.of<ImageRepoMock>(context).allIds,
         builder: (context, AsyncSnapshot<List<String>> snapshot) {
           if (snapshot.hasData) {
-            // print(snapshot.data);
-
             return SizedBox(
               // height: 400,
               child: GridView.count(
@@ -123,18 +106,18 @@ class _IconPickerPageState extends State<IconPickerPage> {
                 crossAxisCount: 5,
                 children: snapshot.data!
                     .map((e) => Container(
-                  margin: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: buildImageLoader(context, e),
-                ))
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: buildImageLoader(context, e),
+                        ))
                     .toList(),
               ),
             );
           }
-          return SizedBox();
+          return Center(child: SizedBox());
         },
       ),
     );
@@ -143,28 +126,7 @@ class _IconPickerPageState extends State<IconPickerPage> {
   Widget buildImageLoader(BuildContext context, String id) {
     return GestureDetector(
       onTap: () => Navigator.pop(context, id),
-      child: Center(
-        child: FutureBuilder(
-          future: RepositoryProvider.of<ImageRepoMock>(context).imageById(id),
-          builder: (context, AsyncSnapshot<Uint8List> snapshot) {
-            if (snapshot.hasData) {
-              return Image.memory(
-                snapshot.data!,
-                width: 18,
-                height: 18,
-                gaplessPlayback: true,
-              );
-            }
-
-            return Image.asset(
-              'src/task_icons/noimage.png',
-              width: 18,
-              height: 18,
-              gaplessPlayback: true,
-            );
-          },
-        ),
-      ),
+      child: Center(child: CachedIcon(imageID: id)),
     );
   }
 
@@ -180,41 +142,16 @@ class _IconPickerPageState extends State<IconPickerPage> {
             ),
             Spacer(),
             Switch(
-              value: switchValue,
-              onChanged: (onChanged) {
-                setState(() {
-                  switchValue = onChanged;
-                  saveSwitchState(onChanged);
-                  print('Saved state is $switchValue');
-                  //switch works
-                });
-                print(switchValue);
-              },
-            )
+                value: switchValue,
+                onChanged: (onChanged) {
+                  setState(() {
+                    switchValue = !switchValue;
+                  });
+                })
           ],
         ),
       ),
     );
-  }
-
-  getSwitchValues() async {
-    switchValue = await getSwitchState();
-    setState(() {});
-  }
-
-  Future<bool> saveSwitchState(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool("switchState", value);
-    print('Switch Value saved $value');
-    return prefs.setBool("switchState", value);
-  }
-
-  Future<bool> getSwitchState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isSwitchedFT = prefs.getBool("switchState");
-    print(isSwitchedFT);
-
-    return isSwitchedFT!;
   }
 
   GlassmorphicContainer buildGlassmorphicLayer() {
@@ -244,6 +181,35 @@ class _IconPickerPageState extends State<IconPickerPage> {
           Color(0xFFffffff).withOpacity(0.15),
           Color(0xFFffffff).withOpacity(0.15),
           Color(0xFFFFFFFF).withOpacity(0.15),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCloseButton() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+                left: 16 * byWithScale(context),
+                right: 16 * byWithScale(context),
+                top: 12 * byWithScale(context)),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Icon(
+                Icons.close,
+                size: 18 * byWithScale(context),
+              ),
+            ),
+          )
         ],
       ),
     );

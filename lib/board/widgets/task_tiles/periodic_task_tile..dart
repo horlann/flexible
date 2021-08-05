@@ -124,7 +124,6 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
   Widget build(BuildContext context) {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
     return Material(
-      key: widget.task.key,
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
@@ -144,35 +143,51 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           margin: EdgeInsets.symmetric(vertical: 16),
           child: Stack(
             children: [
+              // Use as last layer or it brake all animations
+              Container(
+                key: widget.task.key,
+              ),
               Positioned(
                   top: 2,
-                  child: Text(geTimeString(widget.task.timeStart),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10 * byWithScale(context),
-                          fontWeight: FontWeight.w400))),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: isLessThen350() ? 40 : 59,
+                    child: Text(geTimeString(widget.task.timeStart),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10 * byWithScale(context),
+                            fontWeight: FontWeight.w400)),
+                  )),
               timeDiffEquality() > 1
                   ? SizedBox()
                   : (timeDiffEquality() == 0
                       ? SizedBox()
                       : Positioned(
                           top: (110 * timeDiffEquality()) + 12,
-                          child: Text(
-                            geTimeString(DateTime.now()),
-                            style: TextStyle(
-                                fontSize: 10 * byWithScale(context),
-                                color: Colors.white),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: isLessThen350() ? 40 : 59,
+                            child: Text(
+                              geTimeString(DateTime.now()),
+                              style: TextStyle(
+                                  fontSize: 10 * byWithScale(context),
+                                  color: Colors.white),
+                            ),
                           ),
                         )),
               Positioned(
                   bottom: 0,
-                  child: Text(
-                      geTimeString(
-                          widget.task.timeStart.add(widget.task.period)),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10 * byWithScale(context),
-                          fontWeight: FontWeight.w400))),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: isLessThen350() ? 40 : 59,
+                    child: Text(
+                        geTimeString(
+                            widget.task.timeStart.add(widget.task.period)),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10 * byWithScale(context),
+                            fontWeight: FontWeight.w400)),
+                  )),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -200,11 +215,9 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
                                         locked: widget.task.timeLock,
                                         showLock: showSubButtons,
                                         onTap: () => onLockClicked(context)),
-                                widget.task.isDonable
-                                    ? DoneCheckbox(
-                                        checked: widget.task.isDone,
-                                        onClick: () => onCheckClicked(context))
-                                    : SizedBox(),
+                                DoneCheckbox(
+                                    checked: widget.task.isDone,
+                                    onClick: () => onCheckClicked(context)),
                               ],
                             ),
                           ],
@@ -242,58 +255,61 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
   }
 
   Widget buildMainIcon() {
-    return Stack(
-      children: [
-        Container(
-          height: 150,
-          width: 50,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  color: widget.task.color.withOpacity(0.75), blurRadius: 10)
-            ],
-            color: Color(0xffCAC8C4),
-            borderRadius: BorderRadius.circular(25),
-          ),
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(25),
-          child: Container(
+    return Hero(
+      tag: widget.task,
+      child: Stack(
+        children: [
+          Container(
             height: 150,
             width: 50,
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ClipRect(
-                child: Align(
-                  heightFactor: timeDiffEquality(),
-                  child: Container(
-                    height: 150,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0xff707070).withOpacity(0.5),
-                            blurRadius: 10)
-                      ],
-                      color: widget.task.color,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: widget.task.color.withOpacity(0.75), blurRadius: 10)
+              ],
+              color: Color(0xffCAC8C4),
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(25),
+            child: Container(
+              height: 150,
+              width: 50,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ClipRect(
+                  child: Align(
+                    heightFactor: timeDiffEquality(),
+                    child: Container(
+                      height: 150,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color(0xff707070).withOpacity(0.5),
+                              blurRadius: 10)
+                        ],
+                        color: widget.task.color,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        Container(
-            height: 150,
-            width: 50,
-            child: InvertColors(
-              child: Center(
-                child: CachedIcon(
-                  imageID: widget.task.iconId,
+          Container(
+              height: 150,
+              width: 50,
+              child: InvertColors(
+                child: Center(
+                  child: CachedIcon(
+                    imageID: widget.task.iconId,
+                  ),
                 ),
-              ),
-            )),
-      ],
+              )),
+        ],
+      ),
     );
   }
 

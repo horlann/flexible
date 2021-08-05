@@ -15,6 +15,8 @@ import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 // This widget aссузе Task instanse then copy and edit copy
 // On edit done is send edited task to tasks bloc
@@ -53,6 +55,7 @@ class _TaskEditorState extends State<TaskEditor> {
   }
 
   Widget build(BuildContext context) {
+    print(editableTask.timeStart);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffE9E9E9),
@@ -166,8 +169,11 @@ class _TaskEditorState extends State<TaskEditor> {
                                   fontSize: 48 / pRatio(context)),
                               spacing: 20 * byWithScale(context),
                               minutesInterval: 1,
+                              time: editableTask.timeStart,
                               onTimeChange: (time) {
                                 setState(() {
+                                  print(editableTask.timeStart);
+                                  print(time);
                                   editableTask =
                                       editableTask.copyWith(timeStart: time);
                                 });
@@ -258,10 +264,26 @@ class _TaskEditorState extends State<TaskEditor> {
                           enableColor: Color(0xffE24F4F),
                           disableColor: Color(0xffE24F4F),
                           callback: () {
-                            BlocProvider.of<DailytasksBloc>(context)
-                                .add(DailytasksUpdateTaskAndShiftOther(
-                                task: editableTask));
-                            Navigator.pop(context);
+                            if (editableTask.title.isEmpty) {
+                              print(editableTask);
+                              showTopSnackBar(
+                                context,
+                                CustomSnackBar.info(
+                                  backgroundColor: Color(0xffE24F4F),
+                                  icon: Icon(
+                                    Icons.announcement_outlined,
+                                    color: Colors.white,
+                                    size: 1,
+                                  ),
+                                  message: 'Task title shouldn\'t be empty',
+                                ),
+                              );
+                            } else {
+                              BlocProvider.of<DailytasksBloc>(context).add(
+                                  DailytasksUpdateTaskAndShiftOther(
+                                      task: editableTask));
+                              Navigator.pop(context);
+                            }
                           },
                           text: 'UPDATE TASK'),
                     ),
@@ -334,7 +356,7 @@ class _TaskEditorState extends State<TaskEditor> {
                 mode: CupertinoTimerPickerMode.hm,
                 onTimerDurationChanged: (v) {
                   DateTime timeStart =
-                  DateUtils.dateOnly(editableTask.timeStart).add(v);
+                      DateUtils.dateOnly(editableTask.timeStart).add(v);
 
                   setState(() {
                     editableTask = editableTask.copyWith(timeStart: timeStart);
@@ -397,9 +419,9 @@ class _TaskEditorState extends State<TaskEditor> {
   Container buildTitleInputSection() {
     return Container(
       decoration: BoxDecoration(
-        // color: Colors.red,
+          // color: Colors.red,
           border:
-          Border(bottom: BorderSide(width: 1, color: Color(0xffB1B1B1)))),
+              Border(bottom: BorderSide(width: 1, color: Color(0xffB1B1B1)))),
       padding: EdgeInsets.only(bottom: 2),
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -416,29 +438,29 @@ class _TaskEditorState extends State<TaskEditor> {
           Expanded(
             child: Container(
                 child: SizedBox(
-                  height: 20 * byWithScale(context),
-                  child: TextFormField(
-                    // Change title
-                    onChanged: (value) {
-                      setState(() {
-                        editableTask = editableTask.copyWith(title: value);
-                      });
-                    },
+              height: 20 * byWithScale(context),
+              child: TextFormField(
+                // Change title
+                onChanged: (value) {
+                  setState(() {
+                    editableTask = editableTask.copyWith(title: value);
+                  });
+                },
 
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      // contentPadding: EdgeInsets.all(10),
-                    ),
-                    initialValue: editableTask.title,
-                    style: TextStyle(
-                        color: Color(0xff373535),
-                        fontSize: 12 * byWithScale(context)),
-                  ),
-                )),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  // contentPadding: EdgeInsets.all(10),
+                ),
+                initialValue: editableTask.title,
+                style: TextStyle(
+                    color: Color(0xff373535),
+                    fontSize: 12 * byWithScale(context)),
+              ),
+            )),
           )
         ],
       ),
@@ -450,10 +472,13 @@ class _TaskEditorState extends State<TaskEditor> {
       padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
       child: Row(
         children: [
-          TaskIconInRound(
-            iconId: editableTask.iconId,
-            taskColor: editableTask.color,
-            onTap: () => openImgPicker(),
+          Hero(
+            tag: widget.task,
+            child: TaskIconInRound(
+              iconId: editableTask.iconId,
+              taskColor: editableTask.color,
+              onTap: () => openImgPicker(),
+            ),
           ),
           SizedBox(
             width: 20 * byWithScale(context),
@@ -469,8 +494,7 @@ class _TaskEditorState extends State<TaskEditor> {
                 initValue: editableTask.title,
                 onChange: (String text) {
                   setState(() {
-                    editableTask =
-                        editableTask.copyWith(title: text);
+                    editableTask = editableTask.copyWith(title: text);
                   });
                 },
                 child: Container(),

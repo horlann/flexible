@@ -97,7 +97,6 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
 
     return Material(
-      key: widget.task.key,
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
@@ -109,21 +108,26 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
                   () => onEditClicked(context),
                   () => onLockClicked(context),
                   () => showCopyDialog()));
-          // setState(() {
-          //   showSubButtons = !showSubButtons;
-          // });
         },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 16),
           child: Stack(
             children: [
+              // Use as last layer or it brake all animations
+              Container(
+                key: widget.task.key,
+              ),
               Positioned(
                 top: 16,
-                child: Text(geTimeString(widget.task.timeStart),
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10 * byWithScale(context),
-                        fontWeight: FontWeight.w400)),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: isLessThen350() ? 40 : 59,
+                  child: Text(geTimeString(widget.task.timeStart),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10 * byWithScale(context),
+                          fontWeight: FontWeight.w400)),
+                ),
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,11 +156,9 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
                                         showLock: showSubButtons,
                                         onTap: () => onLockClicked(context),
                                       ),
-                                widget.task.isDonable
-                                    ? DoneCheckbox(
-                                        checked: widget.task.isDone,
-                                        onClick: () => onCheckClicked(context))
-                                    : SizedBox(),
+                                DoneCheckbox(
+                                    checked: widget.task.isDone,
+                                    onClick: () => onCheckClicked(context)),
                               ],
                             ),
                           ],
@@ -193,27 +195,30 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
     );
   }
 
-  Container buildMainIcon() {
-    return Container(
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: widget.task.color.withOpacity(0.75),
-                blurRadius: 20,
-                offset: Offset(0, 10))
-          ],
-          color: widget.task.color,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: InvertColors(
-          child: Center(
-            child: CachedIcon(
-              imageID: widget.task.iconId,
-            ),
+  Widget buildMainIcon() {
+    return Hero(
+      tag: widget.task,
+      child: Container(
+          height: 50,
+          width: 50,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  color: widget.task.color.withOpacity(0.75),
+                  blurRadius: 20,
+                  offset: Offset(0, 10))
+            ],
+            color: widget.task.color,
+            borderRadius: BorderRadius.circular(25),
           ),
-        ));
+          child: InvertColors(
+            child: Center(
+              child: CachedIcon(
+                imageID: widget.task.iconId,
+              ),
+            ),
+          )),
+    );
   }
 
   Widget buildTextSection() {

@@ -102,15 +102,18 @@ class _WeatherBgState extends State<WeatherBg> {
       builder: (context, state) {
         print(state);
         if (BlocProvider.of<SubscribeBloc>(context).state is Subscribed) {
-          if (state is WeatherError) {
-            return Center(child: Text(state.error));
-          } else if (state is WeatherLoaded) {
+          if (state is WeatherLoaded) {
             return VideoLayerFittedToBG(
                 key: Key(getWeatherAssetByCode(state.wCode, state.daylight)),
                 videoAsset: getWeatherAssetByCode(state.wCode, state.daylight),
                 backgroundColor: colorByType(state.daylight));
           }
-          return Center(child: Text('Loading'));
+          // Use as default
+          return Image.asset(
+            'src/helper/backgroundimage.png',
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.topCenter,
+          );
         } else {
           if (state.daylight == DayLight.medium) {
             return Image.asset(

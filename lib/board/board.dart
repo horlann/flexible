@@ -7,6 +7,7 @@ import 'package:flexible/board/widgets/task_tiles/supertask_tile..dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/modal.dart';
+import 'package:flexible/utils/tasks_sort.dart';
 import 'package:flexible/widgets/message_snakbar.dart';
 import 'package:flexible/widgets/modals/regular_task_modal.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,8 @@ class _BoardState extends State<Board> {
       builder: (context, state) {
         print(state);
         if (state is DailytasksCommon) {
-          List<List<Task>> taskGrouped = turboSortAlgorithm(tasks: state.tasks);
+          List<List<Task>> taskGrouped =
+              groupingSortByStartTime(tasks: state.tasks);
 
           List<Widget> tasks = [];
 
@@ -153,42 +155,4 @@ class _BoardState extends State<Board> {
           ),
         ));
   }
-}
-
-List<List<Task>> turboSortAlgorithm({required List<Task> tasks}) {
-  List<List<Task>> taskGroups = [];
-
-  List<Task> tasksCopy = List.from(tasks);
-
-  // Sort time start
-  tasksCopy.sort((a, b) => a.timeStart.compareTo(b.timeStart));
-
-  // Sort to groups
-  // Cros-timed task add to one group
-  int endTime = 0;
-  for (var i = 0; i < tasksCopy.length; i++) {
-    Task cTask = tasksCopy[i];
-    if (endTime == 0) {
-      endTime = cTask.timeStart.add(cTask.period).millisecondsSinceEpoch;
-      taskGroups.add([cTask]);
-      // taskGroups
-      //     .add([cTask.timeStart, cTask.timeStart.add(cTask.period)]);
-    } else {
-      if (cTask.timeStart.millisecondsSinceEpoch < endTime) {
-        taskGroups.last.add(cTask);
-        // taskGroups.last.add(cTask.timeStart);
-        // taskGroups.last.add(cTask.timeStart.add(cTask.period));
-        if (cTask.timeStart.add(cTask.period).millisecondsSinceEpoch >
-            endTime) {
-          endTime = cTask.timeStart.add(cTask.period).millisecondsSinceEpoch;
-        }
-      } else {
-        taskGroups.add([cTask]);
-        // taskGroups
-        //     .add([cTask.timeStart, cTask.timeStart.add(cTask.period)]);
-        endTime = cTask.timeStart.add(cTask.period).millisecondsSinceEpoch;
-      }
-    }
-  }
-  return taskGroups;
 }
