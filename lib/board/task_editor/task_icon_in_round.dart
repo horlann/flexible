@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flexible/board/widgets/task_tiles/components/cached_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:invert_colors/invert_colors.dart';
@@ -28,29 +29,7 @@ class TaskIconInRound extends StatelessWidget {
         height: 35 * byWithScale(context),
         decoration: BoxDecoration(color: taskColor, shape: BoxShape.circle),
         child: InvertColors(
-          child: Center(
-            child: FutureBuilder(
-              future: RepositoryProvider.of<ImageRepoMock>(context)
-                  .imageById(iconId),
-              builder: (context, AsyncSnapshot<Uint8List> snapshot) {
-                if (snapshot.hasData) {
-                  return Image.memory(
-                    snapshot.data!,
-                    width: 16 * byWithScale(context),
-                    height: 16 * byWithScale(context),
-                    gaplessPlayback: true,
-                  );
-                }
-
-                return Image.asset(
-                  'src/icons/noimage.png',
-                  width: 16 * byWithScale(context),
-                  height: 16 * byWithScale(context),
-                  gaplessPlayback: true,
-                );
-              },
-            ),
-          ),
+          child: Center(child: CachedIcon(imageID: iconId)),
         ),
       ),
     );

@@ -219,58 +219,61 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
   }
 
   Widget buildMainIcon() {
-    return Stack(
-      children: [
-        Container(
-          height: 150,
-          width: 50,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  color: widget.task.color.withOpacity(0.75), blurRadius: 10)
-            ],
-            color: Color(0xffCAC8C4),
-            borderRadius: BorderRadius.circular(25),
-          ),
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(25),
-          child: Container(
+    return Hero(
+      tag: widget.task,
+      child: Stack(
+        children: [
+          Container(
             height: 150,
             width: 50,
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ClipRect(
-                child: Align(
-                  heightFactor: timeDiffEquality(),
-                  child: Container(
-                    height: 150,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0xff707070).withOpacity(0.5),
-                            blurRadius: 10)
-                      ],
-                      color: widget.task.color,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: widget.task.color.withOpacity(0.75), blurRadius: 10)
+              ],
+              color: Color(0xffCAC8C4),
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(25),
+            child: Container(
+              height: 150,
+              width: 50,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ClipRect(
+                  child: Align(
+                    heightFactor: timeDiffEquality(),
+                    child: Container(
+                      height: 150,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color(0xff707070).withOpacity(0.5),
+                              blurRadius: 10)
+                        ],
+                        color: widget.task.color,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        Container(
-            height: 150,
-            width: 50,
-            child: InvertColors(
-              child: Center(
-                child: CachedIcon(
-                  imageID: widget.task.iconId,
+          Container(
+              height: 150,
+              width: 50,
+              child: InvertColors(
+                child: Center(
+                  child: CachedIcon(
+                    imageID: widget.task.iconId,
+                  ),
                 ),
-              ),
-            )),
-      ],
+              )),
+        ],
+      ),
     );
   }
 

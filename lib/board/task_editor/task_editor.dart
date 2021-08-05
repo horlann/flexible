@@ -472,10 +472,13 @@ class _TaskEditorState extends State<TaskEditor> {
       padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
       child: Row(
         children: [
-          TaskIconInRound(
-            iconId: editableTask.iconId,
-            taskColor: editableTask.color,
-            onTap: () => openImgPicker(),
+          Hero(
+            tag: widget.task,
+            child: TaskIconInRound(
+              iconId: editableTask.iconId,
+              taskColor: editableTask.color,
+              onTap: () => openImgPicker(),
+            ),
           ),
           SizedBox(
             width: 20 * byWithScale(context),

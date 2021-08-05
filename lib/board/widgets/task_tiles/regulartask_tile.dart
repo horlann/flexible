@@ -197,27 +197,30 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
     );
   }
 
-  Container buildMainIcon() {
-    return Container(
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: widget.task.color.withOpacity(0.75),
-                blurRadius: 20,
-                offset: Offset(0, 10))
-          ],
-          color: widget.task.color,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: InvertColors(
-          child: Center(
-            child: CachedIcon(
-              imageID: widget.task.iconId,
-            ),
+  Widget buildMainIcon() {
+    return Hero(
+      tag: widget.task,
+      child: Container(
+          height: 50,
+          width: 50,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  color: widget.task.color.withOpacity(0.75),
+                  blurRadius: 20,
+                  offset: Offset(0, 10))
+            ],
+            color: widget.task.color,
+            borderRadius: BorderRadius.circular(25),
           ),
-        ));
+          child: InvertColors(
+            child: Center(
+              child: CachedIcon(
+                imageID: widget.task.iconId,
+              ),
+            ),
+          )),
+    );
   }
 
   Widget buildTextSection() {
