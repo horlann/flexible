@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class WeekCalendar extends StatelessWidget {
+class WeekCalendar extends StatefulWidget {
   const WeekCalendar({
     Key? key,
     required this.showCalendar,
@@ -17,12 +17,35 @@ class WeekCalendar extends StatelessWidget {
   final bool showCalendar;
 
   @override
-  Widget build(BuildContext context) {
-    // RepositoryProvider.of<DailytasksBloc>(context);
+  _WeekCalendarState createState() => _WeekCalendarState();
+}
 
-    return BlocBuilder<DailytasksBloc, DailytasksState>(
+class _WeekCalendarState extends State<WeekCalendar> {
+  late DateTime fday;
+
+  @override
+  void initState() {
+    super.initState();
+    fday = RepositoryProvider.of<DailytasksBloc>(context).state.showDay;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<DailytasksBloc, DailytasksState>(
+      listener: (context, state) {
+        fday = state.showDay;
+      },
+      listenWhen: (previous, current) {
+        return previous.showDay.millisecondsSinceEpoch !=
+            current.showDay.millisecondsSinceEpoch;
+      },
       builder: (context, state) {
-        return !showCalendar
+        return !widget.showCalendar
             ? SizedBox()
             : SizedBox(
                 // height: 60,
@@ -31,8 +54,8 @@ class WeekCalendar extends StatelessWidget {
                 child: FutureBuilder(
                     future: RepositoryProvider.of<SqfliteTasksRepo>(context)
                         .tasksByPeriod(
-                            from: state.showDay.subtract(Duration(days: 30)),
-                            to: state.showDay.add(Duration(days: 30))),
+                            from: fday.subtract(Duration(days: 7)),
+                            to: fday.add(Duration(days: 7))),
                     builder: (context, AsyncSnapshot<List<Task>> snapshot) {
                       List getEventByDay(DateTime day) {
                         if (snapshot.hasData) {
@@ -101,10 +124,16 @@ class WeekCalendar extends StatelessWidget {
                         calendarFormat: CalendarFormat.week,
                         firstDay: DateTime.utc(2010, 10, 16),
                         lastDay: DateTime.utc(2030, 3, 14),
-                        focusedDay: state.showDay,
+                        focusedDay: fday,
+                        onPageChanged: (focusedDay) {
+                          setState(() {
+                            fday = focusedDay;
+                          });
+                        },
                         eventLoader: (day) {
                           // Mask good morning and good night
                           List events = getEventByDay(day);
+                          // print('get ev > $day');
                           return events;
                         },
                       );

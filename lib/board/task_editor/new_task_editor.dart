@@ -473,6 +473,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
                       color: Colors.black, fontSize: 48 / pRatio(context)),
                   spacing: 20 * byWithScale(context),
                   minutesInterval: 1,
+                  time: editableRegularTask.timeStart,
                   onTimeChange: (time) {
                     setState(() {
                       editableRegularTask =
