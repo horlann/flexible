@@ -28,6 +28,8 @@ class _ColorPickerRowState extends State<ColorPickerRow> {
       return Material(
         color: Colors.transparent,
         child: InkWell(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           onTap: () {
             widget.callback(color, pos!);
             isActiveArray = [false, false, true, false, false, false];

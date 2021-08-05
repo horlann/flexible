@@ -32,7 +32,6 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
 
   // determine what the day to show
   DateTime showDay = DateTime.now();
-
   // Round date funcs
   // uses for select period
   DateTime startOfaDay(DateTime date) => DateUtils.dateOnly(date);
