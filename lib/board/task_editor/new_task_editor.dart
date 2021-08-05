@@ -24,6 +24,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 enum TaskType { Regular, Super }
 
@@ -162,9 +164,25 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                             key: Key('reg'),
                             onSubmit: (task) {
                               print('reg ask submit');
-                              BlocProvider.of<DailytasksBloc>(context)
-                                  .add(DailytasksAddTask(task: task));
-                              Navigator.pop(context);
+                              print(task.title.isEmpty);
+                              if (task.title.isEmpty) {
+                                showTopSnackBar(
+                                  context,
+                                  CustomSnackBar.info(
+                                    backgroundColor: Color(0xffE24F4F),
+                                    icon: Icon(
+                                      Icons.announcement_outlined,
+                                      color: Colors.white,
+                                      size: 1,
+                                    ),
+                                    message: 'Task title shouldn\'t be empty',
+                                  ),
+                                );
+                              } else {
+                                BlocProvider.of<DailytasksBloc>(context)
+                                    .add(DailytasksAddTask(task: task));
+                                Navigator.pop(context);
+                              }
                             },
                           ),
 
@@ -174,10 +192,25 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                               submitChanel: submitS,
                               key: Key('sup'),
                               onSubmit: (task) {
-                                print('su ask submit');
-                                BlocProvider.of<DailytasksBloc>(context)
-                                    .add(DailytasksSuperTaskAdd(task: task));
-                                Navigator.pop(context);
+                                if (task.title.isEmpty) {
+                                  showTopSnackBar(
+                                    context,
+                                    CustomSnackBar.info(
+                                      backgroundColor: Color(0xffE24F4F),
+                                      icon: Icon(
+                                        Icons.announcement_outlined,
+                                        color: Colors.white,
+                                        size: 1,
+                                      ),
+                                      message: 'Task title shouldn\'t be empty',
+                                    ),
+                                  );
+                                } else {
+                                  print('su ask submit');
+                                  BlocProvider.of<DailytasksBloc>(context)
+                                      .add(DailytasksSuperTaskAdd(task: task));
+                                  Navigator.pop(context);
+                                }
                               },
                             ),
                           //buildUpdateDeleteButtons()
@@ -318,7 +351,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           timeStart: DateUtils.dateOnly(
                   BlocProvider.of<DailytasksBloc>(context).state.showDay)
               .add(Duration(hours: DateTime.now().hour)),
-          period: Duration(hours: 1),
+          period: Duration(hours: 0),
           isDone: false,
           isDonable: true,
           timeLock: false,
@@ -503,26 +536,24 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
               color: Colors.white, borderRadius: BorderRadius.circular(25)),
           padding: EdgeInsets.symmetric(
               horizontal: 5, vertical: 8 * byWithScale(context)),
-          child: Flexible(
-            child: Column(
-              children: [
-                Text(
-                  'What color should you task be?',
-                  style: TextStyle(
-                      fontSize: 12 * byWithScale(context),
-                      fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 14 * byWithScale(context)),
-                ColorPickerRow(callback: (color, pos) {
-                  setState(() {
-                    print(pos.toString() + "pos");
-                    editableRegularTask =
-                        editableRegularTask.copyWith(color: color);
-                    //i=pos;
-                  });
-                }),
-              ],
-            ),
+          child: Column(
+            children: [
+              Text(
+                'What color should you task be?',
+                style: TextStyle(
+                    fontSize: 12 * byWithScale(context),
+                    fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 14 * byWithScale(context)),
+              ColorPickerRow(callback: (color, pos) {
+                setState(() {
+                  print(pos.toString() + "pos");
+                  editableRegularTask =
+                      editableRegularTask.copyWith(color: color);
+                  //i=pos;
+                });
+              }),
+            ],
           ),
         ),
       ],

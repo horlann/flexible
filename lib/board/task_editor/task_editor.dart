@@ -15,6 +15,8 @@ import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 // This widget aссузе Task instanse then copy and edit copy
 // On edit done is send edited task to tasks bloc
@@ -259,10 +261,25 @@ class _TaskEditorState extends State<TaskEditor> {
                           enableColor: Color(0xffE24F4F),
                           disableColor: Color(0xffE24F4F),
                           callback: () {
-                            BlocProvider.of<DailytasksBloc>(context).add(
-                                DailytasksUpdateTaskAndShiftOther(
-                                    task: editableTask));
-                            Navigator.pop(context);
+                            if (editableTask.title.isEmpty) {
+                              print(editableTask);
+                              showTopSnackBar(
+                                context,
+                                CustomSnackBar.info(
+                                  backgroundColor: Color(0xffE24F4F),
+                                  icon: Icon(
+                                    Icons.announcement_outlined,
+                                    color: Colors.white,
+                                    size: 1,
+                                  ),
+                                  message: 'Task title shouldn\'t be empty',
+                                ),
+                              );
+                            } else {
+                              BlocProvider.of<DailytasksBloc>(context).add(
+                                  DailytasksDeleteTask(task: editableTask));
+                              Navigator.pop(context);
+                            }
                           },
                           text: 'UPDATE TASK'),
                     ),
