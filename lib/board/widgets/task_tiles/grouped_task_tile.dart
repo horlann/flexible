@@ -1,18 +1,15 @@
 import 'dart:async';
-import 'dart:typed_data';
-
+import 'package:flexible/board/models/tasks/supertask.dart';
 import 'package:flexible/board/widgets/task_tiles/components/cached_icon.dart';
+import 'package:flexible/widgets/modals/super_task_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:invert_colors/invert_colors.dart';
-
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/models/tasks/task.dart';
-import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/task_editor.dart';
 import 'package:flexible/board/widgets/task_tiles/components/done_checkbox.dart';
 import 'package:flexible/board/widgets/task_tiles/components/hidable_btns_wrapper.dart';
@@ -111,39 +108,151 @@ class _GroupedTaskTileState extends State<GroupedTaskTile> {
                         color: Colors.white,
                         fontSize: 10 * byWithScale(context),
                         fontWeight: FontWeight.w400))),
-            // Row(
-            //   children: [
-            //     SizedBox(
-            //       width: isLessThen350() ? 40 : 59,
-            //     ),
-            //     iconsLayerWithMovement(),
-            //     SizedBox(
-            //       width: 20,
-            //     ),
-            //     Expanded(
-            //       child: Column(
-            //           children: widget.tasks
-            //               .map((e) => TileBody(
-            //                   task: e,
-            //                   isFirst: widget.tasks.first == e,
-            //                   isLast: widget.tasks.last == e))
-            //               .toList()),
-            //     ),
-            //   ],
-            // ),
-            Column(
-                children: widget.tasks
-                    .map((e) => TileBody(
-                        task: e,
-                        isFirst: widget.tasks.first == e,
-                        isLast: widget.tasks.last == e))
-                    .toList())
+            Row(
+              children: [
+                SizedBox(
+                  width: isLessThen350() ? 40 : 59,
+                ),
+                iconsAndBgLayer(),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: Column(
+                      children: widget.tasks
+                          .map((e) => TileBody(
+                              task: e,
+                              isFirst: widget.tasks.first == e,
+                              isLast: widget.tasks.last == e))
+                          .toList()),
+                ),
+              ],
+            ),
+            // Column(
+            //     children: widget.tasks
+            //         .map((e) => TileBody(
+            //             task: e,
+            //             isFirst: widget.tasks.first == e,
+            //             isLast: widget.tasks.last == e))
+            //         .toList())
           ],
         ),
       ),
     );
   }
 
+  Widget iconsAndBgLayer() {
+    // DateTime date = DateTime.fromMillisecondsSinceEpoch(1628097968662);
+    DateTime date = DateTime.now();
+    Duration timerange = timeEnd().difference(timeStart());
+    double height = widget.tasks.length * 120;
+    double elementOffset = -120;
+
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(.25),
+              blurRadius: 10 * byWithScale(context))
+        ],
+        // color: Color(0xffCAC8C4),
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(25),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // Bottom Layer for shadow
+            Container(
+              height: height,
+              width: 50,
+            ),
+            ...widget.tasks
+                .map((e) {
+                  // Blessed math shit
+
+                  elementOffset += 120;
+                  // print(elementOffset);
+                  var gap = e.timeStart.add(e.period).difference(e.timeStart);
+                  // print(gap);
+                  var dateOf = date.difference(e.timeStart);
+                  // print(dateOf);
+                  bool isPos = !dateOf.isNegative;
+                  // print(isPos);
+                  double hMP = dateOf.inMinutes / gap.inMinutes;
+                  // print(hMP);
+                  double height = 120 * hMP;
+                  // print(height);
+                  Duration overtime =
+                      date.difference(e.timeStart.add(e.period));
+                  // print(overtime.inMinutes);
+
+                  return Positioned(
+                    top: elementOffset,
+                    child: Container(
+                      color: Color(0xffD1D1D1),
+                      height: 120,
+                      width: 50,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Positioned(
+                            child: Container(
+                                color: e.color.withOpacity(
+                                    hMP >= 1 || e.isDone ? 1 : 0.2)),
+                            height: 120,
+                            width: 50,
+                          ),
+                          // Color fill from top to bottom by done time
+                          if (hMP > 0 && hMP <= 1 || e.period.inMinutes == 0)
+                            Positioned(
+                              child: Container(color: e.color.withOpacity(1)),
+                              height: e.period.inMinutes == 0 ? 120 : height,
+                              width: 50,
+                            ),
+                          Container(
+                              height: 120,
+                              width: 50,
+                              child: InvertColors(
+                                  child: Center(
+                                      child: CachedIcon(imageID: e.iconId)))),
+                          // Show tale with overtime if is undoned yet
+                          if (widget.tasks.last != e && hMP > 1 && !e.isDone)
+                            Positioned(
+                              left: 12.5,
+                              bottom: -12.5,
+                              child: ClipOval(
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  color: e.color,
+                                  width: 25,
+                                  height: 25,
+                                  child: Text(
+                                      overtime.inMinutes > timerange.inMinutes
+                                          ? '∞'
+                                          : overtime.inMinutes.toString(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      )),
+                                ),
+                              ),
+                            )
+                        ],
+                      ),
+                    ),
+                  );
+                })
+                .toList()
+                .reversed,
+            // donedOverlay()
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Deprecated
   Widget iconsLayerWithMovement() {
     double height = widget.tasks.length * 110;
     Duration timerange = timeEnd().difference(timeStart());
@@ -228,15 +337,6 @@ class _GroupedTaskTileState extends State<GroupedTaskTile> {
       ),
     );
   }
-
-  // Container(
-  //           height: 100,
-  //           width: 50,
-  //           child: InvertColors(
-  //             child: Center(
-  //               child: Icon(Icons.ac_unit),
-  //             ),
-  //           )),
 }
 
 class TileBody extends StatefulWidget {
@@ -312,36 +412,29 @@ class _TileBodyState extends State<TileBody> {
     return InkWell(
       key: widget.task.key,
       onTap: () {
-        showModal(
-            context,
-            RegularTaskModal(
-                widget.task,
-                _getOffset(widget.task.key)?.top ?? 0,
-                () => onEditClicked(context, task: widget.task),
-                () => onLockClicked(context, task: widget.task),
-                () => showCopyDialog(task: widget.task)));
-        // setState(() {
-        //   showSubButtons = !showSubButtons;
-        // });
+        if (widget.task is RegularTask) {
+          showModal(
+              context,
+              RegularTaskModal(
+                  widget.task,
+                  _getOffset(widget.task.key)?.top ?? 0,
+                  () => onEditClicked(context, task: widget.task),
+                  () => onLockClicked(context, task: widget.task),
+                  () => showCopyDialog(task: widget.task)));
+        }
+        if (widget.task is SuperTask) {
+          showModal(
+              context,
+              SuperTaskModal(widget.task, _getOffset(widget.task.key)?.top ?? 0,
+                  () => onLockClicked(context, task: widget.task)));
+        }
       },
-      child: IntrinsicHeight(
+      child: SizedBox(
+        height: 120,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              width: isLessThen350() ? 40 : 59,
-            ),
-            // LayoutBuilder(
-            //   builder: (context, c) {
-            //     return SizedBox(
-            //         height: c.minHeight, child: buildIconsLayer(task: task));
-            //   },
-            // ),
-            buildIconsLayer(task: widget.task),
-            SizedBox(
-              width: 20,
-            ),
             Expanded(
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.start,
@@ -351,45 +444,15 @@ class _TileBodyState extends State<TileBody> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(child: buildTextSection(task: widget.task)),
-                      Row(
-                        children: [
-                          isUnSubscribed()
-                              ? SizedBox()
-                              : HidableTimeLock(
-                                  locked: widget.task.timeLock,
-                                  showLock: showSubButtons,
-                                  onTap: () => onLockClicked(context,
-                                      task: widget.task)),
-                          widget.task.isDonable
-                              ? DoneCheckbox(
-                                  checked: widget.task.isDone,
-                                  onClick: () => onCheckClicked(context,
-                                      task: widget.task))
-                              : SizedBox(),
-                        ],
-                      ),
+                      DoneCheckbox(
+                          checked: widget.task.isDone,
+                          onClick: () =>
+                              onCheckClicked(context, task: widget.task))
                     ],
                   ),
                   SizedBox(
                     height: 16,
                   ),
-                  if (widget.task is RegularTask)
-                    HidableButtonsWrapper(
-                        showSubButtons: showSubButtons,
-                        children: [
-                          MiniButtonWithIcon(
-                              color: Color(0xff4077C1).withOpacity(0.75),
-                              text: 'Edit Task',
-                              iconAsset: 'src/icons/edit.png',
-                              callback: () => onEditClicked(context,
-                                  task: widget.task as RegularTask)),
-                          MiniButtonWithIcon(
-                              color: Color(0xffF4D700).withOpacity(0.75),
-                              text: 'Copy Task',
-                              iconAsset: 'src/icons/copy.png',
-                              callback: () => showCopyDialog(
-                                  task: widget.task as RegularTask)),
-                        ]),
                 ],
               ),
             ),
@@ -402,84 +465,24 @@ class _TileBodyState extends State<TileBody> {
     );
   }
 
-  Widget buildIconsLayer({required Task task}) {
-    double timeDiffEquality() {
-      DateTime currt = DateTime.now();
+  Widget buildTextSection({required Task task}) {
+    Widget superTaskProgress() {
+      if (task is SuperTask) {
+        String iTime = task.globalDurationLeft.toString().substring(0, 4);
+        String allTime = task.globalDuration.toString().substring(0, 4);
 
-      if (currt.difference(task.timeStart).inMinutes > 0) {
-        var dif = task.timeStart
-            .add(task.period)
-            .difference(task.timeStart)
-            .inMinutes;
-        var currFromStart = currt.difference(task.timeStart).inMinutes;
-        return currFromStart / dif;
+        return Text(
+          '$iTime/$allTime',
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 12 * byWithScale(context),
+              fontWeight: FontWeight.w400),
+        );
+      } else {
+        return SizedBox();
       }
-
-      return 0.0;
     }
 
-    return Stack(
-      children: [
-        Container(
-          width: 50,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(color: task.color.withOpacity(0.75), blurRadius: 10)
-            ],
-            color: task.color,
-            borderRadius: BorderRadius.vertical(
-                top: Radius.circular(widget.isFirst ? 25 : 0),
-                bottom: Radius.circular(widget.isLast ? 25 : 0)),
-          ),
-        ),
-        // ClipRRect(
-        //   borderRadius: BorderRadius.vertical(
-        //       top: Radius.circular(isFirst ? 25 : 0),
-        //       bottom: Radius.circular(isLast ? 25 : 0)),
-        //   child: Container(
-        //     // height: 50,
-        //     width: 50,
-        //     child: Align(
-        //       alignment: Alignment.topCenter,
-        //       child: ClipRect(
-        //         child: Align(
-        //           heightFactor: timeDiffEquality(),
-        //           child: Container(
-        //             // height: 150,
-        //             width: 50,
-        //             decoration: BoxDecoration(
-        //               boxShadow: [
-        //                 BoxShadow(
-        //                     color: Color(0xff707070).withOpacity(0.5),
-        //                     blurRadius: 10)
-        //               ],
-        //               color: task.color,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        buildMainIcon(task: task)
-      ],
-    );
-  }
-
-  Container buildMainIcon({required Task task}) {
-    return Container(
-        height: 50,
-        width: 50,
-        child: InvertColors(
-          child: Center(
-            child: CachedIcon(
-              imageID: widget.task.iconId,
-            ),
-          ),
-        ));
-  }
-
-  Widget buildTextSection({required Task task}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -506,6 +509,7 @@ class _TileBodyState extends State<TileBody> {
                   ? TextDecoration.lineThrough
                   : TextDecoration.none),
         ),
+        superTaskProgress(),
       ],
     );
   }

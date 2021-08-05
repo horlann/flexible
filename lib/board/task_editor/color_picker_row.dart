@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ColorPickerRow extends StatefulWidget {
-  int? activeButton;
+  final int? activeButton;
 
-  ColorPickerRow({
+  const ColorPickerRow({
     Key? key,
     this.activeButton,
     required this.callback,
@@ -31,9 +31,8 @@ class _ColorPickerRowState extends State<ColorPickerRow> {
           onTap: () {
             widget.callback(color, pos!);
             isActiveArray = [false, false, true, false, false, false];
-            isActiveArray[pos!] = true;
+            isActiveArray[pos] = true;
             isActiveArray.forEach((element) => print(element));
-
           },
           child: Row(
             children: [
@@ -47,8 +46,9 @@ class _ColorPickerRowState extends State<ColorPickerRow> {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                    border: isActive! ? Border.all(
-                        color: Colors.black, width: 2) : null,
+                    border: isActive!
+                        ? Border.all(color: Colors.black, width: 2)
+                        : null,
                     color: color,
                     borderRadius: BorderRadius.circular(10)),
               ),
@@ -68,21 +68,25 @@ class _ColorPickerRowState extends State<ColorPickerRow> {
         children: [
           colorPart(
               color: Colors.lime, name: '', isActive: isActiveArray[0], pos: 0),
-          colorPart(color: Colors.redAccent,
+          colorPart(
+              color: Colors.redAccent,
               name: '',
               isActive: isActiveArray[1],
               pos: 1),
-          colorPart(color: Colors.indigo,
+          colorPart(
+              color: Colors.indigo,
               name: '',
               isActive: isActiveArray[2],
               pos: 2),
           colorPart(
               color: Colors.cyan, name: '', isActive: isActiveArray[3], pos: 3),
-          colorPart(color: Colors.amber,
+          colorPart(
+              color: Colors.amber,
               name: '',
               isActive: isActiveArray[4],
               pos: 4),
-          colorPart(color: Colors.deepPurple,
+          colorPart(
+              color: Colors.deepPurple,
               name: '',
               isActive: isActiveArray[5],
               pos: 5),

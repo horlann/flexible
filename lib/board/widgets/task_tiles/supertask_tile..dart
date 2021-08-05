@@ -120,9 +120,6 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
               context,
               SuperTaskModal(widget.task, _getOffset(widget.task.key)?.top ?? 0,
                   () => onLockClicked(context)));
-          // setState(() {
-          //   showSubButtons = !showSubButtons;
-          // });
         },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 16),
