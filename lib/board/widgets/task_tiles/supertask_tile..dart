@@ -112,7 +112,6 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
   Widget build(BuildContext context) {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
     return Material(
-      key: widget.task.key,
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
@@ -125,6 +124,10 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
           margin: EdgeInsets.symmetric(vertical: 16),
           child: Stack(
             children: [
+              // Use as last layer or it brake all animations
+              Container(
+                key: widget.task.key,
+              ),
               Positioned(
                   top: 2,
                   child: Container(

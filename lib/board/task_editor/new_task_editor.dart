@@ -389,10 +389,13 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
       padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
       child: Row(
         children: [
-          TaskIconInRound(
-            iconId: editableRegularTask.iconId,
-            taskColor: editableRegularTask.color,
-            onTap: () => openImgPicker(),
+          Hero(
+            tag: Key('newtask'),
+            child: TaskIconInRound(
+              iconId: editableRegularTask.iconId,
+              taskColor: editableRegularTask.color,
+              onTap: () => openImgPicker(),
+            ),
           ),
           SizedBox(
             width: 20 * byWithScale(context),

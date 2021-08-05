@@ -15,25 +15,30 @@ class DoneCheckbox extends StatelessWidget {
     return GestureDetector(
       onTap: () => onClick(),
       child: Container(
-        margin: EdgeInsets.only(top: 12),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Color(0xff6E6B6B).withOpacity(0.75),
-                blurRadius: 20,
-                offset: Offset(0, 10))
-          ],
-        ),
-        child: checked
-            ? Image.asset(
+          margin: EdgeInsets.only(top: 12),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  color: Color(0xff6E6B6B).withOpacity(0.75),
+                  blurRadius: 20,
+                  offset: Offset(0, 10))
+            ],
+          ),
+          child: AnimatedCrossFade(
+              firstCurve: Curves.easeOut,
+              secondCurve: Curves.easeIn,
+              firstChild: Image.asset(
                 'src/icons/checkbox_checked.png',
                 scale: 1.2,
-              )
-            : Image.asset(
+              ),
+              secondChild: Image.asset(
                 'src/icons/checkbox_unchecked.png',
                 scale: 1.2,
               ),
-      ),
+              crossFadeState: checked
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
+              duration: Duration(milliseconds: 300))),
     );
   }
 }

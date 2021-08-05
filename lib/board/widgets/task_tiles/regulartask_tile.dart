@@ -97,7 +97,6 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
 
     return Material(
-      key: widget.task.key,
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
@@ -109,14 +108,15 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
                   () => onEditClicked(context),
                   () => onLockClicked(context),
                   () => showCopyDialog()));
-          // setState(() {
-          //   showSubButtons = !showSubButtons;
-          // });
         },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 16),
           child: Stack(
             children: [
+              // Use as last layer or it brake all animations
+              Container(
+                key: widget.task.key,
+              ),
               Positioned(
                 top: 16,
                 child: Container(
@@ -156,11 +156,9 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
                                         showLock: showSubButtons,
                                         onTap: () => onLockClicked(context),
                                       ),
-                                widget.task.isDonable
-                                    ? DoneCheckbox(
-                                        checked: widget.task.isDone,
-                                        onClick: () => onCheckClicked(context))
-                                    : SizedBox(),
+                                DoneCheckbox(
+                                    checked: widget.task.isDone,
+                                    onClick: () => onCheckClicked(context)),
                               ],
                             ),
                           ],

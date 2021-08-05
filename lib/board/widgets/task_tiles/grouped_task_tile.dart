@@ -424,7 +424,6 @@ class _TileBodyState extends State<TileBody> {
   Widget build(BuildContext context) {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
     return InkWell(
-      key: widget.task.key,
       onTap: () {
         if (widget.task is RegularTask) {
           showModal(
@@ -443,38 +442,46 @@ class _TileBodyState extends State<TileBody> {
                   () => onLockClicked(context, task: widget.task)));
         }
       },
-      child: SizedBox(
-        height: 120,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        children: [
+          // Use as last layer or it brake all animations
+          Container(
+            key: widget.task.key,
+          ),
+          SizedBox(
+            height: 120,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(child: buildTextSection(task: widget.task)),
-                      DoneCheckbox(
-                          checked: widget.task.isDone,
-                          onClick: () =>
-                              onCheckClicked(context, task: widget.task))
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(child: buildTextSection(task: widget.task)),
+                          DoneCheckbox(
+                              checked: widget.task.isDone,
+                              onClick: () =>
+                                  onCheckClicked(context, task: widget.task))
+                        ],
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
                     ],
                   ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(
+                  width: 25,
+                ),
+              ],
             ),
-            SizedBox(
-              width: 25,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
