@@ -51,7 +51,6 @@ class _BoardPageState extends State<BoardPage> {
     var generaldetails =
     new NotificationDetails(android: androidDetails, iOS: iosdetails);
 
-    final date = DateTime.now();
 
     tz.initializeTimeZones();
     final String currentTimeZone =
@@ -68,11 +67,13 @@ class _BoardPageState extends State<BoardPage> {
         context); //TODO проверка времни дня до времни пробуждения или после добавить позжe
     var dayStartInfo = await dayOptionsRepo
         .getDayOptionsByDate(DateTime.now().add(Duration(days: 1)));
+
     wakeupNotification(
         generaldetails,
         dayStartInfo,
         await tasksFromPeriod(startTime(2), startTime(3)),
         dayStartInfo.wakeUpTime, currentTimeZone);
+
     endtNotification(sqTasks, generaldetails, currentTimeZone);
   }
 
@@ -95,6 +96,8 @@ class _BoardPageState extends State<BoardPage> {
       String timeZone) {
     sqTasks.forEach((element) async {
       String taskname = element.title;
+
+
       if (element.period.inMinutes <= 30) {
         int timeBeforeStartTask = (element.timeStart.minute * 0.25).floor();
         print("start" + timeBeforeStartTask.toString());
@@ -103,9 +106,8 @@ class _BoardPageState extends State<BoardPage> {
                 Duration(minutes: timeBeforeStartTask)),
             tz.getLocation(timeZone));
         print(time.toString() + " string");
-
         await flutterLocalNotifications!.zonedSchedule(
-            element.hashCode,
+            Random().nextInt(9999),
             'Be careful!👀',
             "The task $taskname will start in $timeBeforeStartTask minutes",
             time,
@@ -115,12 +117,14 @@ class _BoardPageState extends State<BoardPage> {
             UILocalNotificationDateInterpretation.absoluteTime);
       }
       else {
+        //await flutterLocalNotifications!.show(element.hashCode, "elelelee", "eel,dlfdf", generaldetails);
+
         var time = tz.TZDateTime.from(
             element.timeStart.subtract(Duration(minutes: 15)),
             tz.getLocation(timeZone));
-        print(time.toString() + " string");
+        print(time.toString() + " stringTIME");
         await flutterLocalNotifications!.zonedSchedule(
-            element.hashCode,
+            Random().nextInt(9999),
             'Be careful!👀',
             "The task $taskname will start in 15 minutes",
             time,
@@ -151,7 +155,7 @@ class _BoardPageState extends State<BoardPage> {
             tz.getLocation(timeZone));
         print(time.toString() + " time");
         await flutterLocalNotifications!.zonedSchedule(
-            element.hashCode,
+            Random().nextInt(9999),
             'Be careful!👀',
             "The task $taskname will end in $timeBeforeTaskEnd minutes",
             time,
@@ -169,7 +173,7 @@ class _BoardPageState extends State<BoardPage> {
                 .subtract(Duration(minutes: 10))),
             tz.getLocation(timeZone));
         await flutterLocalNotifications!.zonedSchedule(
-            element.hashCode,
+            Random().nextInt(9999),
             'Be careful!👀',
             "The task $taskname will end in 10 minutes",
             time,
