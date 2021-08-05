@@ -43,10 +43,10 @@ class _BoardState extends State<Board> {
         child: BlocConsumer<DailytasksBloc, DailytasksState>(
       listener: (context, state) {
         if (state is DailytasksCommon) {
-          // if (state.askForSuperInsert) {
-          //   print('ask user');
-          //   ScaffoldMessenger.of(context).showSnackBar(buildSuperAsk(context));
-          // }
+          if (state.askForSuperInsert) {
+            print('ask user');
+            ScaffoldMessenger.of(context).showSnackBar(buildSuperAsk(context));
+          }
           if (state.message.isNotEmpty) {
             showTopSnackBar(
               context,
