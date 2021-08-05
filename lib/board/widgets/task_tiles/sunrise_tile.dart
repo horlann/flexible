@@ -40,11 +40,15 @@ class _SunriseTile extends State<SunriseTile> {
                   children: [
                     Positioned(
                       top: 16,
-                      child: Text(geTimeString(state.sunrise),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10 * byWithScale(context),
-                              fontWeight: FontWeight.w400)),
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: isLessThen350() ? 40 : 59,
+                        child: Text(geTimeString(state.sunrise),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10 * byWithScale(context),
+                                fontWeight: FontWeight.w400)),
+                      ),
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,

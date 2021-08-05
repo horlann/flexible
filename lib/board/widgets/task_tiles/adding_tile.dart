@@ -70,9 +70,10 @@ class _AddingTileState extends State<AddingTile> {
 //                  ),
 //                ),
             Container(
-              margin: EdgeInsets.only(top: 40, left: 32),
+              // color: Colors.red,
+              margin: EdgeInsets.only(top: 10, left: 32),
               clipBehavior: Clip.none,
-              height: 80,
+              height: 60,
               width: double.maxFinite,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,7 +89,7 @@ class _AddingTileState extends State<AddingTile> {
                         shape: BoxShape.circle,
                       ),
                       child: Image.asset('src/icons/plus.png',
-                          width: 80,
+                          width: 60,
                           scale: 0.7,
                           color: Colors.white.withOpacity(0.8),
                           height: 80),

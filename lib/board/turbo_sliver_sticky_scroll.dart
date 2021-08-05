@@ -148,8 +148,8 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                   pinned: true,
                   floating: false,
                   delegate: SliverPersisHeader(
-                    minExtent: 150,
-                    maxExtent: 150,
+                    minExtent: 80,
+                    maxExtent: 80,
                     child: AddingTile(),
                   )),
               // Main sliver

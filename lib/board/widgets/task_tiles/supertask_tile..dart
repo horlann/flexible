@@ -127,33 +127,45 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
             children: [
               Positioned(
                   top: 2,
-                  child: Text(geTimeString(widget.task.timeStart),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10 * byWithScale(context),
-                          fontWeight: FontWeight.w400))),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: isLessThen350() ? 40 : 59,
+                    child: Text(geTimeString(widget.task.timeStart),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10 * byWithScale(context),
+                            fontWeight: FontWeight.w400)),
+                  )),
               timeDiffEquality() > 1
                   ? SizedBox()
                   : (timeDiffEquality() == 0
                       ? SizedBox()
                       : Positioned(
                           top: (110 * timeDiffEquality()) + 12,
-                          child: Text(
-                            geTimeString(DateTime.now()),
-                            style: TextStyle(
-                                fontSize: 10 * byWithScale(context),
-                                color: Colors.white),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: isLessThen350() ? 40 : 59,
+                            child: Text(
+                              geTimeString(DateTime.now()),
+                              style: TextStyle(
+                                  fontSize: 10 * byWithScale(context),
+                                  color: Colors.white),
+                            ),
                           ),
                         )),
               Positioned(
                   bottom: 0,
-                  child: Text(
-                      geTimeString(
-                          widget.task.timeStart.add(widget.task.period)),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10 * byWithScale(context),
-                          fontWeight: FontWeight.w400))),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: isLessThen350() ? 40 : 59,
+                    child: Text(
+                        geTimeString(
+                            widget.task.timeStart.add(widget.task.period)),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10 * byWithScale(context),
+                            fontWeight: FontWeight.w400)),
+                  )),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
