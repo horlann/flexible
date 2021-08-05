@@ -231,7 +231,10 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 12 * byWithScale(context),
-                fontWeight: FontWeight.w600),
+                fontWeight: FontWeight.w600,
+                decoration: widget.task.isDone
+                    ? TextDecoration.lineThrough
+                    : TextDecoration.none),
           ),
           SizedBox(
             width: 10,

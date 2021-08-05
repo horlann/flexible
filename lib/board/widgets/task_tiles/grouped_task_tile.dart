@@ -515,7 +515,10 @@ class _TileBodyState extends State<TileBody> {
           style: TextStyle(
               color: Colors.white,
               fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w400),
+              fontWeight: FontWeight.w600,
+              decoration: widget.task.isDone
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none),
         ),
         SizedBox(
           height: 4,
@@ -525,7 +528,7 @@ class _TileBodyState extends State<TileBody> {
           style: TextStyle(
               color: Colors.white,
               fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
               decoration: task.isDone
                   ? TextDecoration.lineThrough
                   : TextDecoration.none),

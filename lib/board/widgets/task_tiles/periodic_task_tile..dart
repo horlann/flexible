@@ -325,7 +325,10 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           style: TextStyle(
               color: Colors.white,
               fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w400),
+              fontWeight: FontWeight.w600,
+              decoration: widget.task.isDone
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none),
         ),
         SizedBox(
           height: 4,
@@ -335,7 +338,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
           style: TextStyle(
               color: Colors.white,
               fontSize: 14 * byWithScale(context),
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
               decoration: widget.task.isDone
                   ? TextDecoration.lineThrough
                   : TextDecoration.none),
