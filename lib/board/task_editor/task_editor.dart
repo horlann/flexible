@@ -55,6 +55,7 @@ class _TaskEditorState extends State<TaskEditor> {
   }
 
   Widget build(BuildContext context) {
+    print(editableTask.timeStart);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffE9E9E9),
@@ -171,6 +172,8 @@ class _TaskEditorState extends State<TaskEditor> {
                               time: editableTask.timeStart,
                               onTimeChange: (time) {
                                 setState(() {
+                                  print(editableTask.timeStart);
+                                  print(time);
                                   editableTask =
                                       editableTask.copyWith(timeStart: time);
                                 });
@@ -277,7 +280,8 @@ class _TaskEditorState extends State<TaskEditor> {
                               );
                             } else {
                               BlocProvider.of<DailytasksBloc>(context).add(
-                                  DailytasksDeleteTask(task: editableTask));
+                                  DailytasksUpdateTaskAndShiftOther(
+                                      task: editableTask));
                               Navigator.pop(context);
                             }
                           },
