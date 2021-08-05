@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 
 class ColorPickerRow extends StatefulWidget {
-  final int? activeButton;
-
   const ColorPickerRow({
     Key? key,
-    this.activeButton,
     required this.callback,
   }) : super(key: key);
 
-  final Function(Color color, int pos) callback;
+  final Function(Color color) callback;
 
   @override
   _ColorPickerRowState createState() => _ColorPickerRowState();
 }
 
 class _ColorPickerRowState extends State<ColorPickerRow> {
-  List<bool> isActiveArray = [false, false, true, false, false, false];
+  Color selectedColor = Colors.cyan;
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +28,10 @@ class _ColorPickerRowState extends State<ColorPickerRow> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onTap: () {
-            widget.callback(color, pos!);
-            isActiveArray = [false, false, true, false, false, false];
-            isActiveArray[pos] = true;
-            isActiveArray.forEach((element) => print(element));
+            setState(() {
+              selectedColor = color;
+            });
+            widget.callback(color);
           },
           child: Row(
             children: [
@@ -69,28 +66,32 @@ class _ColorPickerRowState extends State<ColorPickerRow> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           colorPart(
-              color: Colors.lime, name: '', isActive: isActiveArray[0], pos: 0),
+              color: Colors.lime,
+              name: '',
+              isActive: Colors.lime == selectedColor),
           colorPart(
               color: Colors.redAccent,
               name: '',
-              isActive: isActiveArray[1],
+              isActive: Colors.redAccent == selectedColor,
               pos: 1),
           colorPart(
               color: Colors.indigo,
               name: '',
-              isActive: isActiveArray[2],
+              isActive: Colors.indigo == selectedColor,
               pos: 2),
           colorPart(
-              color: Colors.cyan, name: '', isActive: isActiveArray[3], pos: 3),
+              color: Colors.cyan,
+              name: '',
+              isActive: Colors.cyan == selectedColor),
           colorPart(
               color: Colors.amber,
               name: '',
-              isActive: isActiveArray[4],
+              isActive: Colors.amber == selectedColor,
               pos: 4),
           colorPart(
               color: Colors.deepPurple,
               name: '',
-              isActive: isActiveArray[5],
+              isActive: Colors.deepPurple == selectedColor,
               pos: 5),
         ],
       ),

@@ -549,9 +549,8 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
                     fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 14 * byWithScale(context)),
-              ColorPickerRow(callback: (color, pos) {
+              ColorPickerRow(callback: (color) {
                 setState(() {
-                  print(pos.toString() + "pos");
                   editableRegularTask =
                       editableRegularTask.copyWith(color: color);
                   //i=pos;
@@ -733,7 +732,7 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
                     fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 14 * byWithScale(context)),
-              ColorPickerRow(callback: (color, isActive) {
+              ColorPickerRow(callback: (color) {
                 setState(() {
                   editableSuperTask = editableSuperTask.copyWith(color: color);
                 });
