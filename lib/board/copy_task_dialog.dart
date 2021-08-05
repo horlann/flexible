@@ -133,25 +133,25 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
                           padding: const EdgeInsets.symmetric(horizontal: 25),
                           child: Row(
                             children: [
-                              Text(
-                                'from',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Text(
-                                DateUtils.dateOnly(widget.task.timeStart)
-                                    .toString()
-                                    .substring(5, 10),
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black),
-                              ),
+                              // Text(
+                              //   'from',
+                              //   style: TextStyle(
+                              //       fontSize: 16,
+                              //       fontWeight: FontWeight.w400,
+                              //       color: Colors.black),
+                              // ),
+                              // SizedBox(
+                              //   width: 8,
+                              // ),
+                              // Text(
+                              //   DateUtils.dateOnly(widget.task.timeStart)
+                              //       .toString()
+                              //       .substring(5, 10),
+                              //   style: TextStyle(
+                              //       fontSize: 16,
+                              //       fontWeight: FontWeight.w400,
+                              //       color: Colors.black),
+                              // ),
                               SizedBox(
                                 width: 8,
                               ),
@@ -166,9 +166,7 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
                                 width: 8,
                               ),
                               Text(
-                                DateUtils.dateOnly(copyTo)
-                                    .toString()
-                                    .substring(5, 10),
+                                DateFormat('dd.LLLL yyyy').format(copyTo),
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
@@ -202,9 +200,12 @@ class _CopyTaskDialogState extends State<CopyTaskDialog> {
 //                                        fontWeight: FontWeight.bold,
 //                                        fontSize: 12),
 //                                  ),
-                                  child: Text("Select date", style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12),),
+                                  child: Text(
+                                    "Select date",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12),
+                                  ),
                                 ),
                               )
                             ],
