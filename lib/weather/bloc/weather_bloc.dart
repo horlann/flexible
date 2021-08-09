@@ -32,9 +32,12 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   DayLight getDayLight(Weather w) {
     DateTime sunset = w.sunset!;
     DateTime sunrise = w.sunrise!;
+
     Duration diff = sunset.difference(sunrise);
-    var isNight = sunset.difference(DateTime.now()).isNegative &&
-        sunrise.difference(DateTime.now()).isNegative;
+
+    var isNight = !DateTime.now().difference(sunset).isNegative ||
+        DateTime.now().difference(sunrise).isNegative;
+
     bool isLateDay =
         sunset.difference(DateTime.now()).inHours < diff.inHours / 4;
 
@@ -83,11 +86,6 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
               daylight: getDayLight(weather),
               sunrise: weather.sunrise!,
               sunset: weather.sunset!);
-
-//          yield WeatherLoaded(
-//              wTemp: getWeatherTemp(weather),
-//              wCode: getWeatherCondition(weather),
-//              daylight: DayLight.dark);
         } catch (e) {
           yield WeatherError(error: 'Service unevaliable');
         }
