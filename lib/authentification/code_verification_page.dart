@@ -7,6 +7,7 @@ import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/flushbar.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/widgets/flush.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
   bool _alwaysShowTimer = false;
   late OTPTextEditController controller;
   final scaffoldKey = GlobalKey();
+  Flushbar? _flushbar;
 
   bool get pinValid {
     if (pincode.length == 6) {
@@ -73,11 +75,11 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
       //ignore: avoid_print
       onCodeReceive: (code) => print('Your Application receive code - $code'),
     )..startListenUserConsent(
-          (code) {
-        final exp = RegExp(r'(\d{6})');
-        return exp.stringMatch(code ?? '') ?? '';
-      },
-    );
+        (code) {
+          final exp = RegExp(r'(\d{6})');
+          return exp.stringMatch(code ?? '') ?? '';
+        },
+      );
 //    _animationController =
 //        AnimationController(duration: Duration(seconds: 1),vsync: this);
 
@@ -148,7 +150,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
       body: SizedBox.expand(
         child: Container(
           decoration: BoxDecoration(
-            // gradient: mainBackgroundGradient,
+              // gradient: mainBackgroundGradient,
               image: DecorationImage(
                   image: AssetImage('src/helper/backgroundimage.png'),
                   fit: BoxFit.cover,
@@ -175,6 +177,9 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authentificated) {
+          if (_flushbar != null) {
+            _flushbar!.dismiss();
+          }
           Navigator.pop(context);
         }
 
@@ -185,7 +190,10 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           // ignore: deprecated_member_use
           Scaffold.of(context).hideCurrentSnackBar();
 
-          showSnackBar(context, "Processing", true);
+          if (_flushbar != null) {
+            _flushbar!.dismiss();
+          }
+          _flushbar = showFlush(context, "Processing", true);
         }
 
         if (state.error.isNotEmpty) {
@@ -194,7 +202,10 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           //     text: state.error,
           //   ));
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          showSnackBar(context, state.error, false);
+          if (_flushbar != null) {
+            _flushbar!.dismiss();
+          }
+          _flushbar = showFlush(context, state.error, false);
         }
 
         if (state.message.isNotEmpty) {
@@ -204,58 +215,13 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           //   ));
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-          showSnackBar(context, state.message, false);
-
+          if (_flushbar != null) {
+            _flushbar!.dismiss();
+          }
+          _flushbar = showFlush(context, state.message, false);
         }
       },
       child: buildBody(context),
-      // child: Stack(children: [
-
-      //   Padding(
-      //     padding: EdgeInsets.only(bottom: 10 * byWithScale(context)),
-      //     child: Align(
-      //       alignment: Alignment.bottomCenter,
-      //       child: Wrap(
-      //         children: [
-      //           Text(
-      //             'Dont get it?',
-      //             style: TextStyle(
-      //               fontSize: 11 * byWithScale(context),
-      //             ),
-      //           ),
-      //           Text(
-      //             'Send it again?',
-      //             style: TextStyle(
-      //               decoration: TextDecoration.underline,
-      //               color: Color(0xffE24F4F),
-      //               fontSize: 11 * byWithScale(context),
-      //             ),
-      //           ),
-      //           BlocBuilder<AuthBloc, AuthState>(
-      //             builder: (context, state) {
-      //               if (state is CodeSended) {
-      //                 return GestureDetector(
-      //                   onTap: () =>
-      //                       !state.isBusy ? onResend(state.number) : {},
-      //                   child: Text(
-      //                     'Send again',
-      //                     style: TextStyle(
-      //                         color: state.isBusy
-      //                             ? Color(0xffE24F4F).withOpacity(0.25)
-      //                             : Color(0xffE24F4F),
-      //                         fontSize: 12 * byWithScale(context),
-      //                         fontWeight: FontWeight.w400),
-      //                   ),
-      //                 );
-      //               }
-      //               return SizedBox();
-      //             },
-      //           )
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // ]),
     );
   }
 
@@ -303,7 +269,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                               pinTheme: PinTheme(
                                 shape: PinCodeFieldShape.box,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                                 fieldHeight: 33 * byWithScale(context),
                                 fieldWidth: 29 * byWithScale(context),
                                 inactiveColor: Colors.grey[300],
@@ -346,12 +312,12 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                           ),
                           widget.afterError
                               ? Text(
-                            'Invalid code',
-                            style: TextStyle(
-                                color: Color(0xffE24F4F),
-                                fontSize: 12 * byWithScale(context),
-                                fontWeight: FontWeight.w400),
-                          )
+                                  'Invalid code',
+                                  style: TextStyle(
+                                      color: Color(0xffE24F4F),
+                                      fontSize: 12 * byWithScale(context),
+                                      fontWeight: FontWeight.w400),
+                                )
                               : SizedBox(),
                           SizedBox(
                             height: 8 * byWithScale(context),
@@ -415,7 +381,11 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                                 setState(() {});
                                 !state.isBusy ? onResend(state.number) : {};
                               } else {
-                                showSnackBar(context,
+                                if (_flushbar != null) {
+                                  _flushbar!.dismiss();
+                                }
+                                _flushbar = showFlush(
+                                    context,
                                     "You can do it per $_start seconds",
                                     false); //                                showTopSnackBar(
 //
@@ -447,40 +417,5 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
         )
       ],
     );
-  }
-
-  void showSnackBar(BuildContext buildContext, String text,
-      bool isProgressive) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    Flushbar(
-      message: text,
-      barBlur: 20,
-      mainButton: isProgressive ? Padding(
-        padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
-        child: CircularProgressIndicator(
-          strokeWidth: 5,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        ),
-      ) : SizedBox(),
-      duration: Duration(seconds: 2),
-      flushbarPosition: FlushbarPosition.TOP,
-      borderRadius: BorderRadius.all(Radius.circular(16)),
-      backgroundColor: Color(0xffE24F4F),
-      margin: const EdgeInsets.symmetric(horizontal: 11),
-      messageText: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-            ),
-          )),
-    )
-      ..show(context);
-  }
-
-  void animCheckMark() {
-
   }
 }
