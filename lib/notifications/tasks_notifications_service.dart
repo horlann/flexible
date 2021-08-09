@@ -102,7 +102,8 @@ class TaskNotificationService {
   Future scheduleTaskNotifications({required List<Task> tasks}) async {
     DateTime currentTime = DateTime.now();
     tasks.forEach((task) async {
-      // print(task.timeStart.difference(currentTime).inMinutes);
+      // If task undone
+      if (task.isDone) return;
 
       // Start notifications
       // Only for future tasks
