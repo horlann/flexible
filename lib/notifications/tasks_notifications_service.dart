@@ -115,8 +115,12 @@ class TaskNotificationService {
             task.timeStart.subtract(Duration(minutes: 15)),
             tz.getLocation(await currentTimeZone));
 
-        flutterLocalNotifications.zonedSchedule(notId, 'Be careful!👀',
-            "The task  will start in 15 minutes", time, generaldetails,
+        flutterLocalNotifications.zonedSchedule(
+            notId,
+            'Be careful!👀',
+            "The task ${task.title} will start in 15 minutes",
+            time,
+            generaldetails,
             androidAllowWhileIdle: true,
             uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime);
@@ -141,7 +145,7 @@ class TaskNotificationService {
           flutterLocalNotifications.zonedSchedule(
               notId,
               'Be careful!👀',
-              "The task  will end in ${(task.period.inMinutes * 0.25).floor()} minutes",
+              "The task ${task.title}  will end in ${(task.period.inMinutes * 0.25).floor()} minutes",
               time,
               generaldetails,
               androidAllowWhileIdle: true,
@@ -160,8 +164,12 @@ class TaskNotificationService {
               task.timeStart.add(task.period).subtract(Duration(minutes: 10)),
               tz.getLocation(await currentTimeZone));
 
-          flutterLocalNotifications.zonedSchedule(notId, 'Be careful!👀',
-              "The task  will end in 10 minutes", time, generaldetails,
+          flutterLocalNotifications.zonedSchedule(
+              notId,
+              'Be careful!👀',
+              "The task ${task.title} will end in 10 minutes",
+              time,
+              generaldetails,
               androidAllowWhileIdle: true,
               uiLocalNotificationDateInterpretation:
                   UILocalNotificationDateInterpretation.absoluteTime);
