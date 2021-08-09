@@ -49,6 +49,8 @@ class TaskNotificationService {
 
   Future startService() async {
     doSchedule() async {
+      await flutterLocalNotifications.cancelAll();
+
       List<Task> todayTasks =
           await tasksFromPeriod(startTime, startTime.add(Duration(days: 1)));
 
