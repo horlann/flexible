@@ -102,10 +102,9 @@ class TaskNotificationService {
     tasks.forEach((task) async {
       // print(task.timeStart.difference(currentTime).inMinutes);
 
+      // Start notifications
       // Only for future tasks
       if (task.timeStart.difference(currentTime).inMinutes > 15) {
-        // Start notifications
-
         // Notification id must be same for replace old version if task changes
         // Wee use part of uuid hashcode + 1 for task start type
         int notId =
@@ -126,9 +125,12 @@ class TaskNotificationService {
                 UILocalNotificationDateInterpretation.absoluteTime);
         print(
             'Added start task notification on ${task.timeStart.subtract(Duration(minutes: 15))}');
+      }
 
-        // End Notifications
-
+      // End notifications
+      // Only for future tasks
+      if (task.timeStart.add(task.period).difference(currentTime).inMinutes >
+          15) {
         if (task.period.inMinutes > 30) {
           // for long task calc 25% of period
           // Notification id must be same for replace old version if task changes
