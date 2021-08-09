@@ -1,19 +1,16 @@
-import 'dart:math';
+import 'dart:async';
+
+import 'package:flexible/board/models/day_options.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-
 import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/repository/day_options_interface.dart';
 import 'package:flexible/board/repository/tasts_repo_interface.dart';
 
 class TaskNotificationService {
-  ITasksRepo myTaskRepo;
-  IDayOptionsRepo dayOptionsRepo;
-  FlutterLocalNotificationsPlugin flutterLocalNotifications =
-      FlutterLocalNotificationsPlugin();
   TaskNotificationService({
     required this.myTaskRepo,
     required this.dayOptionsRepo,
@@ -22,46 +19,21 @@ class TaskNotificationService {
     var iosInit = new IOSInitializationSettings();
     var initSettings =
         new InitializationSettings(android: androidInit, iOS: iosInit);
+    tz.initializeTimeZones();
     this.flutterLocalNotifications.initialize(initSettings);
   }
 
-  Future showNotify() async {
-    var androidDetails = new AndroidNotificationDetails(
-        'Channel ID', 'Flexible Notofocation', "Tasks Notofications",
-        importance: Importance.max);
+  late ITasksRepo myTaskRepo;
+  late IDayOptionsRepo dayOptionsRepo;
+  late StreamSubscription sub;
 
-    var iosdetails = new IOSNotificationDetails();
+  FlutterLocalNotificationsPlugin flutterLocalNotifications =
+      FlutterLocalNotificationsPlugin();
 
-    var generaldetails =
-        new NotificationDetails(android: androidDetails, iOS: iosdetails);
+  get currentTimeZone async => await FlutterNativeTimezone.getLocalTimezone();
 
-    tz.initializeTimeZones();
-    final String currentTimeZone =
-        await FlutterNativeTimezone.getLocalTimezone();
-
-    List<Task> sqTasks = await tasksFromPeriod(startTime(1), startTime(2));
-
-    startNotification(sqTasks, generaldetails, currentTimeZone);
-
-    var dayStartInfo = await dayOptionsRepo
-        .getDayOptionsByDate(DateTime.now().add(Duration(days: 1)));
-
-    wakeupNotification(
-        generaldetails,
-        dayStartInfo,
-        await tasksFromPeriod(startTime(1), startTime(2)),
-        dayStartInfo.wakeUpTime,
-        currentTimeZone);
-
-    endtNotification(sqTasks, generaldetails, currentTimeZone);
-  }
-
-  startTime(int addDuration) {
-    return Jiffy()
-        .subtract(days: 1)
-        .startOf(Units.DAY)
-        .dateTime
-        .add(Duration(days: addDuration));
+  DateTime get startTime {
+    return DateUtils.dateOnly(DateTime.now());
   }
 
   Future<List<Task>> tasksFromPeriod(DateTime start, DateTime end) async {
@@ -69,108 +41,134 @@ class TaskNotificationService {
     return sqTasks;
   }
 
-  void startNotification(
-      List<Task> sqTasks, var generaldetails, String timeZone) {
-    sqTasks.forEach((element) async {
-      String taskname = element.title;
-      print(taskname);
+  NotificationDetails generaldetails = NotificationDetails(
+      android: AndroidNotificationDetails(
+          'Channel ID', 'Flexible Notofocation', "Tasks Notofications",
+          importance: Importance.max),
+      iOS: IOSNotificationDetails());
 
-      if (element.period.inMinutes <= 30) {
-        int timeBeforeStartTask = (element.timeStart.minute * 0.25).floor();
-        print("start" + timeBeforeStartTask.toString());
-        var time = tz.TZDateTime.from(
-            element.timeStart.subtract(Duration(minutes: timeBeforeStartTask)),
-            tz.getLocation(timeZone));
-        print(time.toString() + " string");
-        await flutterLocalNotifications.zonedSchedule(
-            Random().nextInt(9999),
-            'Be careful!👀',
-            "The task $taskname will start in $timeBeforeStartTask minutes",
-            time,
-            generaldetails,
-            androidAllowWhileIdle: true,
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime);
-      } else {
-        var time = tz.TZDateTime.from(
-            element.timeStart.subtract(Duration(minutes: 15)),
-            tz.getLocation(timeZone));
-        print(time.toString() + " stringTIME");
-        await flutterLocalNotifications.zonedSchedule(
-            Random().nextInt(9999),
-            'Be careful!👀',
-            "The task $taskname will start in 15 minutes",
-            time,
-            generaldetails,
-            androidAllowWhileIdle: true,
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime);
-      }
+  Future startService() async {
+    doSchedule() async {
+      List<Task> todayTasks =
+          await tasksFromPeriod(startTime, startTime.add(Duration(days: 1)));
+
+      List<Task> tomorrowTasks =
+          await tasksFromPeriod(startTime, startTime.add(Duration(days: 1)));
+
+      await scheduleTaskNotifications(tasks: todayTasks);
+
+      await wakeupNotificationSchedule(sqTasks: tomorrowTasks);
+    }
+
+    // Listen to db update
+    sub = myTaskRepo.onChanges!.listen((event) async {
+      print('Reschedule tasks');
+      doSchedule();
     });
+
+    doSchedule();
   }
 
-  void endtNotification(
-      List<Task> sqTasks, var generaldetails, String timeZone) {
-    sqTasks.forEach((element) async {
-      String taskname = element.title;
-
-      if (element.period.inMinutes <= 30) {
-        int timeBeforeTaskEnd = (element.period.inMinutes * 0.25).floor();
-        print(timeBeforeTaskEnd.toString() + "min");
-        var time = tz.TZDateTime.from(
-            element.timeStart
-                .add(Duration(
-                    days: element.period.inDays,
-                    hours: element.period.inHours,
-                    minutes: element.period.inMinutes))
-                .subtract(Duration(minutes: timeBeforeTaskEnd)),
-            tz.getLocation(timeZone));
-        print(time.toString() + " time");
-        await flutterLocalNotifications.zonedSchedule(
-            Random().nextInt(9999),
-            'Be careful!👀',
-            "The task $taskname will end in $timeBeforeTaskEnd minutes",
-            time,
-            generaldetails,
-            androidAllowWhileIdle: true,
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime);
-      } else {
-        var time = tz.TZDateTime.from(
-            (element.timeStart
-                .add(Duration(
-                    days: element.period.inDays,
-                    hours: element.period.inHours,
-                    minutes: element.period.inMinutes))
-                .subtract(Duration(minutes: 10))),
-            tz.getLocation(timeZone));
-        await flutterLocalNotifications.zonedSchedule(
-            Random().nextInt(9999),
-            'Be careful!👀',
-            "The task $taskname will end in 10 minutes",
-            time,
-            generaldetails,
-            androidAllowWhileIdle: true,
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime);
-      }
-    });
+  dispose() {
+    sub.cancel();
   }
 
-  void wakeupNotification(var generaldetails, var dayInfo, List<Task> sqTasks,
-      DateTime dateTime, String timeZone) async {
-    var wakeuptime = dateTime;
-    int _taskCount = sqTasks.length;
-    print(_taskCount.toString() + " taskcount");
-    var time = tz.TZDateTime.from(wakeuptime, tz.getLocation(timeZone));
-    await flutterLocalNotifications.zonedSchedule(
-        Random().nextInt(9999),
-        'Wake up!',
-        "tasks are waiting for you!You have $_taskCount tasks for today",
-        time,
-        generaldetails,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+  Future wakeupNotificationSchedule({required List<Task> sqTasks}) async {
+    DayOptions dop = await dayOptionsRepo
+        .getDayOptionsByDate(startTime.add(Duration(days: 1)));
+
+    var time = tz.TZDateTime.from(
+        dop.wakeUpTime, tz.getLocation(await currentTimeZone));
+
+    // If have tasks
+    if (sqTasks.length > 0) {
+      await flutterLocalNotifications.zonedSchedule(
+          1337,
+          'Wake up!',
+          "tasks are waiting for you!You have ${sqTasks.length} tasks for today",
+          time,
+          generaldetails,
+          androidAllowWhileIdle: true,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime);
+
+      print(
+          'Added morning notification in ${dop.wakeUpTime}  tasks ${sqTasks.length}');
+    }
+  }
+
+  Future scheduleTaskNotifications({required List<Task> tasks}) async {
+    DateTime currentTime = DateTime.now();
+    tasks.forEach((task) async {
+      // print(task.timeStart.difference(currentTime).inMinutes);
+
+      // Only for future tasks
+      if (task.timeStart.difference(currentTime).inMinutes > 15) {
+        // Start notifications
+
+        // Notification id must be same for replace old version if task changes
+        // Wee use part of uuid hashcode + 1 for task start type
+        int notId =
+            int.parse('${task.uuid.hashCode.toString().substring(0, 8)}1');
+
+        var time = tz.TZDateTime.from(
+            task.timeStart.subtract(Duration(minutes: 15)),
+            tz.getLocation(await currentTimeZone));
+
+        flutterLocalNotifications.zonedSchedule(notId, 'Be careful!👀',
+            "The task  will start in 15 minutes", time, generaldetails,
+            androidAllowWhileIdle: true,
+            uiLocalNotificationDateInterpretation:
+                UILocalNotificationDateInterpretation.absoluteTime);
+        print(
+            'Added start task notification on ${task.timeStart.subtract(Duration(minutes: 15))}');
+
+        // End Notifications
+
+        if (task.period.inMinutes > 30) {
+          // for long task calc 25% of period
+          // Notification id must be same for replace old version if task changes
+          // Wee use part of uuid hashcode + 2 for task end type
+          int notId =
+              int.parse('${task.uuid.hashCode.toString().substring(0, 8)}2');
+
+          var time = tz.TZDateTime.from(
+              task.timeStart.add(Duration(
+                  minutes: task.period.inMinutes -
+                      (task.period.inMinutes * 0.25).floor())),
+              tz.getLocation(await currentTimeZone));
+
+          flutterLocalNotifications.zonedSchedule(
+              notId,
+              'Be careful!👀',
+              "The task  will end in ${(task.period.inMinutes * 0.25).floor()} minutes",
+              time,
+              generaldetails,
+              androidAllowWhileIdle: true,
+              uiLocalNotificationDateInterpretation:
+                  UILocalNotificationDateInterpretation.absoluteTime);
+          print(
+              'Added end task notification on ${task.timeStart.add(Duration(minutes: task.period.inMinutes - (task.period.inMinutes * 0.25).floor()))}');
+        } else if (task.period.inMinutes > 10) {
+          // for shors task notify in 10 min
+          // Notification id must be same for replace old version if task changes
+          // Wee use part of uuid hashcode + 2 for task end type
+          int notId =
+              int.parse('${task.uuid.hashCode.toString().substring(0, 8)}2');
+
+          var time = tz.TZDateTime.from(
+              task.timeStart.add(task.period).subtract(Duration(minutes: 10)),
+              tz.getLocation(await currentTimeZone));
+
+          flutterLocalNotifications.zonedSchedule(notId, 'Be careful!👀',
+              "The task  will end in 10 minutes", time, generaldetails,
+              androidAllowWhileIdle: true,
+              uiLocalNotificationDateInterpretation:
+                  UILocalNotificationDateInterpretation.absoluteTime);
+          print(
+              'Added end task notification on ${task.timeStart.add(task.period).subtract(Duration(minutes: 10))}');
+        }
+      }
+    });
   }
 }

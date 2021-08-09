@@ -29,7 +29,7 @@ class CombinedTasksRepository extends ITasksRepo {
     });
 
     // init changes stream
-    onChanges = changesController.stream;
+    onChanges = changesController.stream.asBroadcastStream();
   }
 
   // Subscribe to firestore data and automatic synchronize anfer data changes

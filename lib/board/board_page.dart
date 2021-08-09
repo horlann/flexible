@@ -21,13 +21,18 @@ class _BoardPageState extends State<BoardPage> {
   @override
   void initState() {
     super.initState();
-
     // Load notification service
     taskNotificationService = TaskNotificationService(
         myTaskRepo: RepositoryProvider.of<CombinedTasksRepository>(context),
         dayOptionsRepo: RepositoryProvider.of<SqfliteDayOptionsRepo>(context));
     // Schedule task notifications
-    taskNotificationService.showNotify();
+    taskNotificationService.startService();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    taskNotificationService.dispose();
   }
 
   @override

@@ -32,7 +32,6 @@ dependencies:
   glassmorphism: ^2.0.1
   invert_colors: ^0.0.3-null-safety.0
   flutter_local_notifications: ^8.0.0
-  jiffy: ^4.1.0
   flutter_native_timezone: ^2.0.0
   equatable: ^2.0.2
   intl: ^0.17.0
