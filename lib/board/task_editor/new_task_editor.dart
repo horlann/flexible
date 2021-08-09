@@ -192,9 +192,6 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                     isUnSubscribed()
                         ? SizedBox()
                         : buildTaskTypeSwitcher(context),
-                    SizedBox(
-                      height: 10 * byWithScale(context),
-                    ),
                     Expanded(
                       child: PageView(
                         onPageChanged: (value) {
@@ -379,7 +376,11 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           subtitle: '',
           timeStart: DateUtils.dateOnly(
                   BlocProvider.of<DailytasksBloc>(context).state.showDay)
-              .add(Duration(hours: DateTime.now().hour)),
+              .add(Duration(hours: DateTime
+              .now()
+              .hour, minutes: DateTime
+              .now()
+              .minute)),
           period: Duration(hours: 0),
           isDone: false,
           isDonable: true,
@@ -455,9 +456,10 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
 
   @override
   Widget build(BuildContext context) {
+    print(editableRegularTask.timeStart.toString() + "   time");
     int i = 0;
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      //mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Padding(
@@ -577,7 +579,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
                     fontSize: 12 * byWithScale(context),
                     fontWeight: FontWeight.w500),
               ),
-              SizedBox(height: 14 * byWithScale(context)),
+              SizedBox(height: 10 * byWithScale(context)),
               ColorPickerRow(callback: (color) {
                 setState(() {
                   editableRegularTask =
@@ -585,6 +587,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
                   //i=pos;
                 });
               }),
+
             ],
           ),
         ),
@@ -760,12 +763,14 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
                     fontSize: 12 * byWithScale(context),
                     fontWeight: FontWeight.w500),
               ),
-              SizedBox(height: 14 * byWithScale(context)),
+              SizedBox(height: 20 * byWithScale(context)),
               ColorPickerRow(callback: (color) {
                 setState(() {
                   editableSuperTask = editableSuperTask.copyWith(color: color);
                 });
               }),
+              SizedBox(height: 20 * byWithScale(context)),
+
             ],
           ),
         ),

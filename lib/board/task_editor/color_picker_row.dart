@@ -13,7 +13,7 @@ class ColorPickerRow extends StatefulWidget {
 }
 
 class _ColorPickerRowState extends State<ColorPickerRow> {
-  Color selectedColor = Colors.cyan;
+  Color selectedColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {

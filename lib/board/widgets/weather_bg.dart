@@ -115,6 +115,7 @@ class _WeatherBgState extends State<WeatherBg> {
             alignment: Alignment.topCenter,
           );
         } else {
+          print(state.daylight);
           if (state.daylight == DayLight.medium) {
             return Image.asset(
               'src/helper/backgroundimage_medium.png',

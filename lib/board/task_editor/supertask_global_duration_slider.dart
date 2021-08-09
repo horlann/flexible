@@ -34,7 +34,9 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${duration.toString().substring(0, 4)}',
+                duration.inHours < 1
+                    ? '${duration.inMinutes.toString()} minutes'
+                    : '${duration.inHours.toString()} ${duration.inHours == 1 ? "hour" : 'hours'}',
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,

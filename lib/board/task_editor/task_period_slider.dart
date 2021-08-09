@@ -33,7 +33,7 @@ class TaskPeriodSlider extends StatelessWidget {
               Text(
                 period.inHours < 1
                     ? '${period.inMinutes.toString()} minutes'
-                    : '${period.inHours.toString()} hours',
+                    : '${period.inHours.toString()} ${period.inHours == 1 ? "hour" : 'hours'}',
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
