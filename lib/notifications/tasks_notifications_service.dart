@@ -52,8 +52,8 @@ class TaskNotificationService {
       List<Task> todayTasks =
           await tasksFromPeriod(startTime, startTime.add(Duration(days: 1)));
 
-      List<Task> tomorrowTasks =
-          await tasksFromPeriod(startTime, startTime.add(Duration(days: 1)));
+      List<Task> tomorrowTasks = await tasksFromPeriod(
+          startTime.add(Duration(days: 1)), startTime.add(Duration(days: 2)));
 
       await scheduleTaskNotifications(tasks: todayTasks);
 
