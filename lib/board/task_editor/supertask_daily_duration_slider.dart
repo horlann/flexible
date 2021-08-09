@@ -16,7 +16,7 @@ class SuperTaskDailyDurationSlider extends StatelessWidget {
     Duration(hours: 5),
     Duration(hours: 6),
     Duration(hours: 7),
-    Duration(hours: 50)
+    //Duration(hours: 50)
   ];
 
   SuperTaskDailyDurationSlider(

@@ -42,15 +42,27 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   StreamController onSubmitCS = StreamController();
   late Stream submitS;
   final List<Duration> durations = [
-    Duration(minutes: 0),
-    Duration(minutes: 5),
-    Duration(minutes: 15),
     Duration(minutes: 30),
-    Duration(minutes: 45),
     Duration(hours: 1),
     Duration(hours: 2),
     Duration(hours: 3),
     Duration(hours: 4),
+    Duration(hours: 5),
+    Duration(hours: 3),
+    Duration(hours: 4),
+    Duration(hours: 5),
+    Duration(hours: 5),
+  ];
+  final List<Duration> durations2 = [
+    Duration(minutes: 30),
+    Duration(hours: 1),
+    Duration(hours: 2),
+    Duration(hours: 3),
+    Duration(hours: 4),
+    Duration(hours: 5),
+    Duration(hours: 3),
+    Duration(hours: 4),
+    Duration(hours: 5),
     Duration(hours: 5),
   ];
 
@@ -145,7 +157,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                       height: 10 * byWithScale(context),
                     ),
                     isUnSubscribed()
-                        ? SizedBox() //TODO
+                        ? SizedBox()
                         : buildTaskTypeSwitcher(context),
                     SizedBox(
                       height: 10 * byWithScale(context),

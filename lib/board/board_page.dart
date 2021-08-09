@@ -41,7 +41,7 @@ class _BoardPageState extends State<BoardPage> {
     // getWeatherByLocation();
   }
 
-  Future _showNotify() async {
+  Future showNotify() async {
     var androidDetails = new AndroidNotificationDetails(
         'Channel ID', 'Flexible Notofocation', "Tasks Notofications",
         importance: Importance.max);
@@ -71,7 +71,7 @@ class _BoardPageState extends State<BoardPage> {
     wakeupNotification(
         generaldetails,
         dayStartInfo,
-        await tasksFromPeriod(startTime(2), startTime(3)),
+        await tasksFromPeriod(startTime(1), startTime(2)),
         dayStartInfo.wakeUpTime, currentTimeZone);
 
     endtNotification(sqTasks, generaldetails, currentTimeZone);
@@ -96,7 +96,7 @@ class _BoardPageState extends State<BoardPage> {
       String timeZone) {
     sqTasks.forEach((element) async {
       String taskname = element.title;
-
+      print(taskname);
 
       if (element.period.inMinutes <= 30) {
         int timeBeforeStartTask = (element.timeStart.minute * 0.25).floor();
@@ -189,6 +189,7 @@ class _BoardPageState extends State<BoardPage> {
       DateTime dateTime, String timeZone) async {
     var wakeuptime = dateTime;
     int _taskCount = sqTasks!.length;
+    print(_taskCount.toString() + " taskcount");
     var time = tz.TZDateTime.from(wakeuptime, tz.getLocation(timeZone));
     await flutterLocalNotifications!.zonedSchedule(
         Random().nextInt(9999),
@@ -204,7 +205,10 @@ class _BoardPageState extends State<BoardPage> {
 
   @override
   Widget build(BuildContext context) {
-    _showNotify();
+    ITasksRepo myTaskRepo =
+        RepositoryProvider.of<CombinedTasksRepository>(context);
+
+    showNotify();
     // Lock portreit mode
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,

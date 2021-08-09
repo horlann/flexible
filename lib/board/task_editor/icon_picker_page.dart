@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IconPickerPage extends StatefulWidget {
   const IconPickerPage({Key? key}) : super(key: key);
@@ -19,6 +20,13 @@ class IconPickerPage extends StatefulWidget {
 
 class _IconPickerPageState extends State<IconPickerPage> {
   bool switchValue = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getSwitchValues();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,12 +154,34 @@ class _IconPickerPageState extends State<IconPickerPage> {
                 onChanged: (onChanged) {
                   setState(() {
                     switchValue = !switchValue;
+                    switchValue = onChanged;
+                    saveSwitchState(onChanged);
                   });
                 })
           ],
         ),
       ),
     );
+  }
+
+  getSwitchValues() async {
+    switchValue = await getSwitchState();
+    setState(() {});
+  }
+
+  Future<bool> saveSwitchState(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("switchState", value);
+    print('Switch Value saved $value');
+    return prefs.setBool("switchState", value);
+  }
+
+  Future<bool> getSwitchState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isSwitchedFT = prefs.getBool("switchState");
+    print(isSwitchedFT);
+
+    return isSwitchedFT!;
   }
 
   GlassmorphicContainer buildGlassmorphicLayer() {

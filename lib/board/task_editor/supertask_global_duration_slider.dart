@@ -9,7 +9,6 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
 
   final List<Duration> durations = [
     Duration(minutes: 30),
-    Duration(minutes: 45),
     Duration(hours: 1),
     Duration(hours: 2),
     Duration(hours: 3),
@@ -19,7 +18,7 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
     Duration(hours: 7),
     Duration(hours: 8),
     Duration(hours: 9),
-    Duration(hours: 10)
+    // Duration(hours: 10)
   ];
 
   SuperTaskGlobasDurationSlider(
@@ -35,10 +34,10 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${duration.inHours.toString()} hours',
+                '${duration.toString().substring(0, 4)}',
                 style: TextStyle(
-                    color: Colors.white,
                     fontWeight: FontWeight.w600,
+                    color: Colors.white,
                     fontSize: 10 * byWithScale(context)),
               ),
               Text('',
@@ -94,7 +93,7 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
             child: Slider(
               inactiveColor: Colors.white,
               divisions: 9,
-              max: 10,
+              max: 9,
               min: 0,
               value: durations.indexOf(duration).toDouble(),
               //value: 1,
@@ -107,15 +106,7 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(
-              '15',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '30  ',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '45  ',
+              '30m',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             ),
             Text(
@@ -135,17 +126,25 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             ),
             Text(
-              '5h ',
+              '5h  ',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             ),
             Text(
-              '6h ',
+              '6h  ',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
             ),
             Text(
               '7h ',
               style: TextStyle(fontSize: 8 * byWithScale(context)),
-            )
+            ),
+            Text(
+              '8h ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
+            Text(
+              '9h ',
+              style: TextStyle(fontSize: 8 * byWithScale(context)),
+            ),
           ]),
         )
       ],

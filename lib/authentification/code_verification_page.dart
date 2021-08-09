@@ -360,13 +360,15 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                             height: 8 * byWithScale(context),
                           ),
                           Visibility(
-                            visible: _alwaysShowTimer,
+                            visible: true,
                             child: Visibility(
                               child: Text(
-                                " You can resend code per $_start seconds",
+                                _canSendAgain
+                                    ? "You can resend SMS again"
+                                    : " You can resend code per $_start seconds",
                                 style: TextStyle(color: Colors.white),
                               ),
-                              visible: !_canSendAgain,
+                              visible: true,
                             ),
                           ),
                           widget.afterError
