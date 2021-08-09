@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
@@ -24,7 +25,7 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   MaskedTextController controller =
-      MaskedTextController(mask: '000-00-00-00-00-00');
+  MaskedTextController(mask: '000-00-00-00-00-00');
   FocusNode focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   String phoneNumber = '';
@@ -43,6 +44,38 @@ class _SignInPageState extends State<SignInPage> {
     BlocProvider.of<AuthBloc>(context).add(GoToRegistration());
   }
 
+  void showSnackBar(
+      BuildContext buildContext, String text, bool isProgressive) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    Flushbar(
+      message: text,
+      barBlur: 20,
+      mainButton: isProgressive
+          ? Padding(
+              padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
+              child: CircularProgressIndicator(
+                strokeWidth: 5,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : SizedBox(),
+      duration: Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+      borderRadius: BorderRadius.all(Radius.circular(16)),
+      backgroundColor: Color(0xffE24F4F),
+      margin: const EdgeInsets.symmetric(horizontal: 11),
+      messageText: Center(
+          child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+        ),
+      )),
+    )..show(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     double safeTopPadding = MediaQuery.of(context).padding.top;
@@ -56,7 +89,7 @@ class _SignInPageState extends State<SignInPage> {
       body: SizedBox.expand(
         child: Container(
           decoration: BoxDecoration(
-              // gradient: mainBackgroundGradient,
+            // gradient: mainBackgroundGradient,
               image: DecorationImage(
                   image: AssetImage('src/helper/backgroundimage.png'),
                   fit: BoxFit.cover,
@@ -87,18 +120,7 @@ class _SignInPageState extends State<SignInPage> {
           //   ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
           //     text: 'Signing in',
           //   ));
-          showTopSnackBar(
-            context,
-            CustomSnackBar.info(
-              backgroundColor: Color(0xffE24F4F),
-              icon: Icon(
-                Icons.announcement_outlined,
-                color: Colors.white,
-                size: 1,
-              ),
-              message: 'Signing in',
-            ),
-          );
+          showSnackBar(context, "Signing in", true);
         }
 
         if (state.error.isNotEmpty) {
@@ -106,19 +128,7 @@ class _SignInPageState extends State<SignInPage> {
           //    ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
           //      text: state.error,
           //   ));
-          showTopSnackBar(
-            context,
-            CustomSnackBar.info(
-              backgroundColor: Color(0xffE24F4F),
-              icon: Icon(
-                Icons.announcement_outlined,
-                color: Colors.white,
-                size: 1,
-              ),
-              message:
-              state.error,
-            ),
-          );
+          showSnackBar(context, state.error, false);
         }
       },
 
@@ -240,6 +250,8 @@ class _SignInPageState extends State<SignInPage> {
                   prefixIcon: Container(
                     margin: const EdgeInsets.only(left: 8, bottom: 2),
                     width: 50,
+
+                    //color: Color(0xffE24F4F),
                     alignment: Alignment.center,
                     child: CountryCodePickerWidegt(
                       onChange: (code) {
@@ -251,6 +263,8 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   prefixIconConstraints: BoxConstraints(minHeight: 0),
                   hintText: 'Phone',
+                  labelStyle: TextStyle(color: Color(0xffE24F4F)),
+                  hintStyle: TextStyle(color: Color(0xffE24F4F)),
                   isDense: true,
                   contentPadding: EdgeInsets.all(8 * byWithScale(context)),
                   focusedBorder: OutlineInputBorder(

@@ -85,7 +85,8 @@ class _CountryCodePickerWidegtState extends State<CountryCodePickerWidegt> {
       },
       child: Text(
           '+' + CountryPickerUtils.getCountryByIsoCode(isoCode).phoneCode,
-          style: TextStyle(fontSize: 10 * byWithScale(context))),
+          style: TextStyle(
+              fontSize: 10 * byWithScale(context), color: Color(0xffE24F4F))),
     );
   }
 }

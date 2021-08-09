@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/board/task_editor/color_picker_row.dart';
 import 'package:flexible/board/task_editor/icon_picker_page.dart';
 import 'package:flexible/board/task_editor/row_with_close_btn.dart';
@@ -22,6 +23,7 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 // On edit done is send edited task to tasks bloc
 class TaskEditor extends StatefulWidget {
   final RegularTask task;
+
   const TaskEditor({required this.task});
 
   @override
@@ -52,6 +54,38 @@ class _TaskEditorState extends State<TaskEditor> {
         });
       }
     });
+  }
+
+  void showSnackBar(
+      BuildContext buildContext, String text, bool isProgressive) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    Flushbar(
+      message: text,
+      barBlur: 20,
+      mainButton: isProgressive
+          ? Padding(
+              padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
+              child: CircularProgressIndicator(
+                strokeWidth: 5,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : SizedBox(),
+      duration: Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+      borderRadius: BorderRadius.all(Radius.circular(16)),
+      backgroundColor: Color(0xffE24F4F),
+      margin: const EdgeInsets.symmetric(horizontal: 11),
+      messageText: Center(
+          child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+        ),
+      )),
+    )..show(context);
   }
 
   Widget build(BuildContext context) {
@@ -267,18 +301,9 @@ class _TaskEditorState extends State<TaskEditor> {
                           callback: () {
                             if (editableTask.title.isEmpty) {
                               print(editableTask);
-                              showTopSnackBar(
-                                context,
-                                CustomSnackBar.info(
-                                  backgroundColor: Color(0xffE24F4F),
-                                  icon: Icon(
-                                    Icons.announcement_outlined,
-                                    color: Colors.white,
-                                    size: 1,
-                                  ),
-                                  message: 'Task title shouldn\'t be empty',
-                                ),
-                              );
+                              showSnackBar(
+                                  context, 'Task title shouldn\'t be empty',
+                                  false);
                             } else {
                               BlocProvider.of<DailytasksBloc>(context).add(
                                   DailytasksUpdateTaskAndShiftOther(
@@ -357,7 +382,7 @@ class _TaskEditorState extends State<TaskEditor> {
                 mode: CupertinoTimerPickerMode.hm,
                 onTimerDurationChanged: (v) {
                   DateTime timeStart =
-                      DateUtils.dateOnly(editableTask.timeStart).add(v);
+                  DateUtils.dateOnly(editableTask.timeStart).add(v);
 
                   setState(() {
                     editableTask = editableTask.copyWith(timeStart: timeStart);
@@ -420,9 +445,9 @@ class _TaskEditorState extends State<TaskEditor> {
   Container buildTitleInputSection() {
     return Container(
       decoration: BoxDecoration(
-          // color: Colors.red,
+        // color: Colors.red,
           border:
-              Border(bottom: BorderSide(width: 1, color: Color(0xffB1B1B1)))),
+          Border(bottom: BorderSide(width: 1, color: Color(0xffB1B1B1)))),
       padding: EdgeInsets.only(bottom: 2),
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -439,29 +464,29 @@ class _TaskEditorState extends State<TaskEditor> {
           Expanded(
             child: Container(
                 child: SizedBox(
-              height: 20 * byWithScale(context),
-              child: TextFormField(
-                // Change title
-                onChanged: (value) {
-                  setState(() {
-                    editableTask = editableTask.copyWith(title: value);
-                  });
-                },
+                  height: 20 * byWithScale(context),
+                  child: TextFormField(
+                    // Change title
+                    onChanged: (value) {
+                      setState(() {
+                        editableTask = editableTask.copyWith(title: value);
+                      });
+                    },
 
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  // contentPadding: EdgeInsets.all(10),
-                ),
-                initialValue: editableTask.title,
-                style: TextStyle(
-                    color: Color(0xff373535),
-                    fontSize: 12 * byWithScale(context)),
-              ),
-            )),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      // contentPadding: EdgeInsets.all(10),
+                    ),
+                    initialValue: editableTask.title,
+                    style: TextStyle(
+                        color: Color(0xff373535),
+                        fontSize: 12 * byWithScale(context)),
+                  ),
+                )),
           )
         ],
       ),

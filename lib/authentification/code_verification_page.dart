@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:animated_check/animated_check.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
+import 'package:flexible/board/widgets/flushbar.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/widgets/circular_snakbar.dart';
-import 'package:flexible/widgets/error_snakbar.dart';
-import 'package:flexible/widgets/message_snakbar.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +14,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:otp_autofill/otp_autofill.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class CodeVerificationPage extends StatefulWidget {
   final bool afterError;
@@ -26,7 +24,8 @@ class CodeVerificationPage extends StatefulWidget {
   _CodeVerificationPageState createState() => _CodeVerificationPageState();
 }
 
-class _CodeVerificationPageState extends State<CodeVerificationPage> {
+class _CodeVerificationPageState extends State<CodeVerificationPage>
+    with SingleTickerProviderStateMixin {
   final TextEditingController pincodeController = TextEditingController();
   String pincode = '';
   String _textContent = "";
@@ -57,12 +56,16 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
 
   String? otpCode;
 
+  //AnimationController _animationController;
+
+  // Animation<double> _animation;
+
   @override
   void initState() {
     super.initState();
     startTimer();
     OTPInteractor.getAppSignature()
-    //ignore: avoid_print
+        //ignore: avoid_print
         .then((value) => print('signature - $value'));
     controller = OTPTextEditController(
       codeLength: 6,
@@ -75,6 +78,12 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
         return exp.stringMatch(code ?? '') ?? '';
       },
     );
+//    _animationController =
+//        AnimationController(duration: Duration(seconds: 1),vsync: this);
+
+//    _animation = new Tween<double>(begin: 0, end: 1).animate(
+//        new CurvedAnimation(
+//            parent: _animationController, curve: Curves.easeInOutCirc));
   }
 
   void startTimer() {
@@ -176,19 +185,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
           // ignore: deprecated_member_use
           Scaffold.of(context).hideCurrentSnackBar();
 
-          showTopSnackBar(
-            context,
-            CustomSnackBar.info(
-                backgroundColor: Color(0xffE24F4F),
-                icon: Icon(
-                  Icons.announcement_outlined,
-                  color: Colors.white,
-                  size: 1,
-                ),
-                message:
-                "Processing"
-            ),
-          );
+          showSnackBar(context, "Processing", true);
         }
 
         if (state.error.isNotEmpty) {
@@ -196,21 +193,8 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
           //   ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
           //     text: state.error,
           //   ));
-          Scaffold.of(context).hideCurrentSnackBar();
-
-          showTopSnackBar(
-            context,
-            CustomSnackBar.info(
-              backgroundColor: Color(0xffE24F4F),
-              icon: Icon(
-                Icons.announcement_outlined,
-                color: Colors.white,
-                size: 1,
-              ),
-              message:
-              state.error,
-            ),
-          );
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          showSnackBar(context, state.error, false);
         }
 
         if (state.message.isNotEmpty) {
@@ -218,21 +202,10 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
           //  ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
           //    text: state.message,
           //   ));
-          Scaffold.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-          showTopSnackBar(
-            context,
-            CustomSnackBar.info(
-              backgroundColor: Color(0xffE24F4F),
-              icon: Icon(
-                Icons.announcement_outlined,
-                color: Colors.white,
-                size: 1,
-              ),
-              message:
-              state.message,
-            ),
-          );
+          showSnackBar(context, state.message, false);
+
         }
       },
       child: buildBody(context),
@@ -439,24 +412,13 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
                                 startTimer();
                                 _alwaysShowTimer = true;
                                 print(_canSendAgain);
-                                setState(() {
-
-                                });
+                                setState(() {});
                                 !state.isBusy ? onResend(state.number) : {};
                               } else {
-                                showTopSnackBar(
-                                  context,
-                                  CustomSnackBar.info(
-                                    backgroundColor: Color(0xffE24F4F),
-                                    icon: Icon(
-                                      Icons.announcement_outlined,
-                                      color: Colors.white,
-                                      size: 1,
-                                    ),
-                                    message:
+                                showSnackBar(context,
                                     "You can do it per $_start seconds",
-                                  ),
-                                );
+                                    false); //                                showTopSnackBar(
+//
                               }
                             },
                             child: Text(
@@ -485,5 +447,40 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
         )
       ],
     );
+  }
+
+  void showSnackBar(BuildContext buildContext, String text,
+      bool isProgressive) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    Flushbar(
+      message: text,
+      barBlur: 20,
+      mainButton: isProgressive ? Padding(
+        padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
+        child: CircularProgressIndicator(
+          strokeWidth: 5,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        ),
+      ) : SizedBox(),
+      duration: Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+      borderRadius: BorderRadius.all(Radius.circular(16)),
+      backgroundColor: Color(0xffE24F4F),
+      margin: const EdgeInsets.symmetric(horizontal: 11),
+      messageText: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          )),
+    )
+      ..show(context);
+  }
+
+  void animCheckMark() {
+
   }
 }

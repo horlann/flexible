@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
 import 'package:flexible/board/models/tasks/supertask.dart';
@@ -71,6 +72,38 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
     super.initState();
     submitR = onSubmitCR.stream.asBroadcastStream();
     submitS = onSubmitCS.stream.asBroadcastStream();
+  }
+
+  void showSnackBar(
+      BuildContext buildContext, String text, bool isProgressive) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    Flushbar(
+      message: text,
+      barBlur: 20,
+      mainButton: isProgressive
+          ? Padding(
+              padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
+              child: CircularProgressIndicator(
+                strokeWidth: 5,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : SizedBox(),
+      duration: Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+      borderRadius: BorderRadius.all(Radius.circular(16)),
+      backgroundColor: Color(0xffE24F4F),
+      margin: const EdgeInsets.symmetric(horizontal: 11),
+      messageText: Center(
+          child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+        ),
+      )),
+    )..show(context);
   }
 
   @override
@@ -178,18 +211,9 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                               print('reg ask submit');
                               print(task.title.isEmpty);
                               if (task.title.isEmpty) {
-                                showTopSnackBar(
-                                  context,
-                                  CustomSnackBar.info(
-                                    backgroundColor: Color(0xffE24F4F),
-                                    icon: Icon(
-                                      Icons.announcement_outlined,
-                                      color: Colors.white,
-                                      size: 1,
-                                    ),
-                                    message: 'Task title shouldn\'t be empty',
-                                  ),
-                                );
+                                showSnackBar(
+                                    context, 'Task title shouldn\'t be empty',
+                                    false);
                               } else {
                                 BlocProvider.of<DailytasksBloc>(context)
                                     .add(DailytasksAddTask(task: task));
@@ -205,18 +229,10 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                               key: Key('sup'),
                               onSubmit: (task) {
                                 if (task.title.isEmpty) {
-                                  showTopSnackBar(
-                                    context,
-                                    CustomSnackBar.info(
-                                      backgroundColor: Color(0xffE24F4F),
-                                      icon: Icon(
-                                        Icons.announcement_outlined,
-                                        color: Colors.white,
-                                        size: 1,
-                                      ),
-                                      message: 'Task title shouldn\'t be empty',
-                                    ),
-                                  );
+                                  showSnackBar(
+                                      context, 'Task title shouldn\'t be empty',
+                                      false);
+
                                 } else {
                                   print('su ask submit');
                                   BlocProvider.of<DailytasksBloc>(context)
@@ -238,6 +254,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
         ),
       ],
     );
+
   }
 
   Widget buildTaskTypeSwitcher(BuildContext context) {
@@ -791,4 +808,6 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
       ),
     );
   }
+
+
 }

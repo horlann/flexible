@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/authentification/auth_pusher.dart';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/board_page.dart';
@@ -23,17 +24,8 @@ class SubAndAuthChooser extends StatelessWidget {
           // or abort if user out from auth
           // ScaffoldMessenger.of(context).showSnackBar(
           //      messageSnakbar(text: 'You should auhorize before subscribe'));
-          showTopSnackBar(
-            context,
-            CustomSnackBar.info(
-                backgroundColor: Color(0xffE24F4F),
-                icon: Icon(
-                  Icons.announcement_outlined,
-                  color: Colors.white,
-                  size: 1,
-                ),
-                message: 'You should auhorize before subscribe'),
-          );
+          showSnackBar(context, 'You should auhorize before subscribe', false);
+
           Navigator.push(
               context,
               CupertinoPageRoute(
@@ -59,19 +51,7 @@ class SubAndAuthChooser extends StatelessWidget {
         if (state is AskForSubscribe && state.message.isNotEmpty) {
           //ScaffoldMessenger.of(context)
           //    .showSnackBar(messageSnakbar(text: state.message));
-          showTopSnackBar(
-            context,
-            CustomSnackBar.info(
-              backgroundColor: Color(0xffE24F4F),
-              icon: Icon(
-                Icons.announcement_outlined,
-                color: Colors.white,
-                size: 1,
-              ),
-              message:
-              state.message,
-            ),
-          );
+          showSnackBar(context, state.message, false);
         }
       },
       builder: (context, state) {
@@ -109,5 +89,37 @@ class SubAndAuthChooser extends StatelessWidget {
         );
       },
     );
+  }
+
+  void showSnackBar(
+      BuildContext buildContext, String text, bool isProgressive) {
+    ScaffoldMessenger.of(buildContext).hideCurrentSnackBar();
+    Flushbar(
+      message: text,
+      barBlur: 20,
+      mainButton: isProgressive
+          ? Padding(
+              padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
+              child: CircularProgressIndicator(
+                strokeWidth: 5,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : SizedBox(),
+      duration: Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+      borderRadius: BorderRadius.all(Radius.circular(16)),
+      backgroundColor: Color(0xffE24F4F),
+      margin: const EdgeInsets.symmetric(horizontal: 11),
+      messageText: Center(
+          child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+        ),
+      )),
+    )..show(buildContext);
   }
 }

@@ -1,24 +1,19 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/authentification/terms_of_use.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/utils/validators.dart';
-import 'package:flexible/widgets/circular_snakbar.dart';
-import 'package:flexible/widgets/error_snakbar.dart';
-import 'package:flexible/widgets/message_snakbar.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -46,6 +41,38 @@ class _RegistrationPageState extends State<RegistrationPage> {
     } catch (e) {
       print('Error on load image');
     }
+  }
+
+  void showSnackBar(
+      BuildContext buildContext, String text, bool isProgressive) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    Flushbar(
+      message: text,
+      barBlur: 20,
+      mainButton: isProgressive
+          ? Padding(
+              padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
+              child: CircularProgressIndicator(
+                strokeWidth: 5,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : SizedBox(),
+      duration: Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+      borderRadius: BorderRadius.all(Radius.circular(16)),
+      backgroundColor: Color(0xffE24F4F),
+      margin: const EdgeInsets.symmetric(horizontal: 11),
+      messageText: Center(
+          child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+        ),
+      )),
+    )..show(context);
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -122,18 +149,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           //    ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
           //      text: 'Processing',
           //   ));
-          showTopSnackBar(
-            context,
-            CustomSnackBar.info(
-              backgroundColor: Color(0xffE24F4F),
-              icon: Icon(
-                Icons.announcement_outlined,
-                color: Colors.white,
-                size: 1,
-              ),
-              message: "Processing",
-            ),
-          );
+          showSnackBar(context, "Processing", true);
         }
 
         if (state.error.isNotEmpty) {
@@ -141,20 +157,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           //   ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
           //     text: state.error,
           //   ));
-          showTopSnackBar(
-            context,
-            CustomSnackBar.info(
-              backgroundColor: Color(0xffE24F4F),
-              icon: Icon(
-                Icons.announcement_outlined,
-                color: Colors.white,
-                size: 1,
-              ),
-              message:
-              state.error,
-            ),
-          );
-
+          showSnackBar(context, state.error, false);
         }
 
         if (state.message.isNotEmpty) {
@@ -162,20 +165,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           //ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
           //  text: state.message,
           // ));
-          showTopSnackBar(
-            context,
-            CustomSnackBar.info(
-              backgroundColor: Color(0xffE24F4F),
-              icon: Icon(
-                Icons.announcement_outlined,
-                color: Colors.white,
-                size: 1,
-              ),
-              message:
-              state.message,
-            ),
-          );
-
+          showSnackBar(context, state.message, false);
         }
       },
       child: buildBody(context),
@@ -224,7 +214,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         borderRadius:
                             BorderRadius.circular(30 * byWithScale(context)),
                         child: Material(
-                          color: Colors.grey[300],
+                          color: Colors.white,
                           child: InkWell(
                             onTap: () => getImage(),
                             child: Container(
@@ -236,11 +226,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       fit: BoxFit.cover,
                                     )
                                   : Center(
-                                      child: Icon(
-                                        Icons.person,
-                                        color: Colors.grey[500],
-                                      ),
-                                    ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(11.0),
+                                    child: Image.asset(
+                                        'src/icons/logo_for_picker_image.png',
+                                        fit: BoxFit.scaleDown),
+                                  )),
                             ),
                           ),
                         ),
@@ -299,7 +290,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Text(
                   'Already Registered?',
                   style: TextStyle(
-                      color: Colors.white, fontSize: 11 * byWithScale(context)),
+                      color: Colors.white,
+                      fontSize: 11 * byWithScale(context),
+                      fontWeight: FontWeight.w600),
                 ),
                 GestureDetector(
                   child: Text(
@@ -322,69 +315,89 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget buildAgreement() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 28 * byWithScale(context)),
-      child: Row(
-        children: [
-          Transform.scale(
-            scale: 0.75 * byWithScale(context),
-            child: Checkbox(
-                checkColor: Color(0xffE24F4F),
-                activeColor: Colors.transparent,
-                value: isUserAgree,
-                onChanged: (v) {
-                  setState(() {
-                    isUserAgree = v!;
-                  });
-                }),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => TermsPage(),
-                    ));
-              },
-              child: Wrap(
-                children: [
-                  Text('By creating an account you agree to our ',
-                      softWrap: true,
-                      style: TextStyle(
-                          fontSize: 9 * byWithScale(context),
-                          color: Colors.white)),
-                  Text(
-                    'Terms of Service ',
-                    softWrap: true,
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: Color(0xffE24F4F),
-                        fontSize: 9 * byWithScale(context)),
+      child: Container(
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Container(
+                width: 30,
+                height: 30,
+                child: GestureDetector(
+                  onTap: () {
+                    isUserAgree = !isUserAgree;
+                    setState(() {
+
+                    });
+                  },
+                  child: Transform.scale(
+                    scale: 0.75 * byWithScale(context),
+                    child: isUserAgree
+                        ? Container(
+
+                      child: Image.asset("src/icons/ch_checked.png"),
+                    )
+                        : Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Container(
+
+                        child: Image.asset("src/icons/ch_unchecked.png"),
+                      ),
+                    ),
                   ),
-                  Text('and ',
-                      softWrap: true,
-                      style: TextStyle(
-                          fontSize: 9 * byWithScale(context),
-                          color: Colors.white)),
-                  Text(
-                    'and Privacy Policy',
-                    softWrap: true,
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: Color(0xffE24F4F),
-                        fontSize: 9 * byWithScale(context)),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => TermsPage(),
+                      ));
+                },
+                child: Wrap(
+                  children: [
+                    Text('By creating an account you agree to our ',
+                        softWrap: true,
+                        style: TextStyle(
+                            fontSize: 9 * byWithScale(context),
+                            color: Colors.white)),
+                    Text(
+                      'Terms of Service ',
+                      softWrap: true,
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Color(0xffE24F4F),
+                          fontSize: 9 * byWithScale(context)),
+                    ),
+                    Text('and ',
+                        softWrap: true,
+                        style: TextStyle(
+                            fontSize: 9 * byWithScale(context),
+                            color: Colors.white)),
+                    Text(
+                      'and Privacy Policy',
+                      softWrap: true,
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Color(0xffE24F4F),
+                          fontSize: 9 * byWithScale(context)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget buildFullNameInput() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 38),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       child: TextFormField(
         style: TextStyle(fontSize: 10 * byWithScale(context)),
         keyboardType: TextInputType.name,
@@ -394,6 +407,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         },
         decoration: InputDecoration(
             hintText: 'Full name',
+            hintStyle: TextStyle(color: Color(0xffE24F4F)),
             isDense: true,
             contentPadding: EdgeInsets.all(8 * byWithScale(context)),
             focusedBorder: OutlineInputBorder(
@@ -446,6 +460,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   prefixIconConstraints: BoxConstraints(minHeight: 0),
                   hintText: 'Phone',
                   isDense: true,
+                  hintStyle: TextStyle(color: Color(0xffE24F4F)),
                   contentPadding: EdgeInsets.all(8 * byWithScale(context)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -482,6 +497,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         decoration: InputDecoration(
             hintText: 'Email',
             isDense: true,
+            hintStyle: TextStyle(color: Color(0xffE24F4F)),
             contentPadding: EdgeInsets.all(8 * byWithScale(context)),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(30),

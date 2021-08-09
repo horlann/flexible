@@ -8,6 +8,7 @@ SnackBar circularSnakbar({required String text}) {
         children: <Widget>[
           Text(text),
           CircularProgressIndicator(
+            strokeWidth: 2,
             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
           )
         ],
