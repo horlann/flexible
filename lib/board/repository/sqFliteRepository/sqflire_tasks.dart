@@ -9,12 +9,12 @@ class SqfliteTasksRepo implements ITasksRepo {
 
   // Init new db and create table
   Future _init() async {
-    db = await openDatabase('tasks34.db', version: 1,
+    db = await openDatabase('tasks35.db', version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
-          'CREATE TABLE Tasks (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER, timeLock INTEGER , color TEXT, iconId TEXT,deadline INTEGER, globalDuration INTEGER, globalDurationLeft INTEGER, priority INTEGER, isSuperTask INTEGER)');
+          'CREATE TABLE Tasks (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER, timeLock INTEGER , color TEXT, iconId TEXT,deadline INTEGER, globalDuration INTEGER, globalDurationLeft INTEGER, priority INTEGER, isSuperTask INTEGER, forAi INTEGER)');
       await db.execute(
-          'CREATE TABLE SuperTasksQueue (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER, timeLock INTEGER , color TEXT, iconId TEXT,deadline INTEGER, globalDuration INTEGER, globalDurationLeft INTEGER, priority INTEGER, isSuperTask INTEGER)');
+          'CREATE TABLE SuperTasksQueue (uuid TEXT PRIMARY KEY, title TEXT, subtitle TEXT, timeStart INTEGER, period INTEGER , isDone INTEGER , isDonable INTEGER, timeLock INTEGER , color TEXT, iconId TEXT,deadline INTEGER, globalDuration INTEGER, globalDurationLeft INTEGER, priority INTEGER, isSuperTask INTEGER, forAi INTEGER)');
     });
   }
 

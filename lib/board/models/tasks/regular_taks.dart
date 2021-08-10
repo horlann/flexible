@@ -57,6 +57,7 @@ class RegularTask extends Task {
       'isDonable': isDonable ? 1 : 0,
       'color': color.toHex(),
       'iconId': iconId,
+      'forAi': forAi ? 1 : 0,
     };
   }
 
@@ -72,7 +73,7 @@ class RegularTask extends Task {
       timeLock: map['timeLock'],
       color: Color(map['color']),
       iconId: map['iconId'],
-      forAi: map['forAi'] ?? false,
+      forAi: map['forAi'],
     );
   }
 
@@ -88,6 +89,7 @@ class RegularTask extends Task {
       timeLock: map['timeLock'] == 1 ? true : false,
       color: HexColor.fromHex(map['color']),
       iconId: map['iconId'],
+      forAi: map['forAi'] == 1 ? true : false,
     );
   }
 
