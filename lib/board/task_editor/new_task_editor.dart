@@ -330,6 +330,8 @@ class RegularTaskEditorBody extends StatefulWidget {
 class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
   late RegularTask editableRegularTask;
   late StreamSubscription onSubmit;
+  PageController _hPontroller = PageController(viewportFraction: 0.4);
+  PageController _mPcontroller = PageController(viewportFraction: 0.4);
 
   @override
   void initState() {
@@ -504,6 +506,112 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
                       });
                     },
                   ),
+
+                  // Custom prototype of picker
+
+                  // Row(
+                  //   children: [
+                  //     // Spacer(
+                  //     //   flex: 2,
+                  //     // ),
+                  //     Flexible(
+                  //       child: Container(
+                  //         height: 150,
+                  //         child: NotificationListener<ScrollNotification>(
+                  //           onNotification: (notification) {
+                  //             if (notification is ScrollEndNotification) {
+                  //               Timer(Duration(milliseconds: 1), () {
+                  //                 _hPontroller.animateToPage(
+                  //                     _hPontroller.page!.round(),
+                  //                     duration: Duration(milliseconds: 400),
+                  //                     curve: Curves.bounceOut);
+                  //               });
+                  //             }
+                  //             return false;
+                  //           },
+                  //           child: PageView.builder(
+                  //             physics: BouncingScrollPhysics(),
+                  //             pageSnapping: false,
+                  //             scrollDirection: Axis.vertical,
+                  //             controller: _hPontroller,
+                  //             allowImplicitScrolling: true,
+                  //             itemCount: 24,
+                  //             itemBuilder: (context, index) {
+                  //               return Container(
+                  //                 padding: EdgeInsets.only(
+                  //                     left: 32 * byWithScale(context)),
+                  //                 // color: Colors.red,
+                  //                 child: Center(
+                  //                   child: Text(index.toString(),
+                  //                       style: TextStyle(
+                  //                           color: Colors.grey,
+                  //                           fontSize: 55 / pRatio(context))),
+                  //                 ),
+                  //               );
+                  //             },
+                  //             onPageChanged: (value) {
+                  //               print(value);
+                  //               // _pcontroller.animateToPage(10,
+                  //               //     duration: Duration(seconds: 1),
+                  //               //     curve: Curves.easeInOut);
+                  //             },
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     // Spacer(
+                  //     //   flex: 1,
+                  //     // ),
+                  //     Flexible(
+                  //       child: Container(
+                  //         height: 150,
+                  //         child: NotificationListener<ScrollNotification>(
+                  //           onNotification: (notification) {
+                  //             if (notification is ScrollEndNotification) {
+                  //               Timer(Duration(milliseconds: 1), () {
+                  //                 _mPcontroller.animateToPage(
+                  //                     _mPcontroller.page!.round(),
+                  //                     duration: Duration(milliseconds: 400),
+                  //                     curve: Curves.bounceOut);
+                  //               });
+                  //             }
+                  //             return false;
+                  //           },
+                  //           child: PageView.builder(
+                  //             physics: BouncingScrollPhysics(),
+                  //             pageSnapping: false,
+                  //             scrollDirection: Axis.vertical,
+                  //             controller: _mPcontroller,
+                  //             allowImplicitScrolling: true,
+                  //             itemCount: 60,
+                  //             itemBuilder: (context, index) {
+                  //               return Container(
+                  //                 // color: Colors.red,
+                  //                 padding: EdgeInsets.only(
+                  //                     right: 32 * byWithScale(context)),
+                  //                 child: Center(
+                  //                   child: Text(index.toString(),
+                  //                       style: TextStyle(
+                  //                           color: Colors.grey,
+                  //                           fontSize: 55 / pRatio(context))),
+                  //                 ),
+                  //               );
+                  //             },
+                  //             onPageChanged: (value) {
+                  //               print(value);
+                  //               // _pcontroller.animateToPage(10,
+                  //               //     duration: Duration(seconds: 1),
+                  //               //     curve: Curves.easeInOut);
+                  //             },
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     // Spacer(
+                  //     //   flex: 2,
+                  //     // ),
+                  //   ],
+                  // ),
                 ],
               )),
         ),
