@@ -1,10 +1,7 @@
 import 'dart:async';
-
-import 'package:animated_check/animated_check.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
-import 'package:flexible/board/widgets/flushbar.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/widgets/flush.dart';

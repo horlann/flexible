@@ -28,19 +28,14 @@ class HidableTimeLock extends StatelessWidget {
         onTap: () => onTap(),
         child: Container(
           margin: EdgeInsets.only(top: 14, right: 4),
-          child: locked
-              ? Image.asset(
-                  'src/icons/locked.png',
-                  width: size,
-                  height: size,
-                  color: color
-                )
-              : Image.asset(
-                  'src/icons/unlocked.png',
-                  width: size,
-                  height: size,
-                color: color
-                ),
+          child: AnimatedCrossFade(
+              firstChild: Image.asset('src/icons/locked.png',
+                  width: size, height: size, color: color),
+              secondChild: Image.asset('src/icons/unlocked.png',
+                  width: size, height: size, color: color),
+              crossFadeState:
+                  locked ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+              duration: Duration(milliseconds: 300)),
         ),
       ),
       secondChild: SizedBox(

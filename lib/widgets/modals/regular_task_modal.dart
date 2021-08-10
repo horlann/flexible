@@ -23,12 +23,14 @@ class RegularTaskModal extends StatefulWidget {
 }
 
 class _State extends State<RegularTaskModal> {
+  late Task task;
   bool copyButtonHold = false;
   bool editButtonHold = false;
 
   @override
   initState() {
     super.initState();
+    task = widget.task;
   }
 
   @override
@@ -141,11 +143,15 @@ class _State extends State<RegularTaskModal> {
                                                         EdgeInsets.symmetric(
                                                             horizontal: 10),
                                                     child: HidableTimeLock(
-                                                        locked: widget
-                                                            .task.timeLock,
+                                                        locked: task.timeLock,
                                                         onTap: () async {
-                                                          Navigator.pop(
-                                                              context);
+                                                          setState(() {
+                                                            task = task.copyWith(
+                                                                timeLock: !task
+                                                                    .timeLock);
+                                                          });
+                                                          // Navigator.pop(
+                                                          //     context);
                                                           await widget.onLockTap
                                                               .call();
                                                         },
