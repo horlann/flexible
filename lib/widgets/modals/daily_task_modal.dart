@@ -17,7 +17,15 @@ class DailyTaskModal extends StatefulWidget {
   State<StatefulWidget> createState() => _State();
 }
 
-class _State extends State<DailyTaskModal> {
+class _State extends State<DailyTaskModal> with TickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 400),
+    vsync: this,
+  );
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.bounceOut,
+  );
   bool copyButtonHold = false;
   bool editButtonHold = false;
 
@@ -26,6 +34,13 @@ class _State extends State<DailyTaskModal> {
   @override
   initState() {
     super.initState();
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   @override
@@ -50,64 +65,64 @@ class _State extends State<DailyTaskModal> {
                   left: 0,
                   right: 0,
                   top: widget.topPadding,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(width: 1, height: 1),
-                        Container(
-                            decoration: BoxDecoration(boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Color.fromRGBO(235, 5, 15, .16),
-                                  blurRadius: 22,
-                                  spreadRadius: 1)
-                            ]),
-                            child: Column(children: [
-                              CustomPaint(
-                                  painter: TrianglePainter(
-                                      strokeColor: Colors.white,
-                                      strokeWidth: 10,
-                                      paintingStyle: PaintingStyle.fill),
-                                  child: Container(height: 15, width: 20)),
-                              Container(
-                                  height: 40,
-                                  width: 90,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8)),
+                  child: ScaleTransition(
+                    scale: _animation,
+                    child: Container(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(width: 1, height: 1),
+                            Container(
+                                decoration:
+                                    BoxDecoration(boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Color.fromRGBO(235, 5, 15, .16),
+                                      blurRadius: 22,
+                                      spreadRadius: 1)
+                                ]),
+                                child: Column(children: [
+                                  CustomPaint(
+                                      painter: TrianglePainter(
+                                          strokeColor: Colors.white,
+                                          strokeWidth: 10,
+                                          paintingStyle: PaintingStyle.fill),
+                                      child: Container(height: 15, width: 20)),
+                                  Container(
+                                      height: 40,
+                                      width: 90,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
                                       child: Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             GestureDetector(
                                                 onTapCancel: () {
-                                                  setState(
-                                                          () =>
+                                                  setState(() =>
                                                       editButtonHold = false);
                                                 },
                                                 onTapUp: (d) {
-                                                  setState(
-                                                          () =>
+                                                  setState(() =>
                                                       editButtonHold = false);
                                                 },
                                                 onTapDown: (d) {
-                                                  setState(
-                                                          () =>
+                                                  setState(() =>
                                                       editButtonHold = true);
                                                 },
                                                 child: Material(
-                                                    animationDuration:
-                                                    Duration(milliseconds: 250),
+                                                    animationDuration: Duration(
+                                                        milliseconds: 250),
                                                     color: Colors.white,
-                                                    borderRadius: BorderRadius
-                                                        .all(
+                                                    borderRadius: BorderRadius.all(
                                                         Radius.circular(8)),
                                                     child: InkWell(
-                                                        borderRadius:
-                                                        BorderRadius.all(
+                                                        borderRadius: BorderRadius.all(
                                                             Radius.circular(8)),
                                                         splashColor: redMain,
                                                         highlightColor:
-                                                        Colors.transparent,
+                                                            Colors.transparent,
                                                         child: Container(
                                                             height: 40,
                                                             width: 90,
@@ -116,16 +131,14 @@ class _State extends State<DailyTaskModal> {
                                                                     text,
                                                                     style: TextStyle(
                                                                         fontSize:
-                                                                        25,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
+                                                                            25,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
                                                                         fontFamily:
-                                                                        "Mikado",
-                                                                        color: editButtonHold ==
-                                                                            true
-                                                                            ? Colors
-                                                                            .white
+                                                                            "Mikado",
+                                                                        color: editButtonHold == true
+                                                                            ? Colors.white
                                                                             : redMain)))),
                                                         onTap: () async {
                                                           Navigator.pop(
@@ -136,7 +149,9 @@ class _State extends State<DailyTaskModal> {
                                           ]))
                                 ])),
                             Container(width: 1, height: 1)
-                          ]))
-                ]))));
+                          ]),
+                    ),
+                  ))
+            ]))));
   }
 }

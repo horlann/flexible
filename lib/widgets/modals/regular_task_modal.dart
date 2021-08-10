@@ -22,7 +22,15 @@ class RegularTaskModal extends StatefulWidget {
   State<StatefulWidget> createState() => _State();
 }
 
-class _State extends State<RegularTaskModal> {
+class _State extends State<RegularTaskModal> with TickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 400),
+    vsync: this,
+  );
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.bounceOut,
+  );
   late Task task;
   bool copyButtonHold = false;
   bool editButtonHold = false;
@@ -31,6 +39,13 @@ class _State extends State<RegularTaskModal> {
   initState() {
     super.initState();
     task = widget.task;
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   @override
@@ -55,172 +70,182 @@ class _State extends State<RegularTaskModal> {
                   left: 0,
                   right: 0,
                   top: widget.topPadding,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(width: 1, height: 1),
-                        Container(
-                            decoration: BoxDecoration(boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Color.fromRGBO(235, 5, 15, .16),
-                                  blurRadius: 22,
-                                  spreadRadius: 1)
-                            ]),
-                            child: Column(children: [
-                              CustomPaint(
-                                  painter: TrianglePainter(
-                                      strokeColor: Colors.white,
-                                      strokeWidth: 10,
-                                      paintingStyle: PaintingStyle.fill),
-                                  child: Container(height: 15, width: 20)),
-                              Container(
-                                  height: 52,
-                                  //width: 256,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        GestureDetector(
-                                            onTapCancel: () {
-                                              setState(
-                                                  () => editButtonHold = false);
-                                            },
-                                            onTapUp: (d) {
-                                              setState(
-                                                  () => editButtonHold = false);
-                                            },
-                                            onTapDown: (d) {
-                                              setState(
-                                                  () => editButtonHold = true);
-                                            },
-                                            child: Material(
-                                                animationDuration:
-                                                    Duration(milliseconds: 250),
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(8)),
-                                                child: InkWell(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(8)),
-                                                    splashColor: redMain,
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    child: Container(
-                                                        height: 52,
-                                                        width: 100,
-                                                        child: Center(
-                                                            child: Text("Edit",
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        25,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontFamily:
-                                                                        "Mikado",
-                                                                    color: editButtonHold ==
-                                                                            true
-                                                                        ? Colors.white
-                                                                        : redMain)))),
-                                                    onTap: () async {
-                                                      Navigator.pop(context);
-                                                      await widget.onEditTap
-                                                          .call();
-                                                    }))),
-                                        Builder(
-                                            builder: (BuildContext context) {
-                                          if (BlocProvider.of<SubscribeBloc>(
-                                                  context)
-                                              .state is Subscribed) {
-                                            return Wrap(
-                                              children: [
-                                                Container(
-                                                    margin:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 10),
-                                                    child: HidableTimeLock(
-                                                        locked: task.timeLock,
-                                                        onTap: () async {
-                                                          setState(() {
-                                                            task = task.copyWith(
-                                                                timeLock: !task
-                                                                    .timeLock);
-                                                          });
-                                                          // Navigator.pop(
-                                                          //     context);
-                                                          await widget.onLockTap
-                                                              .call();
-                                                        },
-                                                        showLock: true,
-                                                        color: redMain,
-                                                        size: 25)),
-                                                GestureDetector(
-                                                    onTapCancel: () {
-                                                      setState(() =>
-                                                          copyButtonHold =
-                                                              false);
-                                                    },
-                                                    onTapUp: (d) {
-                                                      setState(() =>
-                                                          copyButtonHold =
-                                                              false);
-                                                    },
-                                                    onTapDown: (d) {
-                                                      setState(() =>
-                                                          copyButtonHold =
-                                                              true);
-                                                    },
-                                                    child: Material(
-                                                        animationDuration:
-                                                            Duration(
-                                                                milliseconds:
-                                                                    250),
-                                                        color: Colors.white,
+                  child: ScaleTransition(
+                    scale: _animation,
+                    child: Container(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(width: 1, height: 1),
+                            Container(
+                                decoration:
+                                    BoxDecoration(boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Color.fromRGBO(235, 5, 15, .16),
+                                      blurRadius: 22,
+                                      spreadRadius: 1)
+                                ]),
+                                child: Column(children: [
+                                  CustomPaint(
+                                      painter: TrianglePainter(
+                                          strokeColor: Colors.white,
+                                          strokeWidth: 10,
+                                          paintingStyle: PaintingStyle.fill),
+                                      child: Container(height: 15, width: 20)),
+                                  Container(
+                                      height: 52,
+                                      //width: 256,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            GestureDetector(
+                                                onTapCancel: () {
+                                                  setState(() =>
+                                                      editButtonHold = false);
+                                                },
+                                                onTapUp: (d) {
+                                                  setState(() =>
+                                                      editButtonHold = false);
+                                                },
+                                                onTapDown: (d) {
+                                                  setState(() =>
+                                                      editButtonHold = true);
+                                                },
+                                                child: Material(
+                                                    animationDuration: Duration(
+                                                        milliseconds: 250),
+                                                    color: Colors.white,
+                                                    borderRadius: BorderRadius.all(
+                                                        Radius.circular(8)),
+                                                    child: InkWell(
                                                         borderRadius: BorderRadius.all(
                                                             Radius.circular(8)),
-                                                        child: InkWell(
+                                                        splashColor: redMain,
+                                                        highlightColor:
+                                                            Colors.transparent,
+                                                        child: Container(
+                                                            height: 52,
+                                                            width: 100,
+                                                            child: Center(
+                                                                child: Text(
+                                                                    "Edit",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            25,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontFamily:
+                                                                            "Mikado",
+                                                                        color: editButtonHold == true
+                                                                            ? Colors.white
+                                                                            : redMain)))),
+                                                        onTap: () async {
+                                                          Navigator.pop(
+                                                              context);
+                                                          await widget.onEditTap
+                                                              .call();
+                                                        }))),
+                                            Builder(builder:
+                                                (BuildContext context) {
+                                              if (BlocProvider.of<
+                                                      SubscribeBloc>(context)
+                                                  .state is Subscribed) {
+                                                return Wrap(
+                                                  children: [
+                                                    Container(
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 10),
+                                                        child: HidableTimeLock(
+                                                            locked:
+                                                                task.timeLock,
+                                                            onTap: () async {
+                                                              setState(() {
+                                                                task = task.copyWith(
+                                                                    timeLock: !task
+                                                                        .timeLock);
+                                                              });
+                                                              // Navigator.pop(
+                                                              //     context);
+                                                              await widget
+                                                                  .onLockTap
+                                                                  .call();
+                                                            },
+                                                            showLock: true,
+                                                            color: redMain,
+                                                            size: 25)),
+                                                    GestureDetector(
+                                                        onTapCancel: () {
+                                                          setState(() =>
+                                                              copyButtonHold =
+                                                                  false);
+                                                        },
+                                                        onTapUp: (d) {
+                                                          setState(() =>
+                                                              copyButtonHold =
+                                                                  false);
+                                                        },
+                                                        onTapDown: (d) {
+                                                          setState(() =>
+                                                              copyButtonHold =
+                                                                  true);
+                                                        },
+                                                        child: Material(
+                                                            animationDuration:
+                                                                Duration(
+                                                                    milliseconds:
+                                                                        250),
+                                                            color: Colors.white,
                                                             borderRadius:
                                                                 BorderRadius.all(
                                                                     Radius.circular(
                                                                         8)),
-                                                            splashColor:
-                                                                redMain,
-                                                            highlightColor:
-                                                                Colors
-                                                                    .transparent,
-                                                            child: Container(
-                                                                height: 52,
-                                                                width: 100,
-                                                                child: Center(
-                                                                    child: Text(
-                                                                        "Copy",
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                25,
-                                                                            fontWeight: FontWeight.bold,
-                                                                            fontFamily: "Mikado",
-                                                                            color: copyButtonHold == true ? Colors.white : redMain)))),
-                                                            onTap: () async {
-                                                              Navigator.pop(
-                                                                  context);
-                                                              await widget
-                                                                  .onCopyTap
-                                                                  .call();
-                                                            })))
-                                              ],
-                                            );
-                                          } else {
-                                            return Container();
-                                          }
-                                        }),
-                                      ]))
-                            ])),
-                        Container(width: 1, height: 1)
-                      ]))
+                                                            child: InkWell(
+                                                                borderRadius:
+                                                                    BorderRadius.all(
+                                                                        Radius.circular(
+                                                                            8)),
+                                                                splashColor:
+                                                                    redMain,
+                                                                highlightColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                child: Container(
+                                                                    height: 52,
+                                                                    width: 100,
+                                                                    child: Center(
+                                                                        child: Text(
+                                                                            "Copy",
+                                                                            style: TextStyle(
+                                                                                fontSize: 25,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontFamily: "Mikado",
+                                                                                color: copyButtonHold == true ? Colors.white : redMain)))),
+                                                                onTap: () async {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  await widget
+                                                                      .onCopyTap
+                                                                      .call();
+                                                                })))
+                                                  ],
+                                                );
+                                              } else {
+                                                return Container();
+                                              }
+                                            }),
+                                          ]))
+                                ])),
+                            Container(width: 1, height: 1)
+                          ]),
+                    ),
+                  ))
             ]))));
   }
 }
