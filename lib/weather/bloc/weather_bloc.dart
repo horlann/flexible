@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flexible/geolocation/geolocation_service.dart';
@@ -35,11 +34,11 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
     Duration diff = sunset.difference(sunrise);
 
-    var isNight = !DateTime.now().difference(sunset).isNegative ||
-        DateTime.now().difference(sunrise).isNegative;
+    DateTime now = DateTime.now();
 
-    bool isLateDay =
-        sunset.difference(DateTime.now()).inHours < diff.inHours / 4;
+    bool isNight = now.hour < sunrise.hour || now.hour > sunset.hour;
+
+    bool isLateDay = sunset.difference(now).inHours < diff.inHours / 4;
 
     if (isNight) {
       return DayLight.dark;
