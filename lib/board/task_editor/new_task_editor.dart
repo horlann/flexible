@@ -479,12 +479,12 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
                   isForce2Digits: true,
                   is24HourMode: true,
                   itemHeight: 30 * byWithScale(context),
-                  itemWidth: 20 * byWithScale(context),
+                  itemWidth: 60 * byWithScale(context),
                   normalTextStyle: TextStyle(
-                      color: Colors.grey, fontSize: 48 / pRatio(context)),
+                      color: Colors.grey, fontSize: 55 / pRatio(context)),
                   highlightedTextStyle: TextStyle(
-                      color: Colors.black, fontSize: 48 / pRatio(context)),
-                  spacing: 20 * byWithScale(context),
+                      color: Colors.black, fontSize: 55 / pRatio(context)),
+                  spacing: 0,
                   minutesInterval: 1,
                   time: editableRegularTask.timeStart,
                   onTimeChange: (time) {

@@ -157,11 +157,7 @@ class _TaskEditorState extends State<DayOptionsEditor> {
                 BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
         child: Stack(
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.03,
-                top: MediaQuery.of(context).size.width * 0.105,
-              ),
+            Positioned.fill(
               child: Align(
                 child: Text(
                   ":",
@@ -172,16 +168,17 @@ class _TaskEditorState extends State<DayOptionsEditor> {
             ),
             Center(
               child: TimePickerSpinner(
+                alignment: Alignment.center,
                 isForce2Digits: true,
                 is24HourMode: true,
                 time: widget.dayOptions.wakeUpTime,
                 itemHeight: 30 * byWithScale(context),
-                itemWidth: 30 * byWithScale(context),
+                itemWidth: 60 * byWithScale(context),
                 normalTextStyle: TextStyle(
                     color: Colors.grey, fontSize: 15 * byWithScale(context)),
                 highlightedTextStyle: TextStyle(
                     color: Colors.black, fontSize: 15 * byWithScale(context)),
-                spacing: 40,
+                spacing: 0,
                 minutesInterval: 1,
                 onTimeChange: (time) {
                   setState(() {
@@ -213,11 +210,7 @@ class _TaskEditorState extends State<DayOptionsEditor> {
                 BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
         child: Stack(
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.width * 0.105,
-                left: MediaQuery.of(context).size.width * 0.03,
-              ),
+            Positioned.fill(
               child: Align(
                 child: Text(
                   ":",
@@ -228,16 +221,17 @@ class _TaskEditorState extends State<DayOptionsEditor> {
             ),
             Center(
               child: TimePickerSpinner(
+                alignment: Alignment.center,
                 isForce2Digits: true,
                 is24HourMode: true,
                 time: widget.dayOptions.goToSleepTime,
                 itemHeight: 30 * byWithScale(context),
-                itemWidth: 30 * byWithScale(context),
+                itemWidth: 60 * byWithScale(context),
                 normalTextStyle: TextStyle(
                     color: Colors.grey, fontSize: 15 * byWithScale(context)),
                 highlightedTextStyle: TextStyle(
                     color: Colors.black, fontSize: 15 * byWithScale(context)),
-                spacing: 40,
+                spacing: 0,
                 minutesInterval: 1,
                 onTimeChange: (time) {
                   setState(() {
