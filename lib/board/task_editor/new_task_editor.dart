@@ -452,53 +452,61 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
               fontWeight: FontWeight.w500,
               color: Colors.white),
         ),
-        Container(
-            margin: EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
-            padding: EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  15 * byWithScale(context),
-                ),
-              ),
-            ),
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Align(
-                    child: Text(
-                      ":",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    alignment: Alignment.center,
+        GestureDetector(
+          // behavior: HitTestBehavior.opaque,
+          onHorizontalDragStart: (details) {
+            print('h');
+          },
+          child: Container(
+              margin:
+                  EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
+              padding:
+                  EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    15 * byWithScale(context),
                   ),
                 ),
-                TimePickerSpinner(
-                  alignment: Alignment.center,
-                  isForce2Digits: true,
-                  is24HourMode: true,
-                  itemHeight: 30 * byWithScale(context),
-                  itemWidth: 60 * byWithScale(context),
-                  normalTextStyle: TextStyle(
-                      color: Colors.grey, fontSize: 55 / pRatio(context)),
-                  highlightedTextStyle: TextStyle(
-                      color: Colors.black, fontSize: 55 / pRatio(context)),
-                  spacing: 0,
-                  minutesInterval: 1,
-                  time: editableRegularTask.timeStart,
-                  onTimeChange: (time) {
-                    setState(() {
-                      editableRegularTask =
-                          editableRegularTask.copyWith(timeStart: time);
-                      //DateTime wakeUpTime =
-                      //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
-                      //_dateTime = time;
-                    });
-                  },
-                ),
-              ],
-            )),
+              ),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Align(
+                      child: Text(
+                        ":",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                  TimePickerSpinner(
+                    alignment: Alignment.center,
+                    isForce2Digits: true,
+                    is24HourMode: true,
+                    itemHeight: 30 * byWithScale(context),
+                    itemWidth: 60 * byWithScale(context),
+                    normalTextStyle: TextStyle(
+                        color: Colors.grey, fontSize: 55 / pRatio(context)),
+                    highlightedTextStyle: TextStyle(
+                        color: Colors.black, fontSize: 55 / pRatio(context)),
+                    spacing: 0,
+                    minutesInterval: 1,
+                    time: editableRegularTask.timeStart,
+                    onTimeChange: (time) {
+                      setState(() {
+                        editableRegularTask =
+                            editableRegularTask.copyWith(timeStart: time);
+                        //DateTime wakeUpTime =
+                        //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
+                        //_dateTime = time;
+                      });
+                    },
+                  ),
+                ],
+              )),
+        ),
         Wrap(
           children: [
             Text(

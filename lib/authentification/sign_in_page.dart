@@ -25,7 +25,7 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   MaskedTextController controller =
-  MaskedTextController(mask: '000-00-00-00-00-00');
+      MaskedTextController(mask: '000-00-00-00-00-00');
   FocusNode focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   String phoneNumber = '';
@@ -89,7 +89,7 @@ class _SignInPageState extends State<SignInPage> {
       body: SizedBox.expand(
         child: Container(
           decoration: BoxDecoration(
-            // gradient: mainBackgroundGradient,
+              // gradient: mainBackgroundGradient,
               image: DecorationImage(
                   image: AssetImage('src/helper/backgroundimage.png'),
                   fit: BoxFit.cover,
@@ -131,7 +131,6 @@ class _SignInPageState extends State<SignInPage> {
           showSnackBar(context, state.error, false);
         }
       },
-
       child: buildBody(context),
     );
   }

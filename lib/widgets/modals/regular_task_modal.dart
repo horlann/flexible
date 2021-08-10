@@ -24,12 +24,12 @@ class RegularTaskModal extends StatefulWidget {
 
 class _State extends State<RegularTaskModal> with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
-    duration: const Duration(milliseconds: 400),
+    duration: const Duration(milliseconds: 300),
     vsync: this,
   );
   late final Animation<double> _animation = CurvedAnimation(
     parent: _controller,
-    curve: Curves.bounceOut,
+    curve: Curves.fastOutSlowIn,
   );
   late Task task;
   bool copyButtonHold = false;

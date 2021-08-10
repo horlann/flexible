@@ -60,7 +60,9 @@ class _CountryCodePickerWidegtState extends State<CountryCodePickerWidegt> {
               titlePadding: EdgeInsets.all(8.0),
               searchCursorColor: Colors.pinkAccent,
               isSearchable: true,
-              title: Text('Select your phone code'),
+              title: Text(
+                'Select your phone code',
+              ),
               onValuePicked: (Country country) {
                 setState(() {
                   isoCode = country.isoCode;
@@ -86,7 +88,7 @@ class _CountryCodePickerWidegtState extends State<CountryCodePickerWidegt> {
       child: Text(
           '+' + CountryPickerUtils.getCountryByIsoCode(isoCode).phoneCode,
           style: TextStyle(
-              fontSize: 10 * byWithScale(context), color: Color(0xffE24F4F))),
+              fontSize: 12 * byWithScale(context), color: Color(0xffE24F4F))),
     );
   }
 }
