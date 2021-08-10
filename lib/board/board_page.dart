@@ -44,7 +44,7 @@ class _BoardPageState extends State<BoardPage> {
     ]);
 
     return Scaffold(
-      backgroundColor: Color(0xffE9E9E9),
+      backgroundColor: Colors.white,
       body: SizedBox.expand(
           child: Stack(
         children: [

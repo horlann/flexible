@@ -1,9 +1,13 @@
 part of 'weather_bloc.dart';
 
 abstract class WeatherState extends Equatable {
+  final String wTemp;
+  final int wCode;
   final DayLight daylight;
   WeatherState({
     this.daylight = DayLight.light,
+    this.wCode = 800,
+    this.wTemp = '30',
   });
 
   @override

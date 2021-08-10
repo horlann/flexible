@@ -119,6 +119,8 @@ class _VideoLayerFittedToBGState extends State<VideoLayerFittedToBG> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
       color: widget.backgroundColor,
       child: FittedBox(
         fit: BoxFit.fitWidth,

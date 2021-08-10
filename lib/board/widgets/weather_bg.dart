@@ -102,38 +102,51 @@ class _WeatherBgState extends State<WeatherBg> {
       builder: (context, state) {
         print(state);
         if (BlocProvider.of<SubscribeBloc>(context).state is Subscribed) {
-          if (state is WeatherLoaded) {
-            return VideoLayerFittedToBG(
-                key: Key(getWeatherAssetByCode(state.wCode, state.daylight)),
-                videoAsset: getWeatherAssetByCode(state.wCode, state.daylight),
-                backgroundColor: colorByType(state.daylight));
-          }
-          // Use as default
-          return Image.asset(
-            'src/helper/backgroundimage.png',
-            fit: BoxFit.fitWidth,
-            alignment: Alignment.topCenter,
-          );
+          return AnimatedCrossFade(
+              firstChild: VideoLayerFittedToBG(
+                  key: Key(getWeatherAssetByCode(state.wCode, state.daylight)),
+                  videoAsset:
+                      getWeatherAssetByCode(state.wCode, state.daylight),
+                  backgroundColor: colorByType(state.daylight)),
+              secondChild: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset(
+                  'src/helper/backgroundimage.png',
+                  fit: BoxFit.fitWidth,
+                  alignment: Alignment.topCenter,
+                ),
+              ),
+              crossFadeState: state is WeatherLoaded
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
+              duration: Duration(seconds: 5));
         } else {
           print(state.daylight);
           if (state.daylight == DayLight.medium) {
-            return Image.asset(
-              'src/helper/backgroundimage_medium.png',
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.topCenter,
-            );
+            return FadeInImage(
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.topCenter,
+                fadeInDuration: Duration(seconds: 1),
+                fadeOutDuration: Duration(seconds: 1),
+                placeholder: AssetImage('src/helper/backgroundimage.png'),
+                image: AssetImage('src/helper/backgroundimage_medium.png'));
           } else if (state.daylight == DayLight.dark) {
-            return Image.asset(
-              'src/helper/backgroundimage_dark.png',
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.topCenter,
-            );
+            return FadeInImage(
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.topCenter,
+                fadeInDuration: Duration(seconds: 1),
+                fadeOutDuration: Duration(seconds: 1),
+                placeholder: AssetImage('src/helper/backgroundimage.png'),
+                image: AssetImage('src/helper/backgroundimage_dark.png'));
           } else {
-            return Image.asset(
-              'src/helper/backgroundimage.png',
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.topCenter,
-            );
+            return FadeInImage(
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.topCenter,
+                fadeInDuration: Duration(seconds: 1),
+                fadeOutDuration: Duration(seconds: 1),
+                placeholder: AssetImage('src/helper/backgroundimage.png'),
+                image: AssetImage('src/helper/backgroundimage.png'));
           }
         }
       },
