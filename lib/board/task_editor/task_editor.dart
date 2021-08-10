@@ -301,9 +301,8 @@ class _TaskEditorState extends State<TaskEditor> {
                           callback: () {
                             if (editableTask.title.isEmpty) {
                               print(editableTask);
-                              showSnackBar(
-                                  context, 'Task title shouldn\'t be empty',
-                                  false);
+                              showSnackBar(context,
+                                  'Task title shouldn\'t be empty', false);
                             } else {
                               BlocProvider.of<DailytasksBloc>(context).add(
                                   DailytasksUpdateTaskAndShiftOther(
@@ -382,7 +381,7 @@ class _TaskEditorState extends State<TaskEditor> {
                 mode: CupertinoTimerPickerMode.hm,
                 onTimerDurationChanged: (v) {
                   DateTime timeStart =
-                  DateUtils.dateOnly(editableTask.timeStart).add(v);
+                      DateUtils.dateOnly(editableTask.timeStart).add(v);
 
                   setState(() {
                     editableTask = editableTask.copyWith(timeStart: timeStart);
@@ -445,9 +444,9 @@ class _TaskEditorState extends State<TaskEditor> {
   Container buildTitleInputSection() {
     return Container(
       decoration: BoxDecoration(
-        // color: Colors.red,
+          // color: Colors.red,
           border:
-          Border(bottom: BorderSide(width: 1, color: Color(0xffB1B1B1)))),
+              Border(bottom: BorderSide(width: 1, color: Color(0xffB1B1B1)))),
       padding: EdgeInsets.only(bottom: 2),
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -464,29 +463,29 @@ class _TaskEditorState extends State<TaskEditor> {
           Expanded(
             child: Container(
                 child: SizedBox(
-                  height: 20 * byWithScale(context),
-                  child: TextFormField(
-                    // Change title
-                    onChanged: (value) {
-                      setState(() {
-                        editableTask = editableTask.copyWith(title: value);
-                      });
-                    },
+              height: 20 * byWithScale(context),
+              child: TextFormField(
+                // Change title
+                onChanged: (value) {
+                  setState(() {
+                    editableTask = editableTask.copyWith(title: value);
+                  });
+                },
 
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      // contentPadding: EdgeInsets.all(10),
-                    ),
-                    initialValue: editableTask.title,
-                    style: TextStyle(
-                        color: Color(0xff373535),
-                        fontSize: 12 * byWithScale(context)),
-                  ),
-                )),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  // contentPadding: EdgeInsets.all(10),
+                ),
+                initialValue: editableTask.title,
+                style: TextStyle(
+                    color: Color(0xff373535),
+                    fontSize: 12 * byWithScale(context)),
+              ),
+            )),
           )
         ],
       ),
@@ -494,16 +493,28 @@ class _TaskEditorState extends State<TaskEditor> {
   }
 
   Widget typeTaskWidget() {
+    int c = 0;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
       child: Row(
         children: [
-          Hero(
-            tag: widget.task,
-            child: TaskIconInRound(
-              iconId: editableTask.iconId,
-              taskColor: editableTask.color,
-              onTap: () => openImgPicker(),
+          GestureDetector(
+            onDoubleTap: () {
+              c++;
+              print(c);
+              if (c == 3) {
+                print('Marked as ai suitable');
+                showSnackBar(context, 'Marked as ai suitable', false);
+              }
+              editableTask = editableTask.copyWith(forAi: true);
+            },
+            child: Hero(
+              tag: widget.task,
+              child: TaskIconInRound(
+                iconId: editableTask.iconId,
+                taskColor: editableTask.color,
+                onTap: () => openImgPicker(),
+              ),
             ),
           ),
           SizedBox(

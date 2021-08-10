@@ -4,6 +4,7 @@ import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flutter/material.dart';
 
 class RegularTask extends Task {
+  final bool forAi;
   RegularTask({
     uuid,
     required title,
@@ -15,6 +16,7 @@ class RegularTask extends Task {
     required timeLock,
     required color,
     required iconId,
+    this.forAi = false,
   }) : super(
             uuid: uuid,
             title: title,
@@ -39,6 +41,7 @@ class RegularTask extends Task {
       'timeLock': timeLock,
       'color': color.value,
       'iconId': iconId,
+      'forAi': forAi,
     };
   }
 
@@ -69,6 +72,7 @@ class RegularTask extends Task {
       timeLock: map['timeLock'],
       color: Color(map['color']),
       iconId: map['iconId'],
+      forAi: map['forAi'] ?? false,
     );
   }
 
@@ -92,18 +96,18 @@ class RegularTask extends Task {
   factory RegularTask.fromJson(String source) =>
       RegularTask.fromMap(json.decode(source));
 
-  RegularTask copyWith({
-    String? uuid,
-    String? title,
-    String? subtitle,
-    DateTime? timeStart,
-    Duration? period,
-    bool? isDone,
-    bool? isDonable,
-    bool? timeLock,
-    Color? color,
-    String? iconId,
-  }) {
+  RegularTask copyWith(
+      {String? uuid,
+      String? title,
+      String? subtitle,
+      DateTime? timeStart,
+      Duration? period,
+      bool? isDone,
+      bool? isDonable,
+      bool? timeLock,
+      Color? color,
+      String? iconId,
+      bool? forAi}) {
     return RegularTask(
       uuid: uuid ?? this.uuid,
       title: title ?? this.title,
@@ -115,6 +119,7 @@ class RegularTask extends Task {
       timeLock: timeLock ?? this.timeLock,
       color: color ?? this.color,
       iconId: iconId ?? this.iconId,
+      forAi: forAi ?? this.forAi,
     );
   }
 

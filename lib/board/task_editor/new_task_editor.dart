@@ -20,6 +20,7 @@ import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flexible/widgets/flush.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -72,38 +73,6 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
     super.initState();
     submitR = onSubmitCR.stream.asBroadcastStream();
     submitS = onSubmitCS.stream.asBroadcastStream();
-  }
-
-  void showSnackBar(
-      BuildContext buildContext, String text, bool isProgressive) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    Flushbar(
-      message: text,
-      barBlur: 20,
-      mainButton: isProgressive
-          ? Padding(
-              padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
-              child: CircularProgressIndicator(
-                strokeWidth: 5,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            )
-          : SizedBox(),
-      duration: Duration(seconds: 2),
-      flushbarPosition: FlushbarPosition.TOP,
-      borderRadius: BorderRadius.all(Radius.circular(16)),
-      backgroundColor: Color(0xffE24F4F),
-      margin: const EdgeInsets.symmetric(horizontal: 11),
-      messageText: Center(
-          child: Text(
-        text,
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
-        ),
-      )),
-    )..show(context);
   }
 
   @override
@@ -207,10 +176,11 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                             onSubmit: (task) {
                               print('reg ask submit');
                               print(task.title.isEmpty);
+
                               if (task.title.isEmpty) {
-                                showSnackBar(
-                                    context, 'Task title shouldn\'t be empty',
-                                    false);
+                                showFlush(context,
+                                    'Task title shouldn\'t be empty', false)
+                                  ..show(context);
                               } else {
                                 BlocProvider.of<DailytasksBloc>(context)
                                     .add(DailytasksAddTask(task: task));
@@ -226,10 +196,9 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
                               key: Key('sup'),
                               onSubmit: (task) {
                                 if (task.title.isEmpty) {
-                                  showSnackBar(
-                                      context, 'Task title shouldn\'t be empty',
-                                      false);
-
+                                  showFlush(context,
+                                      'Task title shouldn\'t be empty', false)
+                                    ..show(context);
                                 } else {
                                   print('su ask submit');
                                   BlocProvider.of<DailytasksBloc>(context)
@@ -251,7 +220,6 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
         ),
       ],
     );
-
   }
 
   Widget buildTaskTypeSwitcher(BuildContext context) {
@@ -376,11 +344,8 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           subtitle: '',
           timeStart: DateUtils.dateOnly(
                   BlocProvider.of<DailytasksBloc>(context).state.showDay)
-              .add(Duration(hours: DateTime
-              .now()
-              .hour, minutes: DateTime
-              .now()
-              .minute)),
+              .add(Duration(
+                  hours: DateTime.now().hour, minutes: DateTime.now().minute)),
           period: Duration(hours: 0),
           isDone: false,
           isDonable: true,
@@ -415,16 +380,30 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
   }
 
   Widget typeTaskWidget() {
+    int c = 0;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10 * byWithScale(context)),
       child: Row(
         children: [
-          Hero(
-            tag: Key('newtask'),
-            child: TaskIconInRound(
-              iconId: editableRegularTask.iconId,
-              taskColor: editableRegularTask.color,
-              onTap: () => openImgPicker(),
+          GestureDetector(
+            onDoubleTap: () {
+              c++;
+              print(c);
+              if (c == 3) {
+                print('Marked as ai suitable');
+                showFlush(context, 'Marked as ai suitable', false)
+                    .show(context);
+              }
+              editableRegularTask = editableRegularTask.copyWith(forAi: true);
+              print(editableRegularTask.forAi);
+            },
+            child: Hero(
+              tag: Key('newtask'),
+              child: TaskIconInRound(
+                iconId: editableRegularTask.iconId,
+                taskColor: editableRegularTask.color,
+                onTap: () => openImgPicker(),
+              ),
             ),
           ),
           SizedBox(
@@ -587,7 +566,6 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
                   //i=pos;
                 });
               }),
-
             ],
           ),
         ),
@@ -770,7 +748,6 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
                 });
               }),
               SizedBox(height: 20 * byWithScale(context)),
-
             ],
           ),
         ),
@@ -813,6 +790,4 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
       ),
     );
   }
-
-
 }
