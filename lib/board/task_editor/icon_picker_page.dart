@@ -134,7 +134,11 @@ class _IconPickerPageState extends State<IconPickerPage> {
   Widget buildImageLoader(BuildContext context, String id) {
     return GestureDetector(
       onTap: () => Navigator.pop(context, id),
-      child: Center(child: CachedIcon(imageID: id)),
+      child: Center(
+          child: CachedIcon(
+        imageID: id,
+        key: Key(id),
+      )),
     );
   }
 

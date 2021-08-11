@@ -21,7 +21,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  flutter_bloc: ^7.0.0
+  flutter_bloc: ^7.1.0
   shared_preferences: ^2.0.6
   flutter_time_picker_spinner: ^2.0.0
   dots_indicator: ^2.0.0
@@ -35,7 +35,7 @@ dependencies:
   invert_colors: ^0.0.3-null-safety.0
   flutter_local_notifications: ^8.0.0
   flutter_native_timezone: ^2.0.0
-  equatable: ^2.0.2
+  equatable: ^2.0.3
   intl: ^0.17.0
   animated_check: ^1.0.2
 

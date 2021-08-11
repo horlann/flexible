@@ -215,6 +215,7 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
             child: Center(
               child: CachedIcon(
                 imageID: widget.task.iconId,
+                key: Key(widget.task.iconId),
               ),
             ),
           )),

@@ -305,6 +305,7 @@ class _PeriodicTaskTileState extends State<PeriodicTaskTile> {
                 child: Center(
                   child: CachedIcon(
                     imageID: widget.task.iconId,
+                    key: Key(widget.task.iconId),
                   ),
                 ),
               )),

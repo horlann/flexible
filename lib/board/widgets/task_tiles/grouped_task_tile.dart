@@ -230,7 +230,10 @@ class _GroupedTaskTileState extends State<GroupedTaskTile> {
                               width: 50,
                               child: InvertColors(
                                   child: Center(
-                                      child: CachedIcon(imageID: e.iconId)))),
+                                      child: CachedIcon(
+                                imageID: e.iconId,
+                                key: Key(e.iconId),
+                              )))),
                           // Show tale with overtime if is undoned yet
                           if (widget.tasks.last != e && hMP > 1 && !e.isDone)
                             Positioned(

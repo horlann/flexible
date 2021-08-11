@@ -272,6 +272,7 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
                 child: Center(
                   child: CachedIcon(
                     imageID: widget.task.iconId,
+                    key: Key(widget.task.iconId),
                   ),
                 ),
               )),
