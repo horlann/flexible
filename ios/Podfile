@@ -45,7 +45,7 @@ pod 'Firebase/Analytics'
 # or pod ‘Firebase/AnalyticsWithoutAdIdSupport’
 # for Analytics without IDFA collection capability
 
-pod 'Qonversion'
+# pod 'Qonversion'
 
 # add pods for any other desired Firebase products
 # https://firebase.google.com/docs/ios/setup#available-pods
