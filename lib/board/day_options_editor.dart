@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/day_options.dart';
+import 'package:flexible/board/task_editor/ogtimepicker.dart';
 import 'package:flexible/board/widgets/close_button.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/board/widgets/weather_bg.dart';
@@ -142,116 +143,147 @@ class _TaskEditorState extends State<DayOptionsEditor> {
     );
   }
 
-  SizedBox buildWakeTimePicker() {
-    return SizedBox(
-      child: Container(
-        // height: 150,
-        margin: EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
-        padding: EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  color: Color(0xff000B2B).withOpacity(0.4),
-                  blurRadius: 8 * byWithScale(context))
-            ],
-            borderRadius:
-                BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Align(
-                child: Text(
-                  ":",
-                  style: TextStyle(fontSize: 20),
-                ),
-                alignment: Alignment.center,
-              ),
-            ),
-            Center(
-              child: TimePickerSpinner(
-                alignment: Alignment.center,
-                isForce2Digits: true,
-                is24HourMode: true,
-                time: widget.dayOptions.wakeUpTime,
-                itemHeight: 30 * byWithScale(context),
-                itemWidth: 60 * byWithScale(context),
-                normalTextStyle: TextStyle(
-                    color: Colors.grey, fontSize: 15 * byWithScale(context)),
-                highlightedTextStyle: TextStyle(
-                    color: Colors.black, fontSize: 15 * byWithScale(context)),
-                spacing: 0,
-                minutesInterval: 1,
-                onTimeChange: (time) {
-                  setState(() {
-                    editableOptions = editableOptions.copyWith(
-                        wakeUpTime: time.add(
-                            Duration(milliseconds: Random().nextInt(100))));
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
+  Widget buildWakeTimePicker() {
+    return GestureDetector(
+      onHorizontalDragDown: (details) {},
+      child: OgTimePicker(
+        initTime: widget.dayOptions.goToSleepTime,
+        onChange: (time) {
+          setState(() {
+            setState(() {
+              editableOptions = editableOptions.copyWith(
+                  wakeUpTime:
+                      time.add(Duration(milliseconds: Random().nextInt(100))));
+            });
+          });
+        },
       ),
     );
+    // return SizedBox(
+    //   child: Container(
+    //     // height: 150,
+    //     margin: EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
+    //     padding: EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
+    //     decoration: BoxDecoration(
+    //         color: Colors.white,
+    //         boxShadow: [
+    //           BoxShadow(
+    //               color: Color(0xff000B2B).withOpacity(0.4),
+    //               blurRadius: 8 * byWithScale(context))
+    //         ],
+    //         borderRadius:
+    //             BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
+    //     child: Stack(
+    //       children: [
+    //         Positioned.fill(
+    //           child: Align(
+    //             child: Text(
+    //               ":",
+    //               style: TextStyle(fontSize: 20),
+    //             ),
+    //             alignment: Alignment.center,
+    //           ),
+    //         ),
+    //         Center(
+    //           child: TimePickerSpinner(
+    //             alignment: Alignment.center,
+    //             isForce2Digits: true,
+    //             is24HourMode: true,
+    //             time: widget.dayOptions.wakeUpTime,
+    //             itemHeight: 30 * byWithScale(context),
+    //             itemWidth: 60 * byWithScale(context),
+    //             normalTextStyle: TextStyle(
+    //                 color: Colors.grey, fontSize: 15 * byWithScale(context)),
+    //             highlightedTextStyle: TextStyle(
+    //                 color: Colors.black, fontSize: 15 * byWithScale(context)),
+    //             spacing: 0,
+    //             minutesInterval: 1,
+    //             onTimeChange: (time) {
+    //               setState(() {
+    //                 editableOptions = editableOptions.copyWith(
+    //                     wakeUpTime: time.add(
+    //                         Duration(milliseconds: Random().nextInt(100))));
+    //               });
+    //             },
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 
-  SizedBox buildSleepTimePicker() {
-    return SizedBox(
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
-        padding: EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  color: Color(0xff000B2B).withOpacity(0.4),
-                  blurRadius: 8 * byWithScale(context))
-            ],
-            borderRadius:
-                BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Align(
-                child: Text(
-                  ":",
-                  style: TextStyle(fontSize: 20),
-                ),
-                alignment: Alignment.center,
-              ),
-            ),
-            Center(
-              child: TimePickerSpinner(
-                alignment: Alignment.center,
-                isForce2Digits: true,
-                is24HourMode: true,
-                time: widget.dayOptions.goToSleepTime,
-                itemHeight: 30 * byWithScale(context),
-                itemWidth: 60 * byWithScale(context),
-                normalTextStyle: TextStyle(
-                    color: Colors.grey, fontSize: 15 * byWithScale(context)),
-                highlightedTextStyle: TextStyle(
-                    color: Colors.black, fontSize: 15 * byWithScale(context)),
-                spacing: 0,
-                minutesInterval: 1,
-                onTimeChange: (time) {
-                  setState(() {
-                    editableOptions = editableOptions.copyWith(
-                        goToSleepTime: time.add(
-                            Duration(milliseconds: Random().nextInt(100))));
-                    //DateTime wakeUpTime =
-                    //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
-                    //_dateTime = time;
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
+  Widget buildSleepTimePicker() {
+    return GestureDetector(
+      onHorizontalDragDown: (details) {},
+      child: OgTimePicker(
+        initTime: widget.dayOptions.goToSleepTime,
+        onChange: (time) {
+          setState(() {
+            setState(() {
+              editableOptions = editableOptions.copyWith(
+                  goToSleepTime:
+                      time.add(Duration(milliseconds: Random().nextInt(100))));
+            });
+          });
+        },
       ),
     );
+
+    // return SizedBox(
+    //   child: Container(
+    //     margin: EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
+    //     padding: EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
+    //     decoration: BoxDecoration(
+    //         color: Colors.white,
+    //         boxShadow: [
+    //           BoxShadow(
+    //               color: Color(0xff000B2B).withOpacity(0.4),
+    //               blurRadius: 8 * byWithScale(context))
+    //         ],
+    //         borderRadius:
+    //             BorderRadius.all(Radius.circular(15 * byWithScale(context)))),
+    //     child: Stack(
+    //       children: [
+    //         Positioned.fill(
+    //           child: Align(
+    //             child: Text(
+    //               ":",
+    //               style: TextStyle(fontSize: 20),
+    //             ),
+    //             alignment: Alignment.center,
+    //           ),
+    //         ),
+    //         Center(
+    //           child: TimePickerSpinner(
+    //             alignment: Alignment.center,
+    //             isForce2Digits: true,
+    //             is24HourMode: true,
+    //             time: widget.dayOptions.goToSleepTime,
+    //             itemHeight: 30 * byWithScale(context),
+    //             itemWidth: 60 * byWithScale(context),
+    //             normalTextStyle: TextStyle(
+    //                 color: Colors.grey, fontSize: 15 * byWithScale(context)),
+    //             highlightedTextStyle: TextStyle(
+    //                 color: Colors.black, fontSize: 15 * byWithScale(context)),
+    //             spacing: 0,
+    //             minutesInterval: 1,
+    //             onTimeChange: (time) {
+    //               setState(() {
+    //                 editableOptions = editableOptions.copyWith(
+    //                     goToSleepTime: time.add(
+    //                         Duration(milliseconds: Random().nextInt(100))));
+    //                 //DateTime wakeUpTime =
+    //                 //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
+    //                 //_dateTime = time;
+    //               });
+    //             },
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 
   GlassmorphicContainer buildGlassmorphicLayer() {

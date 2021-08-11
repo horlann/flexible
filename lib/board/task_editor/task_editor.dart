@@ -4,6 +4,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/board/board_page.dart';
 import 'package:flexible/board/task_editor/color_picker_row.dart';
 import 'package:flexible/board/task_editor/icon_picker_page.dart';
+import 'package:flexible/board/task_editor/ogtimepicker.dart';
 import 'package:flexible/board/task_editor/row_with_close_btn.dart';
 import 'package:flexible/board/task_editor/task_icon_in_round.dart';
 import 'package:flexible/board/task_editor/task_period_slider.dart';
@@ -165,61 +166,76 @@ class _TaskEditorState extends State<TaskEditor> {
                           fontWeight: FontWeight.w500,
                           color: Colors.white),
                     ),
-                    Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 40 * byWithScale(context)),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 8 * byWithScale(context)),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              15 * byWithScale(context),
-                            ),
-                          ),
-                        ),
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 5.0),
-                                child: Align(
-                                  child: Text(
-                                    ":",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                  alignment: Alignment.center,
-                                ),
-                              ),
-                            ),
-                            TimePickerSpinner(
-                              alignment: Alignment.center,
-                              isForce2Digits: true,
-                              is24HourMode: true,
-                              itemHeight: 30 * byWithScale(context),
-                              itemWidth: 60 * byWithScale(context),
-                              normalTextStyle: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 55 / pRatio(context)),
-                              highlightedTextStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 55 / pRatio(context)),
-                              spacing: 0,
-                              minutesInterval: 1,
-                              time: editableTask.timeStart,
-                              onTimeChange: (time) {
-                                setState(() {
-                                  print(editableTask.timeStart);
-                                  print(time);
-                                  editableTask = editableTask.copyWith(
-                                      timeStart: time.add(Duration(
-                                          milliseconds:
-                                              Random().nextInt(100))));
-                                });
-                              },
-                            ),
-                          ],
-                        )),
+                    GestureDetector(
+                      onHorizontalDragDown: (details) {},
+                      child: OgTimePicker(
+                        initTime: editableTask.timeStart,
+                        onChange: (time) {
+                          setState(() {
+                            print(editableTask.timeStart);
+                            print(time);
+                            editableTask = editableTask.copyWith(
+                                timeStart: time.add(Duration(
+                                    milliseconds: Random().nextInt(100))));
+                          });
+                        },
+                      ),
+                    ),
+                    // Container(
+                    //     margin: EdgeInsets.symmetric(
+                    //         horizontal: 40 * byWithScale(context)),
+                    //     padding: EdgeInsets.symmetric(
+                    //         vertical: 8 * byWithScale(context)),
+                    //     decoration: BoxDecoration(
+                    //       color: Colors.white,
+                    //       borderRadius: BorderRadius.all(
+                    //         Radius.circular(
+                    //           15 * byWithScale(context),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     child: Stack(
+                    //       children: [
+                    //         Positioned.fill(
+                    //           child: Padding(
+                    //             padding: const EdgeInsets.only(bottom: 5.0),
+                    //             child: Align(
+                    //               child: Text(
+                    //                 ":",
+                    //                 style: TextStyle(fontSize: 20),
+                    //               ),
+                    //               alignment: Alignment.center,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         TimePickerSpinner(
+                    //           alignment: Alignment.center,
+                    //           isForce2Digits: true,
+                    //           is24HourMode: true,
+                    //           itemHeight: 30 * byWithScale(context),
+                    //           itemWidth: 60 * byWithScale(context),
+                    //           normalTextStyle: TextStyle(
+                    //               color: Colors.grey,
+                    //               fontSize: 55 / pRatio(context)),
+                    //           highlightedTextStyle: TextStyle(
+                    //               color: Colors.black,
+                    //               fontSize: 55 / pRatio(context)),
+                    //           spacing: 0,
+                    //           minutesInterval: 1,
+                    //           time: editableTask.timeStart,
+                    //           onTimeChange: (time) {
+                    //             setState(() {
+                    //               print(editableTask.timeStart);
+                    //               print(time);
+                    //               editableTask = editableTask.copyWith(
+                    //                   timeStart: time.add(Duration(
+                    //                       milliseconds:
+                    //                           Random().nextInt(100))));
+                    //             });
+                    //           },
+                    //         ),
+                    //       ],
+                    //     )),
                     Wrap(
                       children: [
                         Text(
