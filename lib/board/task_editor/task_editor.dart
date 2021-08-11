@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/board/task_editor/color_picker_row.dart';
 import 'package:flexible/board/task_editor/icon_picker_page.dart';
@@ -208,8 +210,10 @@ class _TaskEditorState extends State<TaskEditor> {
                                 setState(() {
                                   print(editableTask.timeStart);
                                   print(time);
-                                  editableTask =
-                                      editableTask.copyWith(timeStart: time);
+                                  editableTask = editableTask.copyWith(
+                                      timeStart: time.add(Duration(
+                                          milliseconds:
+                                              Random().nextInt(100))));
                                 });
                               },
                             ),

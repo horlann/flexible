@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/models/day_options.dart';
 import 'package:flexible/board/widgets/close_button.dart';
@@ -182,8 +184,9 @@ class _TaskEditorState extends State<DayOptionsEditor> {
                 minutesInterval: 1,
                 onTimeChange: (time) {
                   setState(() {
-                    editableOptions =
-                        editableOptions.copyWith(wakeUpTime: time);
+                    editableOptions = editableOptions.copyWith(
+                        wakeUpTime: time.add(
+                            Duration(milliseconds: Random().nextInt(100))));
                   });
                 },
               ),
@@ -235,8 +238,9 @@ class _TaskEditorState extends State<DayOptionsEditor> {
                 minutesInterval: 1,
                 onTimeChange: (time) {
                   setState(() {
-                    editableOptions =
-                        editableOptions.copyWith(goToSleepTime: time);
+                    editableOptions = editableOptions.copyWith(
+                        goToSleepTime: time.add(
+                            Duration(milliseconds: Random().nextInt(100))));
                     //DateTime wakeUpTime =
                     //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
                     //_dateTime = time;

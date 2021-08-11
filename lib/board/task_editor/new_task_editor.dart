@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
@@ -498,8 +499,9 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
                     time: editableRegularTask.timeStart,
                     onTimeChange: (time) {
                       setState(() {
-                        editableRegularTask =
-                            editableRegularTask.copyWith(timeStart: time);
+                        editableRegularTask = editableRegularTask.copyWith(
+                            timeStart: time.add(
+                                Duration(milliseconds: Random().nextInt(100))));
                         //DateTime wakeUpTime =
                         //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
                         //_dateTime = time;
