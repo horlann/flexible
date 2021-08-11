@@ -9,6 +9,7 @@ import 'package:flexible/board/models/tasks/task.dart';
 import 'package:flexible/board/task_editor/color_picker_row.dart';
 import 'package:flexible/board/task_editor/deadline_chooser.dart';
 import 'package:flexible/board/task_editor/icon_picker_page.dart';
+import 'package:flexible/board/task_editor/ogtimepicker.dart';
 import 'package:flexible/board/task_editor/priority_chooser.dart';
 import 'package:flexible/board/task_editor/row_with_close_btn.dart';
 import 'package:flexible/board/task_editor/supertask_daily_duration_slider.dart';
@@ -331,8 +332,6 @@ class RegularTaskEditorBody extends StatefulWidget {
 class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
   late RegularTask editableRegularTask;
   late StreamSubscription onSubmit;
-  PageController _hPontroller = PageController(viewportFraction: 0.4);
-  PageController _mPcontroller = PageController(viewportFraction: 0.4);
 
   @override
   void initState() {
@@ -456,167 +455,68 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
               color: Colors.white),
         ),
         GestureDetector(
-          // behavior: HitTestBehavior.opaque,
-          onHorizontalDragStart: (details) {
-            print('h');
-          },
-          child: Container(
-              margin:
-                  EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
-              padding:
-                  EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(
-                    15 * byWithScale(context),
-                  ),
-                ),
-              ),
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Align(
-                      child: Text(
-                        ":",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      alignment: Alignment.center,
-                    ),
-                  ),
-                  TimePickerSpinner(
-                    alignment: Alignment.center,
-                    isForce2Digits: true,
-                    is24HourMode: true,
-                    itemHeight: 30 * byWithScale(context),
-                    itemWidth: 60 * byWithScale(context),
-                    normalTextStyle: TextStyle(
-                        color: Colors.grey, fontSize: 55 / pRatio(context)),
-                    highlightedTextStyle: TextStyle(
-                        color: Colors.black, fontSize: 55 / pRatio(context)),
-                    spacing: 0,
-                    minutesInterval: 1,
-                    time: editableRegularTask.timeStart,
-                    onTimeChange: (time) {
-                      setState(() {
-                        editableRegularTask = editableRegularTask.copyWith(
-                            timeStart: time.add(
-                                Duration(milliseconds: Random().nextInt(100))));
-                        //DateTime wakeUpTime =
-                        //DateUtils.dateOnly(editableOptions.wakeUpTime).add(time);
-                        //_dateTime = time;
-                      });
-                    },
-                  ),
-
-                  // Custom prototype of picker
-
-                  // Row(
-                  //   children: [
-                  //     // Spacer(
-                  //     //   flex: 2,
-                  //     // ),
-                  //     Flexible(
-                  //       child: Container(
-                  //         height: 150,
-                  //         child: NotificationListener<ScrollNotification>(
-                  //           onNotification: (notification) {
-                  //             if (notification is ScrollEndNotification) {
-                  //               Timer(Duration(milliseconds: 1), () {
-                  //                 _hPontroller.animateToPage(
-                  //                     _hPontroller.page!.round(),
-                  //                     duration: Duration(milliseconds: 400),
-                  //                     curve: Curves.bounceOut);
-                  //               });
-                  //             }
-                  //             return false;
-                  //           },
-                  //           child: PageView.builder(
-                  //             physics: BouncingScrollPhysics(),
-                  //             pageSnapping: false,
-                  //             scrollDirection: Axis.vertical,
-                  //             controller: _hPontroller,
-                  //             allowImplicitScrolling: true,
-                  //             itemCount: 24,
-                  //             itemBuilder: (context, index) {
-                  //               return Container(
-                  //                 padding: EdgeInsets.only(
-                  //                     left: 32 * byWithScale(context)),
-                  //                 // color: Colors.red,
-                  //                 child: Center(
-                  //                   child: Text(index.toString(),
-                  //                       style: TextStyle(
-                  //                           color: Colors.grey,
-                  //                           fontSize: 55 / pRatio(context))),
-                  //                 ),
-                  //               );
-                  //             },
-                  //             onPageChanged: (value) {
-                  //               print(value);
-                  //               // _pcontroller.animateToPage(10,
-                  //               //     duration: Duration(seconds: 1),
-                  //               //     curve: Curves.easeInOut);
-                  //             },
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     // Spacer(
-                  //     //   flex: 1,
-                  //     // ),
-                  //     Flexible(
-                  //       child: Container(
-                  //         height: 150,
-                  //         child: NotificationListener<ScrollNotification>(
-                  //           onNotification: (notification) {
-                  //             if (notification is ScrollEndNotification) {
-                  //               Timer(Duration(milliseconds: 1), () {
-                  //                 _mPcontroller.animateToPage(
-                  //                     _mPcontroller.page!.round(),
-                  //                     duration: Duration(milliseconds: 400),
-                  //                     curve: Curves.bounceOut);
-                  //               });
-                  //             }
-                  //             return false;
-                  //           },
-                  //           child: PageView.builder(
-                  //             physics: BouncingScrollPhysics(),
-                  //             pageSnapping: false,
-                  //             scrollDirection: Axis.vertical,
-                  //             controller: _mPcontroller,
-                  //             allowImplicitScrolling: true,
-                  //             itemCount: 60,
-                  //             itemBuilder: (context, index) {
-                  //               return Container(
-                  //                 // color: Colors.red,
-                  //                 padding: EdgeInsets.only(
-                  //                     right: 32 * byWithScale(context)),
-                  //                 child: Center(
-                  //                   child: Text(index.toString(),
-                  //                       style: TextStyle(
-                  //                           color: Colors.grey,
-                  //                           fontSize: 55 / pRatio(context))),
-                  //                 ),
-                  //               );
-                  //             },
-                  //             onPageChanged: (value) {
-                  //               print(value);
-                  //               // _pcontroller.animateToPage(10,
-                  //               //     duration: Duration(seconds: 1),
-                  //               //     curve: Curves.easeInOut);
-                  //             },
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     // Spacer(
-                  //     //   flex: 2,
-                  //     // ),
-                  //   ],
-                  // ),
-                ],
-              )),
+          onHorizontalDragDown: (details) {},
+          child: OgTimePicker(
+            initTime: editableRegularTask.timeStart,
+            onChange: (time) {
+              editableRegularTask = editableRegularTask.copyWith(
+                  timeStart:
+                      time.add(Duration(milliseconds: Random().nextInt(100))));
+            },
+          ),
         ),
+        // GestureDetector(
+        //   // behavior: HitTestBehavior.opaque,
+        //   onHorizontalDragStart: (details) {
+        //     print('h');
+        //   },
+        //   child: Container(
+        //     margin: EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
+        //     padding: EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
+        //     decoration: BoxDecoration(
+        //       color: Colors.white,
+        //       borderRadius: BorderRadius.all(
+        //         Radius.circular(
+        //           15 * byWithScale(context),
+        //         ),
+        //       ),
+        //     ),
+        //     child: Stack(
+        //       children: [
+        //         Positioned.fill(
+        //           child: Align(
+        //             child: Text(
+        //               ":",
+        //               style: TextStyle(fontSize: 20),
+        //             ),
+        //             alignment: Alignment.center,
+        //           ),
+        //         ),
+        //         TimePickerSpinner(
+        //           alignment: Alignment.center,
+        //           isForce2Digits: true,
+        //           is24HourMode: true,
+        //           itemHeight: 30 * byWithScale(context),
+        //           itemWidth: 60 * byWithScale(context),
+        //           normalTextStyle: TextStyle(
+        //               color: Colors.grey, fontSize: 55 / pRatio(context)),
+        //           highlightedTextStyle: TextStyle(
+        //               color: Colors.black, fontSize: 55 / pRatio(context)),
+        //           spacing: 0,
+        //           minutesInterval: 1,
+        //           time: editableRegularTask.timeStart,
+        //           onTimeChange: (time) {
+        //             setState(() {
+        //               editableRegularTask = editableRegularTask.copyWith(
+        //                   timeStart: time.add(
+        //                       Duration(milliseconds: Random().nextInt(100))));
+        //             });
+        //           },
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
         Wrap(
           children: [
             Text(
