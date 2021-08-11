@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 class OgTimePicker extends StatefulWidget {
   final DateTime initTime;
@@ -39,6 +40,7 @@ class _OgTimePickerState extends State<OgTimePicker> {
         .add(Duration(hours: hValue, minutes: mValue));
     // print(time);
     widget.onChange(time);
+    Vibrate.feedback(FeedbackType.light);
   }
 
   @override
