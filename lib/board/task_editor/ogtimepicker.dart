@@ -74,7 +74,7 @@ class _OgTimePickerState extends State<OgTimePicker> {
               // ),
               Flexible(
                 child: Container(
-                  height: 150,
+                  height: 100 * byWithScale(context),
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (notification) {
                       if (notification is ScrollEndNotification) {
@@ -123,7 +123,7 @@ class _OgTimePickerState extends State<OgTimePicker> {
               // ),
               Flexible(
                 child: Container(
-                  height: 150,
+                  height: 100 * byWithScale(context),
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (notification) {
                       if (notification is ScrollEndNotification) {
