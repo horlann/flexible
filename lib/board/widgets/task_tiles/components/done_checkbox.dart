@@ -45,11 +45,9 @@ class _DoneCheckboxState extends State<DoneCheckbox>
   }
 
   Future<void> vibro() async {
-    !_canVibrate
-        ? null
-        : () {
-            Vibrate.feedback(FeedbackType.light);
-          };
+    if (_canVibrate) {
+      Vibrate.feedback(FeedbackType.light);
+    }
   }
 
   @override
@@ -57,14 +55,14 @@ class _DoneCheckboxState extends State<DoneCheckbox>
     print(widget.checked.toString() + "     ddd");
     _animState = widget.checked;
     return GestureDetector(
-      onTap: () =>
-      {
-        widget.onClick(),
+      onTap: () {
+        widget.onClick();
         _animState
-            ? {_animationController.reset()}
-            : {_animationController.forward(), vibro()},
-        _animState = !_animState,
-        print(_animState)
+            ? _animationController.reset()
+            : _animationController.forward();
+        if (!_animState) vibro();
+        _animState = !_animState;
+        print(_animState);
       },
       child: Container(
           margin: EdgeInsets.only(top: 12),
