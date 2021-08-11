@@ -32,6 +32,7 @@ class _DoneCheckboxState extends State<DoneCheckbox>
 
     _animation = new Tween<double>(begin: 0, end: 1).animate(
         new CurvedAnimation(parent: _animationController, curve: Curves.ease));
+    widget.checked ? _animationController.animateTo(3) : null;
   }
 
   init() async {
