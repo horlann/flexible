@@ -88,9 +88,9 @@ flutter_native_splash:
 
 
 flutter_icons:
-  android: false
+  android: true
   ios: true
-  image_path: "src/launcher_ios.png"
+  image_path: "src/launcher2.png"
 
 
 # For information on the generic Dart part of this file, see the
