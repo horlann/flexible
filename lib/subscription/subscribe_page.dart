@@ -1,21 +1,14 @@
 import 'dart:ui';
 
-import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flexible/authentification/code_verification_page.dart';
-import 'package:flexible/authentification/sign_in_page.dart';
-import 'package:flexible/authentification/terms_of_use.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
-import 'package:flexible/board/widgets/weather_bg.dart';
-import 'package:flexible/helper/helper_page.dart';
-import 'package:flexible/helper/helper_wrapper.dart';
-import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
-import 'package:flexible/subscription/subscription_wrapper.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/subscribe_bloc.dart';
 
 class SubscribePage extends StatefulWidget {
   SubscribePage({Key? key}) : super(key: key);
