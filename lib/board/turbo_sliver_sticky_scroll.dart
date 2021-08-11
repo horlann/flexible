@@ -213,7 +213,12 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
         if (state is WeatherLoaded &&
             widget.dayOptions.goToSleepTime
                 .difference(state.sunset)
-                .isNegative) {
+                .isNegative &&
+            !(widget.dayOptions.goToSleepTime
+                    .difference(
+                        DateUtils.dateOnly(widget.dayOptions.goToSleepTime))
+                    .inMinutes <
+                30)) {
           w = w.reversed.toList();
         }
         return SliverList(delegate: SliverChildListDelegate(w));
