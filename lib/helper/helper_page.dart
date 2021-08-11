@@ -300,7 +300,7 @@ class Helper3 extends StatelessWidget {
         Text(
           'Increase productivity',
           style: TextStyle(
-              color: Colors.white, fontSize: 32, fontWeight: FontWeight.w700),
+              color: Colors.white, fontSize: 30, fontWeight: FontWeight.w700),
         ),
         Text(
           'Start with your first task',
@@ -321,9 +321,11 @@ class Helper3 extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Text(
             'You can change this later in the settings',
+            textAlign: TextAlign.center, // overflow: TextOverflow.visible,
+
             style: TextStyle(
                 color: Color(0xffE24F4F),
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: FontWeight.w400),
           ),
         ),
@@ -399,9 +401,11 @@ class Helper4 extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Text(
             'You can change this later in the settings',
+            textAlign: TextAlign.center, // overflow: TextOverflow.visible,
+
             style: TextStyle(
                 color: Color(0xffE24F4F),
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: FontWeight.w400),
           ),
         ),
@@ -476,12 +480,17 @@ class Helper6 extends StatelessWidget {
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Text(
-            'Stop wasting time - divide your day into small tasks',
-            style: TextStyle(
-                color: Color(0xffE24F4F),
-                fontSize: 14,
-                fontWeight: FontWeight.w400),
+          child: Wrap(
+            children: [
+              Text(
+                'Stop wasting time - divide your day into small tasks',
+                textAlign: TextAlign.center, // overflow: TextOverflow.visible,
+                style: TextStyle(
+                    color: Color(0xffE24F4F),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400),
+              ),
+            ],
           ),
         ),
         Spacer(
@@ -555,10 +564,13 @@ class Helper5 extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Text(
+
             'You can change this later in the settings',
+            textAlign: TextAlign.center, // overflow: TextOverflow.visible,
+
             style: TextStyle(
                 color: Color(0xffE24F4F),
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: FontWeight.w400),
           ),
         ),

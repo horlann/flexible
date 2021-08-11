@@ -10,7 +10,7 @@ abstract class Task {
   final Duration period;
   final bool isDone;
   final bool isDonable;
-  final bool timeLock;
+  late final bool timeLock;
   final Color color;
   final String iconId;
 

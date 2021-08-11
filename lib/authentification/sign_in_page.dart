@@ -244,7 +244,9 @@ class _SignInPageState extends State<SignInPage> {
               focusNode: focusNode,
               controller: controller,
               keyboardType: TextInputType.phone,
-              style: TextStyle(fontSize: 12 * byWithScale(context)),
+              style: TextStyle(
+                  fontSize: 12 * byWithScale(context),
+                  color: Color(0xffE24F4F)),
               decoration: InputDecoration(
                   prefixIcon: Container(
                     margin: const EdgeInsets.only(left: 8, bottom: 2),
