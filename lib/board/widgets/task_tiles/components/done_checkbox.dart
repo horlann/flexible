@@ -27,8 +27,8 @@ class _DoneCheckboxState extends State<DoneCheckbox>
   void initState() {
     super.initState();
     init();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    _animationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1200));
 
     _animation = new Tween<double>(begin: 0, end: 1).animate(
         new CurvedAnimation(parent: _animationController, curve: Curves.ease));
