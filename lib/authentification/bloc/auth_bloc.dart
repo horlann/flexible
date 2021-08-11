@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flexible/authentification/models/user_data_model.dart';
 import 'package:flexible/authentification/services/firebase_auth.dart';
 import 'package:flexible/authentification/services/users_data_repository.dart';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:qonversion_flutter/qonversion_flutter.dart';
 
 part 'auth_event.dart';

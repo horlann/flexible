@@ -1,3 +1,4 @@
+import 'package:flexible/authentification/models/user_data_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flexible/authentification/models/user_data_model.dart';
 
@@ -5,7 +6,7 @@ class UsersDataRepo {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   CollectionReference _usersCollection =
-      FirebaseFirestore.instance.collection('users');
+  FirebaseFirestore.instance.collection('users');
 
   Future<List<UserData>> getUsers() async {
     QuerySnapshot usersSnap = await _usersCollection.get();
@@ -26,7 +27,7 @@ class UsersDataRepo {
 
   Future<bool> existsByPhone(String phone) async {
     QuerySnapshot documentSnapshot =
-        await _usersCollection.where('phoneNumber', isEqualTo: phone).get();
+    await _usersCollection.where('phoneNumber', isEqualTo: phone).get();
     return documentSnapshot.docs.isNotEmpty;
   }
 

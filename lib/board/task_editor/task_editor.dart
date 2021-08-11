@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart';
+import 'package:flexible/board/board_page.dart';
 import 'package:flexible/board/task_editor/color_picker_row.dart';
 import 'package:flexible/board/task_editor/icon_picker_page.dart';
 import 'package:flexible/board/task_editor/row_with_close_btn.dart';
@@ -362,7 +363,7 @@ class _TaskEditorState extends State<TaskEditor> {
               callback: () {
                 BlocProvider.of<DailytasksBloc>(context)
                     .add(DailytasksDeleteTask(task: editableTask));
-                Navigator.pop(context);
+                Navigator.of(context).push(_createRoute());
               },
               text: 'DELETE'),
         ),
@@ -370,6 +371,24 @@ class _TaskEditorState extends State<TaskEditor> {
           height: 8 * byWithScale(context),
         ),
       ],
+    );
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => BoardPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 
@@ -547,3 +566,4 @@ class _TaskEditorState extends State<TaskEditor> {
     );
   }
 }
+
