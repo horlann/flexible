@@ -8,7 +8,6 @@ import 'package:flexible/board/widgets/task_tiles/sunset_tile.dart';
 import 'package:flexible/board/widgets/task_tiles/system_tile.dart';
 import 'package:flexible/utils/modal.dart';
 import 'package:flexible/weather/bloc/weather_bloc.dart';
-import 'package:flexible/weather/openweather_service.dart';
 import 'package:flexible/widgets/modals/daily_task_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +29,8 @@ class TurboAnimatedScrollView extends StatefulWidget {
       _TurboAnimatedScrollViewState();
 }
 
-class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
+class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView>
+    with TickerProviderStateMixin {
   ScrollController scr = ScrollController();
   double topOverscroll = 16;
   double bottomOverscroll = 0;
@@ -41,6 +41,10 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
   GlobalKey sunrisekey = GlobalKey();
   bool isSunrise = true;
   bool isSunset = true;
+  late AnimationController controller;
+  late AnimationController controller2;
+  late Animation<double> animation;
+  late Animation<double> animation2;
 
   Rect? _getOffset(GlobalKey? key) {
     if (key == null) return null;
@@ -94,6 +98,21 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
         });
       }
     });
+    controller = new AnimationController(
+        duration: Duration(milliseconds: 300), vsync: this)
+      ..addListener(() => setState(() {}));
+    controller2 = new AnimationController(
+        duration: Duration(milliseconds: 300), vsync: this)
+      ..addListener(() => setState(() {}));
+    animation = Tween(begin: 0.0, end: 550.0).animate(controller);
+    animation2 = Tween(begin: 0.0, end: 550.0).animate(controller);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    controller2.dispose();
+    super.dispose();
   }
 
   @override
@@ -115,14 +134,14 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
           // Its size grows with list size
           Positioned.fill(
               child: Padding(
-            padding: EdgeInsets.only(
-                left: isLessThen350() ? 64 : 82,
-                top: topOverscroll,
-                bottom: bottomLinePadding),
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(width: 2, color: Colors.white)),
-          )),
+                padding: EdgeInsets.only(
+                    left: isLessThen350() ? 64 : 82,
+                    top: topOverscroll,
+                    bottom: bottomLinePadding),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(width: 2, color: Colors.white)),
+              )),
           // The sliver
           CustomScrollView(
             cacheExtent: 200,
@@ -191,20 +210,38 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                       ));
                 }, 'Edit'));
           }),
+      Builder(
+        builder: (BuildContext context) {
+          if (isSunset) {
+            return Transform.translate(
+              offset: Offset(animation2.value, 0.0),
+
+              child: SusetTile(
+                  key: sunsetkey,
+                  callback: () {
+                    showModal(
+                        context,
+                        DailyTaskModal(
+                            widget.dayOptions,
+                            _getOffset(sunsetkey)?.top ?? 250,
+                                () {
+                              controller2.forward();
+                              Future.delayed(
+                                Duration(milliseconds: 300), () {
+                                setState(() {
+                                  isSunset = !isSunset;
+                                });
+                              },
+                              );
+                            }, "Disable"));
+                  }),
+            );
+          } else {
+            return Container();
+          }
+        },
+      )
       // Check if disabled
-      if (isSunset)
-        SusetTile(
-            key: sunsetkey,
-            callback: () {
-              showModal(
-                  context,
-                  DailyTaskModal(
-                      widget.dayOptions, _getOffset(sunsetkey)?.top ?? 250, () {
-                    setState(() {
-                      isSunset = !isSunset;
-                    });
-                  }, "Disable"));
-            }),
     ];
 
     // Reverse position of goodnight and sunset by time
@@ -218,10 +255,14 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
               widget.dayOptions.goToSleepTime.hour,
               widget.dayOptions.goToSleepTime.minute);
           DateTime sunset =
-              DateTime(2017, 9, 7, state.sunset.hour, state.sunset.minute);
+          DateTime(2017, 9, 7, state.sunset.hour, state.sunset.minute);
           if (state is WeatherLoaded &&
-              sleepTime.difference(sunset).isNegative &&
-              !(sleepTime.difference(DateUtils.dateOnly(sleepTime)).inMinutes <
+              sleepTime
+                  .difference(sunset)
+                  .isNegative &&
+              !(sleepTime
+                  .difference(DateUtils.dateOnly(sleepTime))
+                  .inMinutes <
                   30)) {
             w = w.reversed.toList();
           }
@@ -257,20 +298,37 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
                 }, 'Edit'));
           }),
       // Check if disabled
-      if (isSunrise)
-        SunriseTile(
-            key: sunrisekey,
-            callback: () {
-              showModal(
-                  context,
-                  DailyTaskModal(
-                      widget.dayOptions, _getOffset(sunrisekey)?.top ?? 40, () {
-                    setState(() {
-                      isSunrise = !isSunrise;
-                    });
-                    ;
-                  }, "Disable"));
-            }),
+      Builder(
+        builder: (BuildContext context) {
+          if (isSunrise) {
+            return Transform.translate(
+              offset: Offset(animation.value, 0.0),
+
+              child: SunriseTile(
+                  key: sunrisekey,
+                  callback: () {
+                    showModal(
+                        context,
+                        DailyTaskModal(
+                            widget.dayOptions,
+                            _getOffset(sunrisekey)?.top ?? 250,
+                                () {
+                              controller.forward();
+                              Future.delayed(
+                                Duration(milliseconds: 300), () {
+                                setState(() {
+                                  isSunrise = !isSunrise;
+                                });
+                              },
+                              );
+                            }, "Disable"));
+                  }),
+            );
+          } else {
+            return Container();
+          }
+        },
+      )
     ];
 
     // Reverse position of morning and sunrise by time
@@ -284,10 +342,12 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
               widget.dayOptions.wakeUpTime.hour,
               widget.dayOptions.wakeUpTime.minute);
           DateTime sunrise =
-              DateTime(2017, 9, 7, state.sunrise.hour, state.sunrise.minute);
+          DateTime(2017, 9, 7, state.sunrise.hour, state.sunrise.minute);
 
           if (state is WeatherLoaded &&
-              wakeupTime.difference(sunrise).isNegative) {
+              wakeupTime
+                  .difference(sunrise)
+                  .isNegative) {
             w = w.reversed.toList();
           }
         }

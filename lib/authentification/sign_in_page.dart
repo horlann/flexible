@@ -245,12 +245,12 @@ class _SignInPageState extends State<SignInPage> {
               controller: controller,
               keyboardType: TextInputType.phone,
               style: TextStyle(
-                  fontSize: 12 * byWithScale(context),
+                  fontSize: 10 * byWithScale(context),
                   color: Color(0xffE24F4F)),
               decoration: InputDecoration(
                   prefixIcon: Container(
                     margin: const EdgeInsets.only(left: 8, bottom: 2),
-                    width: 50,
+                    width: 70 * byWithScale(context),
 
                     //color: Color(0xffE24F4F),
                     alignment: Alignment.center,

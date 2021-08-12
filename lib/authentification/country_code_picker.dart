@@ -1,4 +1,3 @@
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
@@ -22,8 +21,10 @@ class CountryCodePickerWidegt extends StatefulWidget {
 
 class _CountryCodePickerWidegtState extends State<CountryCodePickerWidegt> {
   String isoCode = 'GB';
+  Country? countryy;
 
   var prefixTapped = false;
+
   @override
   void initState() {
     super.initState();
@@ -67,11 +68,12 @@ class _CountryCodePickerWidegtState extends State<CountryCodePickerWidegt> {
                 setState(() {
                   isoCode = country.isoCode;
                   widget.onChange('+' + country.phoneCode);
+                  //countryy = country;
                 });
               },
               // itemFilter: (c) => ['AR', 'DE', 'GB', 'CN'].contains(c.isoCode),
               priorityList: [
-                CountryPickerUtils.getCountryByIsoCode('TR'),
+                //CountryPickerUtils.getCountryByIsoCode('TR'),
                 CountryPickerUtils.getCountryByIsoCode('US'),
               ],
             )),
@@ -85,10 +87,33 @@ class _CountryCodePickerWidegtState extends State<CountryCodePickerWidegt> {
         widget.focusNode.unfocus();
         _openCountryPickerDialog(context);
       },
-      child: Text(
-          '+' + CountryPickerUtils.getCountryByIsoCode(isoCode).phoneCode,
-          style: TextStyle(
-              fontSize: 12 * byWithScale(context), color: Color(0xffE24F4F))),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 5, 5, 2),
+            child: Container(
+                width: 24 * byWithScale(context),
+                height: 15 * byWithScale(context),
+                child: CountryPickerUtils.getDefaultFlagImage(
+                    CountryPickerUtils.getCountryByIsoCode(isoCode))),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 3.0),
+            child: Center(
+              child: Text(
+                  '+' +
+                      CountryPickerUtils.getCountryByIsoCode(isoCode).phoneCode,
+                  style: TextStyle(
+                      fontSize: 10 * byWithScale(context),
+                      color: Color(0xffE24F4F))),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

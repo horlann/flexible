@@ -1,10 +1,12 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/board/board_page.dart';
 import 'package:flexible/board/task_editor/color_picker_row.dart';
 import 'package:flexible/board/task_editor/icon_picker_page.dart';
 import 'package:flexible/board/task_editor/ogtimepicker.dart';
+import 'package:flexible/board/task_editor/routes.dart';
 import 'package:flexible/board/task_editor/row_with_close_btn.dart';
 import 'package:flexible/board/task_editor/task_icon_in_round.dart';
 import 'package:flexible/board/task_editor/task_period_slider.dart';
@@ -38,6 +40,7 @@ class TaskEditor extends StatefulWidget {
 
 class _TaskEditorState extends State<TaskEditor> {
   late RegularTask editableTask;
+  GlobalKey key = GlobalKey();
 
   @override
   void initState() {
@@ -49,10 +52,14 @@ class _TaskEditorState extends State<TaskEditor> {
   // Open picker
   // Picker should return icon id as string
   openImgPicker() {
+    print(_getOffset(key));
     Navigator.push(
         context,
-        CupertinoPageRoute(
-          builder: (context) => IconPickerPage(),
+        RevealRoute(
+          page: IconPickerPage(),
+          maxRadius: 800,
+          centerAlignment: Alignment.center,
+          centerOffset: _getOffset(key),
         )).then((iconId) {
       if (iconId != null) {
         setState(() {
@@ -62,6 +69,18 @@ class _TaskEditorState extends State<TaskEditor> {
     });
   }
 
+  Offset? _getOffset(GlobalKey? key) {
+    if (key == null) return null;
+    final renderObject = key.currentContext?.findRenderObject();
+    var translation = renderObject?.getTransformTo(null).getTranslation();
+    print(Offset(translation!.x, translation.y).toString());
+
+    if (translation != null && renderObject?.paintBounds != null) {
+      return Offset(translation.x, translation.y);
+    } else {
+      return null;
+    }
+  }
   void showSnackBar(
       BuildContext buildContext, String text, bool isProgressive) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -249,13 +268,19 @@ class _TaskEditorState extends State<TaskEditor> {
                                   fontWeight: FontWeight.w500),
                             ),
                             SizedBox(height: 14 * byWithScale(context)),
-                            ColorPickerRow(callback: (color) {
-                              print(color);
-                              setState(() {
-                                editableTask =
-                                    editableTask.copyWith(color: color);
-                              });
-                            }),
+                            Flexible(
+                              child: ConstrainedBox(
+
+                                constraints: BoxConstraints(maxHeight: 80),
+                                child: ColorPickerRow(callback: (color) {
+                                  print(color);
+                                  setState(() {
+                                    editableTask =
+                                        editableTask.copyWith(color: color);
+                                  });
+                                }),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -490,8 +515,8 @@ class _TaskEditorState extends State<TaskEditor> {
               }
               editableTask = editableTask.copyWith(forAi: true);
             },
-            child: Hero(
-              tag: widget.task,
+            child: Container(
+              key: key,
               child: TaskIconInRound(
                 iconId: editableTask.iconId,
                 taskColor: editableTask.color,
@@ -523,6 +548,49 @@ class _TaskEditorState extends State<TaskEditor> {
         ],
       ),
     );
+  }
+}
+
+
+class CircularRevealClipper extends CustomClipper<Path> {
+  final double fraction;
+  final Alignment centerAlignment;
+  final Offset centerOffset;
+  final double minRadius;
+  final double maxRadius;
+
+  CircularRevealClipper({
+    required this.fraction,
+    required this.centerAlignment,
+    required this.centerOffset,
+    required this.minRadius,
+    required this.maxRadius,
+  });
+
+  @override
+  Path getClip(Size size) {
+    final Offset center = this.centerAlignment.alongSize(size) ??
+        this.centerOffset ??
+        Offset(size.width / 2, size.height / 2);
+    final minRadius = this.minRadius ?? 0;
+    final maxRadius = this.maxRadius ?? calcMaxRadius(size, center);
+
+    return Path()
+      ..addOval(
+        Rect.fromCircle(
+          center: center,
+          radius: lerpDouble(minRadius, maxRadius, fraction)!,
+        ),
+      );
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
+
+  static double calcMaxRadius(Size size, Offset center) {
+    final w = max(center.dx, size.width - center.dx);
+    final h = max(center.dy, size.height - center.dy);
+    return sqrt(w * w + h * h);
   }
 }
 
