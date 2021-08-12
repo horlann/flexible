@@ -44,16 +44,21 @@ class MiniWhiteButton extends StatelessWidget {
     return GestureDetector(
       onTap: () => callback(),
       child: Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: 8 * byWithScale(context),
-              vertical: 4 * byWithScale(context)),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(12)),
-          child: Text(text,
-              style: TextStyle(
-                  fontSize: 10 * byWithScale(context),
-                  color: Colors.black,
-                  fontWeight: FontWeight.w900))),
+        color: Colors.transparent,
+        alignment: Alignment.center,
+        height: 40 * byWithScale(context),
+        child: Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: 8 * byWithScale(context),
+                vertical: 4 * byWithScale(context)),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(12)),
+            child: Text(text,
+                style: TextStyle(
+                    fontSize: 10 * byWithScale(context),
+                    color: Colors.black,
+                    fontWeight: FontWeight.w900))),
+      ),
     );
   }
 }

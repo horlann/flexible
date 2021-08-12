@@ -52,7 +52,10 @@ class _State extends State<RegularTaskModal> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     var data = MediaQuery.of(context);
     return GestureDetector(
-        onTap: () => Navigator.pop(context),
+        onTap: () async {
+         
+          _controller.reverse().then((value) => Navigator.pop(context));
+        },
         child: Container(
             color: Colors.transparent,
             height: -63 +

@@ -210,17 +210,23 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
     // Reverse position of goodnight and sunset by time
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
-        if (state is WeatherLoaded &&
-            widget.dayOptions.goToSleepTime
-                .difference(state.sunset)
-                .isNegative &&
-            !(widget.dayOptions.goToSleepTime
-                    .difference(
-                        DateUtils.dateOnly(widget.dayOptions.goToSleepTime))
-                    .inMinutes <
-                30)) {
-          w = w.reversed.toList();
+        if (state is WeatherLoaded) {
+          DateTime sleepTime = DateTime(
+              2017,
+              9,
+              7,
+              widget.dayOptions.goToSleepTime.hour,
+              widget.dayOptions.goToSleepTime.minute);
+          DateTime sunset =
+              DateTime(2017, 9, 7, state.sunset.hour, state.sunset.minute);
+          if (state is WeatherLoaded &&
+              sleepTime.difference(sunset).isNegative &&
+              !(sleepTime.difference(DateUtils.dateOnly(sleepTime)).inMinutes <
+                  30)) {
+            w = w.reversed.toList();
+          }
         }
+
         return SliverList(delegate: SliverChildListDelegate(w));
       },
     );
@@ -270,10 +276,22 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView> {
     // Reverse position of morning and sunrise by time
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
-        if (state is WeatherLoaded &&
-            widget.dayOptions.wakeUpTime.difference(state.sunrise).isNegative) {
-          w = w.reversed.toList();
+        if (state is WeatherLoaded) {
+          DateTime wakeupTime = DateTime(
+              2017,
+              9,
+              7,
+              widget.dayOptions.wakeUpTime.hour,
+              widget.dayOptions.wakeUpTime.minute);
+          DateTime sunrise =
+              DateTime(2017, 9, 7, state.sunrise.hour, state.sunrise.minute);
+
+          if (state is WeatherLoaded &&
+              wakeupTime.difference(sunrise).isNegative) {
+            w = w.reversed.toList();
+          }
         }
+
         return SliverList(delegate: SliverChildListDelegate(w));
       },
     );

@@ -66,7 +66,7 @@ class _BoardPageState extends State<BoardPage> {
                 ),
                 BottomDatePicker(),
                 SizedBox(
-                  height: 16,
+                  height: 8,
                 ),
               ],
             ),
