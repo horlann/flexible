@@ -88,10 +88,16 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                       ),
                       secondChild: GestureDetector(
                         onTap: () => onTapLeft(),
-                        child: Image.asset(
-                          'src/icons/arrow_left.png',
-                          width: 18 * byWithScale(context),
-                          fit: BoxFit.fitWidth,
+                        child: Container(
+                          color: Colors.transparent,
+                          alignment: Alignment.center,
+                          width: 40 * byWithScale(context),
+                          height: 40 * byWithScale(context),
+                          child: Image.asset(
+                            'src/icons/arrow_left.png',
+                            width: 24 * byWithScale(context),
+                            fit: BoxFit.fitWidth,
+                          ),
                         ),
                       ),
                     ),
@@ -126,10 +132,16 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                       ),
                       secondChild: GestureDetector(
                         onTap: () => onTapRight(),
-                        child: Image.asset(
-                          'src/icons/arrow_right.png',
-                          width: 18 * byWithScale(context),
-                          fit: BoxFit.fitWidth,
+                        child: Container(
+                          color: Colors.transparent,
+                          alignment: Alignment.center,
+                          width: 40 * byWithScale(context),
+                          height: 40 * byWithScale(context),
+                          child: Image.asset(
+                            'src/icons/arrow_right.png',
+                            width: 24 * byWithScale(context),
+                            fit: BoxFit.fitWidth,
+                          ),
                         ),
                       ),
                     )
