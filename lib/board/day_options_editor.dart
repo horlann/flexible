@@ -147,7 +147,7 @@ class _TaskEditorState extends State<DayOptionsEditor> {
     return GestureDetector(
       onHorizontalDragDown: (details) {},
       child: OgTimePicker(
-        initTime: widget.dayOptions.goToSleepTime,
+        initTime: widget.dayOptions.wakeUpTime,
         onChange: (time) {
           setState(() {
             setState(() {
