@@ -432,12 +432,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              // width: byWithScale(context) * 150,
-              // height: byWithScale(context) * 35,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
               child: TextFormField(
                 validator: (value) {
                   return phoneNumberValidator(
