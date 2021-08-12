@@ -32,22 +32,24 @@ class _IconPickerPageState extends State<IconPickerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: SizedBox.expand(
-        child: CustomScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: true,
-              child: Stack(children: [
-                Container(
-                  child: WeatherBg(),
-                  width: double.maxFinite,
-                  height: double.maxFinite,
-                ),
-                SafeArea(child: buildBody(context))
-              ]),
-            ),
-          ],
+      body: Center(
+        child: SizedBox.expand(
+          child: CustomScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            slivers: [
+              SliverFillRemaining(
+                hasScrollBody: true,
+                child: Stack(children: [
+                  Container(
+                    child: WeatherBg(),
+                    width: double.maxFinite,
+                    height: double.maxFinite,
+                  ),
+                  SafeArea(child: buildBody(context))
+                ]),
+              ),
+            ],
+          ),
         ),
       ),
     );

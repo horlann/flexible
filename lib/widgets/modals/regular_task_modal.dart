@@ -1,5 +1,4 @@
 import 'package:flexible/board/models/tasks/task.dart';
-import 'package:flexible/board/widgets/task_tiles/components/hidable_lock.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/colors.dart';
 import 'package:flexible/utils/triangle.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 class RegularTaskModal extends StatefulWidget {
   final Task task;
@@ -27,6 +27,10 @@ class _State extends State<RegularTaskModal> with TickerProviderStateMixin {
     duration: const Duration(milliseconds: 300),
     vsync: this,
   );
+  late final AnimationController _controllerLock = AnimationController(
+    duration: const Duration(milliseconds: 2500),
+    vsync: this,
+  );
   late final Animation<double> _animation = CurvedAnimation(
     parent: _controller,
     curve: Curves.fastOutSlowIn,
@@ -40,12 +44,16 @@ class _State extends State<RegularTaskModal> with TickerProviderStateMixin {
     super.initState();
     task = widget.task;
     _controller.forward();
+    task.timeLock
+        ? _controllerLock.animateTo(0.22, duration: Duration(seconds: 0))
+        : _controllerLock.animateTo(0, duration: Duration(seconds: 0));
   }
 
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
+    _controllerLock.dispose();
   }
 
   @override
@@ -53,7 +61,6 @@ class _State extends State<RegularTaskModal> with TickerProviderStateMixin {
     var data = MediaQuery.of(context);
     return GestureDetector(
         onTap: () async {
-         
           _controller.reverse().then((value) => Navigator.pop(context));
         },
         child: Container(
@@ -162,27 +169,63 @@ class _State extends State<RegularTaskModal> with TickerProviderStateMixin {
                                                 return Wrap(
                                                   children: [
                                                     Container(
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 10),
-                                                        child: HidableTimeLock(
-                                                            locked:
-                                                                task.timeLock,
-                                                            onTap: () async {
-                                                              setState(() {
-                                                                task = task.copyWith(
-                                                                    timeLock: !task
-                                                                        .timeLock);
-                                                              });
-                                                              // Navigator.pop(
-                                                              //     context);
-                                                              await widget
-                                                                  .onLockTap
-                                                                  .call();
-                                                            },
-                                                            showLock: true,
-                                                            color: redMain,
-                                                            size: 25)),
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 10),
+//                                                        child: HidableTimeLock(
+//                                                            locked:
+//                                                                task.timeLock,
+//                                                            onTap: () async {
+//                                                              setState(() {
+//                                                                task = task.copyWith(
+//                                                                    timeLock: !task
+//                                                                        .timeLock);
+//                                                              });
+//                                                              // Navigator.pop(
+//                                                              //     context);
+//                                                              await widget
+//                                                                  .onLockTap
+//                                                                  .call();
+//                                                            },
+//                                                            showLock: true,
+//                                                            color: redMain,
+//                                                            size: 25)
+                                                      child: Container(
+                                                        child: GestureDetector(
+                                                          child: Lottie.asset(
+                                                              'src/lottie/padlock.json',
+                                                              controller:
+                                                                  _controllerLock),
+                                                          onTap: () async {
+                                                            _controllerLock
+                                                                        .value ==
+                                                                    0.22
+                                                                ? _controllerLock
+                                                                    .animateTo(
+                                                                        0)
+                                                                : _controllerLock
+                                                                    .animateBack(
+                                                                        0.22);
+                                                            print(_controllerLock
+                                                                    .value
+                                                                    .toString() +
+                                                                "   value");
+                                                            setState(() {
+                                                              task = task.copyWith(
+                                                                  timeLock: !task
+                                                                      .timeLock);
+                                                            });
+                                                            // Navigator.pop(
+                                                            //     context);
+                                                            await widget
+                                                                .onLockTap
+                                                                .call();
+                                                          },
+                                                        ),
+                                                        width: 50,
+                                                        height: 50,
+                                                      ),
+                                                    ),
                                                     GestureDetector(
                                                         onTapCancel: () {
                                                           setState(() =>

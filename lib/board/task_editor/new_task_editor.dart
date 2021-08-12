@@ -11,6 +11,7 @@ import 'package:flexible/board/task_editor/deadline_chooser.dart';
 import 'package:flexible/board/task_editor/icon_picker_page.dart';
 import 'package:flexible/board/task_editor/ogtimepicker.dart';
 import 'package:flexible/board/task_editor/priority_chooser.dart';
+import 'package:flexible/board/task_editor/routes.dart';
 import 'package:flexible/board/task_editor/row_with_close_btn.dart';
 import 'package:flexible/board/task_editor/supertask_daily_duration_slider.dart';
 import 'package:flexible/board/task_editor/supertask_global_duration_slider.dart';
@@ -45,6 +46,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   late Stream submitR;
   StreamController onSubmitCS = StreamController();
   late Stream submitS;
+
   final List<Duration> durations = [
     Duration(minutes: 30),
     Duration(hours: 1),
@@ -317,8 +319,9 @@ class RegularTaskEditorBody extends StatefulWidget {
   final RegularTask? task;
   final Stream submitChanel;
   final Function(Task task) onSubmit;
+  final GlobalKey key = GlobalKey();
 
-  const RegularTaskEditorBody({
+  RegularTaskEditorBody({
     Key? key,
     this.task,
     required this.submitChanel,
@@ -368,10 +371,14 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
   }
 
   openImgPicker() {
+    print(_getOffset(widget.key));
     Navigator.push(
         context,
-        CupertinoPageRoute(
-          builder: (context) => IconPickerPage(),
+        RevealRoute(
+          page: IconPickerPage(),
+          maxRadius: 800,
+          centerAlignment: Alignment.center,
+          centerOffset: _getOffset(widget.key),
         )).then((iconId) {
       if (iconId != null) {
         setState(() {
@@ -379,6 +386,19 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
         });
       }
     });
+  }
+
+  Offset? _getOffset(GlobalKey? key) {
+    if (key == null) return null;
+    final renderObject = key.currentContext?.findRenderObject();
+    var translation = renderObject?.getTransformTo(null).getTranslation();
+    print(Offset(translation!.x, translation.y).toString());
+
+    if (translation != null && renderObject?.paintBounds != null) {
+      return Offset(translation.x, translation.y);
+    } else {
+      return null;
+    }
   }
 
   Widget typeTaskWidget() {

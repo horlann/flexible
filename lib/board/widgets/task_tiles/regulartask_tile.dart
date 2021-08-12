@@ -41,7 +41,7 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
   bool showSubButtons = false;
 
   bool isUnSubscribed() =>
-      (BlocProvider.of<SubscribeBloc>(context).state is! Subscribed);
+      (BlocProvider.of<SubscribeBloc>(context).state is Subscribed);
 
   onCheckClicked(BuildContext context) {
     BlocProvider.of<DailytasksBloc>(context).add(DailytasksUpdateTask(
