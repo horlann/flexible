@@ -226,12 +226,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       fit: BoxFit.cover,
                                     )
                                   : Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(11.0),
-                                    child: Image.asset(
-                                        'src/icons/logo_for_picker_image.png',
-                                        fit: BoxFit.scaleDown),
-                                  )),
+                                      child: Padding(
+                                      padding: const EdgeInsets.all(11.0),
+                                      child: Image.asset(
+                                          'src/icons/logo_for_picker_image.png',
+                                          fit: BoxFit.scaleDown),
+                                    )),
                             ),
                           ),
                         ),
@@ -326,24 +326,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 child: GestureDetector(
                   onTap: () {
                     isUserAgree = !isUserAgree;
-                    setState(() {
-
-                    });
+                    setState(() {});
                   },
                   child: Transform.scale(
                     scale: 0.75 * byWithScale(context),
                     child: isUserAgree
                         ? Container(
-
-                      child: Image.asset("src/icons/ch_checked.png"),
-                    )
+                            child: Image.asset("src/icons/ch_checked.png"),
+                          )
                         : Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: Container(
-
-                        child: Image.asset("src/icons/ch_unchecked.png"),
-                      ),
-                    ),
+                            padding: const EdgeInsets.all(3.0),
+                            child: Container(
+                              child: Image.asset("src/icons/ch_unchecked.png"),
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -443,7 +439,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               focusNode: focusNode,
               controller: controller,
               keyboardType: TextInputType.phone,
-              style: TextStyle(fontSize: 10 * byWithScale(context)),
+              style: TextStyle(fontSize: 12 * byWithScale(context)),
               decoration: InputDecoration(
                   prefixIcon: Container(
                     margin: const EdgeInsets.only(left: 8, bottom: 2),
