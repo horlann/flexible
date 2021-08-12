@@ -39,6 +39,8 @@ dependencies:
   intl: ^0.17.0
   animated_check: ^1.0.2
   flutter_vibrate: ^1.1.0
+  lottie: ^1.1.0
+
   uuid: ^3.0.4
   table_calendar: ^3.0.0
   sliver_tools: ^0.2.2

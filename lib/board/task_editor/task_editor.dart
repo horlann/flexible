@@ -12,6 +12,8 @@ import 'package:flexible/board/task_editor/title_input_section.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/weather/bloc/weather_bloc.dart';
+import 'package:flexible/weather/openweather_service.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -181,61 +183,7 @@ class _TaskEditorState extends State<TaskEditor> {
                         },
                       ),
                     ),
-                    // Container(
-                    //     margin: EdgeInsets.symmetric(
-                    //         horizontal: 40 * byWithScale(context)),
-                    //     padding: EdgeInsets.symmetric(
-                    //         vertical: 8 * byWithScale(context)),
-                    //     decoration: BoxDecoration(
-                    //       color: Colors.white,
-                    //       borderRadius: BorderRadius.all(
-                    //         Radius.circular(
-                    //           15 * byWithScale(context),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     child: Stack(
-                    //       children: [
-                    //         Positioned.fill(
-                    //           child: Padding(
-                    //             padding: const EdgeInsets.only(bottom: 5.0),
-                    //             child: Align(
-                    //               child: Text(
-                    //                 ":",
-                    //                 style: TextStyle(fontSize: 20),
-                    //               ),
-                    //               alignment: Alignment.center,
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         TimePickerSpinner(
-                    //           alignment: Alignment.center,
-                    //           isForce2Digits: true,
-                    //           is24HourMode: true,
-                    //           itemHeight: 30 * byWithScale(context),
-                    //           itemWidth: 60 * byWithScale(context),
-                    //           normalTextStyle: TextStyle(
-                    //               color: Colors.grey,
-                    //               fontSize: 55 / pRatio(context)),
-                    //           highlightedTextStyle: TextStyle(
-                    //               color: Colors.black,
-                    //               fontSize: 55 / pRatio(context)),
-                    //           spacing: 0,
-                    //           minutesInterval: 1,
-                    //           time: editableTask.timeStart,
-                    //           onTimeChange: (time) {
-                    //             setState(() {
-                    //               print(editableTask.timeStart);
-                    //               print(time);
-                    //               editableTask = editableTask.copyWith(
-                    //                   timeStart: time.add(Duration(
-                    //                       milliseconds:
-                    //                           Random().nextInt(100))));
-                    //             });
-                    //           },
-                    //         ),
-                    //       ],
-                    //     )),
+
                     Wrap(
                       children: [
                         Text(
@@ -282,31 +230,34 @@ class _TaskEditorState extends State<TaskEditor> {
                     SizedBox(
                       height: 10 * byWithScale(context),
                     ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 16 * byWithScale(context)),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25)),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 5, vertical: 8 * byWithScale(context)),
-                      child: Column(
-                        children: [
-                          Text(
-                            'What color should you task be?',
-                            style: TextStyle(
-                                fontSize: 12 * byWithScale(context),
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(height: 14 * byWithScale(context)),
-                          ColorPickerRow(callback: (color) {
-                            print(color);
-                            setState(() {
-                              editableTask =
-                                  editableTask.copyWith(color: color);
-                            });
-                          }),
-                        ],
+                    Flexible(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 16 * byWithScale(context)),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25)),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 8 * byWithScale(context)),
+                        child: Column(
+                          //mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(
+                              'What color should you task be?',
+                              style: TextStyle(
+                                  fontSize: 12 * byWithScale(context),
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            SizedBox(height: 14 * byWithScale(context)),
+                            ColorPickerRow(callback: (color) {
+                              print(color);
+                              setState(() {
+                                editableTask =
+                                    editableTask.copyWith(color: color);
+                              });
+                            }),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -353,35 +304,27 @@ class _TaskEditorState extends State<TaskEditor> {
   // Sends edited task to bloc
   Widget buildUpdateDeleteButtons() {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-//        Padding(
-//          padding: EdgeInsets.symmetric(horizontal: 80),
-//          child: WideRoundedButton(
-//              enable: true,
-//              textColor: Colors.white,
-//              enableColor: Color(0xffE24F4F),
-//              disableColor: Color(0xffE24F4F),
-//              callback: () {
-//                BlocProvider.of<DailytasksBloc>(context)
-//                    .add(DailytasksUpdateTaskAndShiftOther(task: editableTask));
-//                Navigator.pop(context);
-//              },
-//              text: 'UPDATE TASK'),
-//        ),
-
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 40),
-          child: WideRoundedButton(
-              enable: true,
-              textColor: Colors.black,
-              enableColor: Colors.transparent,
-              disableColor: Colors.transparent,
-              callback: () {
-                BlocProvider.of<DailytasksBloc>(context)
-                    .add(DailytasksDeleteTask(task: editableTask));
-                Navigator.of(context).push(_createRoute());
-              },
-              text: 'DELETE'),
+          child: BlocBuilder<WeatherBloc, WeatherState>(
+            builder: (buildcontext, state) {
+              return WideRoundedButton(
+                  enable: true,
+                  textColor: state.daylight == DayLight.dark
+                      ? Colors.white
+                      : Colors.black,
+                  enableColor: Colors.transparent,
+                  disableColor: Colors.transparent,
+                  callback: () {
+                    BlocProvider.of<DailytasksBloc>(context)
+                        .add(DailytasksDeleteTask(task: editableTask));
+                    Navigator.of(context).push(_createRoute());
+                  },
+                  text: 'DELETE');
+            },
+          ),
         ),
         SizedBox(
           height: 8 * byWithScale(context),

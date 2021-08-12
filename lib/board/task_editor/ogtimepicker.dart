@@ -47,7 +47,7 @@ class _OgTimePickerState extends State<OgTimePicker> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 40 * byWithScale(context)),
-      padding: EdgeInsets.symmetric(vertical: 10 * byWithScale(context)),
+      padding: EdgeInsets.symmetric(vertical: 5 * byWithScale(context)),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(
@@ -74,7 +74,7 @@ class _OgTimePickerState extends State<OgTimePicker> {
               // ),
               Flexible(
                 child: Container(
-                  height: 100 * byWithScale(context),
+                  height: 90 * byWithScale(context),
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (notification) {
                       if (notification is ScrollEndNotification) {
@@ -104,7 +104,7 @@ class _OgTimePickerState extends State<OgTimePicker> {
                                     color: (hValue == (index % 24))
                                         ? Colors.black
                                         : Colors.grey,
-                                    fontSize: 55 / pRatio(context))),
+                                    fontSize: 50 / pRatio(context))),
                           ),
                         );
                       },
@@ -123,7 +123,7 @@ class _OgTimePickerState extends State<OgTimePicker> {
               // ),
               Flexible(
                 child: Container(
-                  height: 100 * byWithScale(context),
+                  height: 90 * byWithScale(context),
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (notification) {
                       if (notification is ScrollEndNotification) {
@@ -154,7 +154,7 @@ class _OgTimePickerState extends State<OgTimePicker> {
                                     color: (mValue == (index % 60))
                                         ? Colors.black
                                         : Colors.grey,
-                                    fontSize: 55 / pRatio(context))),
+                                    fontSize: 50 / pRatio(context))),
                           ),
                         );
                       },

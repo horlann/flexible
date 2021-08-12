@@ -1,5 +1,8 @@
 import 'package:flexible/utils/adaptive_utils.dart';
+import 'package:flexible/weather/bloc/weather_bloc.dart';
+import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SuperTaskDailyDurationSlider extends StatelessWidget {
   final Duration duration;
@@ -88,48 +91,64 @@ class SuperTaskDailyDurationSlider extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 22, right: 16),
           child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(
-              '15',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '30  ',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '45  ',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '1h  ',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '2h  ',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '3h  ',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '4h  ',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '5h ',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '6h ',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            ),
-            Text(
-              '7h ',
-              style: TextStyle(fontSize: 8 * byWithScale(context)),
-            )
-          ]),
+              BlocBuilder<WeatherBloc, WeatherState>(builder: (context, state) {
+            var _color =
+                state.daylight == DayLight.dark ? Colors.white : Colors.black;
+            return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '15',
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context), color: _color),
+                  ),
+                  Text(
+                    '30  ',
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context), color: _color),
+                  ),
+                  Text(
+                    '45  ',
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context), color: _color),
+                  ),
+                  Text(
+                    '1h  ',
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context), color: _color),
+                  ),
+                  Text(
+                    '2h  ',
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context), color: _color),
+                  ),
+                  Text(
+                    '3h  ',
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context), color: _color),
+                  ),
+                  Text(
+                    '4h  ',
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context), color: _color),
+                  ),
+                  Text(
+                    '5h ',
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context), color: _color),
+                  ),
+                  Text(
+                    '6h ',
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context), color: _color),
+                  ),
+                  Text(
+                    '7h ',
+                    style: TextStyle(
+                        fontSize: 8 * byWithScale(context), color: _color),
+                  )
+                ]);
+          }),
         )
       ],
     );
