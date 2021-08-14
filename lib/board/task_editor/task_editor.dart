@@ -56,7 +56,9 @@ class _TaskEditorState extends State<TaskEditor> {
     Navigator.push(
         context,
         RevealRoute(
-          page: IconPickerPage(),
+          page: IconPickerPage(
+            text: editableTask.title,
+          ),
           maxRadius: 800,
           centerAlignment: Alignment.center,
           centerOffset: _getOffset(key),
@@ -81,6 +83,7 @@ class _TaskEditorState extends State<TaskEditor> {
       return null;
     }
   }
+
   void showSnackBar(
       BuildContext buildContext, String text, bool isProgressive) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -270,7 +273,6 @@ class _TaskEditorState extends State<TaskEditor> {
                             SizedBox(height: 14 * byWithScale(context)),
                             Flexible(
                               child: ConstrainedBox(
-
                                 constraints: BoxConstraints(maxHeight: 80),
                                 child: ColorPickerRow(callback: (color) {
                                   print(color);
@@ -551,7 +553,6 @@ class _TaskEditorState extends State<TaskEditor> {
   }
 }
 
-
 class CircularRevealClipper extends CustomClipper<Path> {
   final double fraction;
   final Alignment centerAlignment;
@@ -593,4 +594,3 @@ class CircularRevealClipper extends CustomClipper<Path> {
     return sqrt(w * w + h * h);
   }
 }
-

@@ -375,7 +375,9 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
     Navigator.push(
         context,
         RevealRoute(
-          page: IconPickerPage(),
+          page: IconPickerPage(
+            text: editableRegularTask.title,
+          ),
           maxRadius: 800,
           centerAlignment: Alignment.center,
           centerOffset: _getOffset(widget.key),
@@ -669,7 +671,9 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
     Navigator.push(
         context,
         CupertinoPageRoute(
-          builder: (context) => IconPickerPage(),
+          builder: (context) => IconPickerPage(
+            text: editableSuperTask.title,
+          ),
         )).then((iconId) {
       if (iconId != null) {
         setState(() {

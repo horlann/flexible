@@ -1,18 +1,20 @@
-import 'dart:typed_data';
-
-import 'package:flexible/board/repository/image_repo_mock.dart';
-import 'package:flexible/board/widgets/task_tiles/components/cached_icon.dart';
-import 'package:flexible/board/widgets/weather_bg.dart';
-import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/utils/main_backgroung_gradient.dart';
+import 'package:flexible/ai/text2icon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flexible/board/repository/image_repo_mock.dart';
+import 'package:flexible/board/widgets/task_tiles/components/cached_icon.dart';
+import 'package:flexible/board/widgets/weather_bg.dart';
+import 'package:flexible/utils/adaptive_utils.dart';
 
 class IconPickerPage extends StatefulWidget {
-  const IconPickerPage({Key? key}) : super(key: key);
+  final String text;
+  const IconPickerPage({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
 
   @override
   _IconPickerPageState createState() => _IconPickerPageState();
@@ -20,12 +22,18 @@ class IconPickerPage extends StatefulWidget {
 
 class _IconPickerPageState extends State<IconPickerPage> {
   bool switchValue = false;
+  Text2Icon text2icon = Text2Icon();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getSwitchValues();
+    // classify();
+  }
+
+  Future<List<String>> classify() async {
+    List<String> result = await text2icon.classify(widget.text);
+    return result;
   }
 
   @override
@@ -89,13 +97,56 @@ class _IconPickerPageState extends State<IconPickerPage> {
                 height: 16,
               ),
               buildImproveSwitch(),
-              Expanded(child: buildImagesGrid(context)),
+              switchValue
+                  ? Expanded(child: buildPredictionImagesGrid(context))
+                  : Expanded(child: buildImagesGrid(context)),
               SizedBox(
                 height: 16,
               ),
             ],
           )
         ],
+      ),
+    );
+  }
+
+  Padding buildPredictionImagesGrid(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: FutureBuilder(
+        future: classify(),
+        builder: (context, AsyncSnapshot<List<String>> snapshot) {
+          if (snapshot.hasData) {
+            return SizedBox(
+              // height: 60,
+              child: GridView.count(
+                // shrinkWrap: true,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                crossAxisCount: 5,
+                children: snapshot.data!
+                    .map((e) => Container(
+                          margin: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: buildImageLoader(context, e),
+                        ))
+                    .toList(),
+              ),
+            );
+          }
+          return SizedBox(
+            height: 60,
+            child: Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -184,10 +235,9 @@ class _IconPickerPageState extends State<IconPickerPage> {
 
   Future<bool> getSwitchState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isSwitchedFT = prefs.getBool("switchState");
-    print(isSwitchedFT);
+    bool isSwitchedFT = prefs.getBool("switchState") ?? false;
 
-    return isSwitchedFT!;
+    return isSwitchedFT;
   }
 
   GlassmorphicContainer buildGlassmorphicLayer() {
