@@ -60,6 +60,13 @@ dependencies:
   move_to_background: ^1.0.2
   video_player: ^2.1.6
   qonversion_flutter: ^4.0.0
+
+  permission_handler: ^8.1.4+2
+  csv: ^5.0.0
+  ext_storage:
+    git:
+      url: git://github.com/GitJournal/ext_storage.git
+      
   flutter:
     sdk: flutter
 
