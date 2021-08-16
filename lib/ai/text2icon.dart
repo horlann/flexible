@@ -22,10 +22,15 @@ class Text2Icon {
   static bool loaded = false;
 
   Future load() async {
-    await _loadModel();
-    await _loadDictionary();
-    await _loadLabels();
-    loaded = true;
+    try {
+      await _loadModel();
+      await _loadDictionary();
+      await _loadLabels();
+      loaded = true;
+    } catch (e) {
+      loaded = false;
+      print('ai load error > $e');
+    }
   }
 
   Future _loadModel() async {
@@ -79,6 +84,8 @@ class Text2Icon {
         sortedResult.add(key);
       }
     });
+
+    print('ai classify > $answer');
 
     return sortedResult;
   }
