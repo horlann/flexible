@@ -60,7 +60,7 @@ class _DoneCheckboxState extends State<DoneCheckbox>
 
   @override
   Widget build(BuildContext context) {
-    print(widget.checked.toString() + "     ddd");
+    // print(widget.checked.toString() + "     ddd");
     _animState = widget.checked;
     return GestureDetector(
       onTap: () {

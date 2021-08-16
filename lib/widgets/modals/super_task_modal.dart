@@ -39,8 +39,8 @@ class _State extends State<SuperTaskModal> with TickerProviderStateMixin {
     task = widget.task;
     _controller.forward();
     task.timeLock
-        ? _controllerLock.animateTo(0.22, duration: Duration(seconds: 0))
-        : _controllerLock.animateTo(0, duration: Duration(seconds: 0));
+        ? _controllerLock.animateTo(0, duration: Duration(seconds: 0))
+        : _controllerLock.animateTo(0.22, duration: Duration(seconds: 0));
   }
 
   @override
@@ -52,6 +52,7 @@ class _State extends State<SuperTaskModal> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print(task.timeLock.toString() + " state");
     var data = MediaQuery.of(context);
     return GestureDetector(
         onTap: () async {
@@ -70,111 +71,111 @@ class _State extends State<SuperTaskModal> with TickerProviderStateMixin {
             width: data.size.width,
             child: GestureDetector(
                 child: Stack(children: [
-              Positioned(
-                  left: 0,
-                  right: 0,
-                  top: widget.topPadding,
-                  child: ScaleTransition(
-                    scale: _animation,
-                    child: Container(
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(width: 1, height: 1),
-                            Container(
-                                decoration:
+                  Positioned(
+                      left: 0,
+                      right: 0,
+                      top: widget.topPadding,
+                      child: ScaleTransition(
+                        scale: _animation,
+                        child: Container(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(width: 1, height: 1),
+                                Container(
+                                    decoration:
                                     BoxDecoration(boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: Color.fromRGBO(235, 5, 15, .16),
-                                      blurRadius: 22,
-                                      spreadRadius: 1)
-                                ]),
-                                child: Column(children: [
-                                  CustomPaint(
-                                      painter: TrianglePainter(
-                                          strokeColor: Colors.white,
-                                          strokeWidth: 10,
-                                          paintingStyle: PaintingStyle.fill),
-                                      child: Container(height: 15, width: 20)),
-                                  Container(
-                                      height: 52,
-                                      //width: 58,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
+                                      BoxShadow(
+                                          color: Color.fromRGBO(235, 5, 15, .16),
+                                          blurRadius: 22,
+                                          spreadRadius: 1)
+                                    ]),
+                                    child: Column(children: [
+                                      CustomPaint(
+                                          painter: TrianglePainter(
+                                              strokeColor: Colors.white,
+                                              strokeWidth: 10,
+                                              paintingStyle: PaintingStyle.fill),
+                                          child: Container(height: 15, width: 20)),
+                                      Container(
+                                          height: 52,
+                                          //width: 58,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
                                               BorderRadius.circular(8)),
-                                      child: Row(
-                                          crossAxisAlignment:
+                                          child: Row(
+                                              crossAxisAlignment:
                                               CrossAxisAlignment.start,
-                                          mainAxisAlignment:
+                                              mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          children: [
-                                            // InkWell(
-                                            //     borderRadius:
-                                            //     BorderRadius.all(
-                                            //         Radius.circular(8)),
-                                            //     splashColor: redMain,
-                                            //     highlightColor:
-                                            //     Colors.transparent,
-                                            //     child: Container(
-                                            //         height: 52,
-                                            //         width: 100,
-                                            //         child: Center(
-                                            //             child: Text(
-                                            //                 "Edit",
-                                            //                 style: TextStyle(
-                                            //                     fontSize:
-                                            //                     25,
-                                            //                     fontWeight:
-                                            //                     FontWeight
-                                            //                         .bold,
-                                            //                     fontFamily:
-                                            //                     "Mikado",
-                                            //                     color: editButtonHold ==
-                                            //                         true
-                                            //                         ? Colors
-                                            //                         .white
-                                            //                         : redMain)))),
-                                            //     onTap: () async {
-                                            //       //Navigator.pop(context);
-                                            //       //await widget.onEditTap
-                                            //       //     .call();
-                                            //     }),
+                                              children: [
+                                                // InkWell(
+                                                //     borderRadius:
+                                                //     BorderRadius.all(
+                                                //         Radius.circular(8)),
+                                                //     splashColor: redMain,
+                                                //     highlightColor:
+                                                //     Colors.transparent,
+                                                //     child: Container(
+                                                //         height: 52,
+                                                //         width: 100,
+                                                //         child: Center(
+                                                //             child: Text(
+                                                //                 "Edit",
+                                                //                 style: TextStyle(
+                                                //                     fontSize:
+                                                //                     25,
+                                                //                     fontWeight:
+                                                //                     FontWeight
+                                                //                         .bold,
+                                                //                     fontFamily:
+                                                //                     "Mikado",
+                                                //                     color: editButtonHold ==
+                                                //                         true
+                                                //                         ? Colors
+                                                //                         .white
+                                                //                         : redMain)))),
+                                                //     onTap: () async {
+                                                //       //Navigator.pop(context);
+                                                //       //await widget.onEditTap
+                                                //       //     .call();
+                                                //     }),
 
-                                            Container(
-                                                margin: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                              child: GestureDetector(
-                                                child: Lottie.asset(
-                                                    'src/lottie/padlock.json',
-                                                    controller:
+                                                Container(
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  child: GestureDetector(
+                                                    child: Lottie.asset(
+                                                        'src/lottie/padlock.json',
+                                                        controller:
                                                         _controllerLock),
-                                                onTap: () async {
-                                                  _controllerLock.value == 0.22
-                                                      ? _controllerLock
+                                                    onTap: () async {
+                                                      _controllerLock.value == 0.22
+                                                          ? _controllerLock
                                                           .animateTo(0)
-                                                      : _controllerLock
+                                                          : _controllerLock
                                                           .animateBack(0.22);
-                                                  print(_controllerLock.value
+                                                      print(_controllerLock.value
                                                           .toString() +
-                                                      "   value");
-                                                  setState(() {
-                                                    task = task.copyWith(
-                                                        timeLock:
+                                                          "   value");
+                                                      setState(() {
+                                                        task = task.copyWith(
+                                                            timeLock:
                                                             !task.timeLock);
-                                                  });
-                                                  // Navigator.pop(
-                                                  //     context);
-                                                  await widget.onLockTap.call();
-                                                },
-                                              ),
-                                            ),
-                                          ]))
-                                ])),
-                            Container(width: 1, height: 1)
-                          ]),
-                    ),
-                  ))
-            ]))));
+                                                      });
+                                                      // Navigator.pop(
+                                                      //     context);
+                                                      await widget.onLockTap.call();
+                                                    },
+                                                  ),
+                                                ),
+                                              ]))
+                                    ])),
+                                Container(width: 1, height: 1)
+                              ]),
+                        ),
+                      ))
+                ]))));
   }
 }
