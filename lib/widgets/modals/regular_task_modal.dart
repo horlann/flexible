@@ -45,8 +45,8 @@ class _State extends State<RegularTaskModal> with TickerProviderStateMixin {
     task = widget.task;
     _controller.forward();
     task.timeLock
-        ? _controllerLock.animateTo(0.22, duration: Duration(seconds: 0))
-        : _controllerLock.animateTo(0, duration: Duration(seconds: 0));
+        ? _controllerLock.animateTo(0, duration: Duration(seconds: 0))
+        : _controllerLock.animateTo(0.22, duration: Duration(seconds: 0));
   }
 
   @override
@@ -59,6 +59,7 @@ class _State extends State<RegularTaskModal> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var data = MediaQuery.of(context);
+    print(widget.task.timeLock);
     return GestureDetector(
         onTap: () async {
           _controller.reverse().then((value) => Navigator.pop(context));
