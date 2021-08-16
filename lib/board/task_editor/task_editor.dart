@@ -262,7 +262,7 @@ class _TaskEditorState extends State<TaskEditor> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 5, vertical: 8 * byWithScale(context)),
                         child: Column(
-                          //mainAxisSize: MainAxisSize.max,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
                               'What color should you task be?',
