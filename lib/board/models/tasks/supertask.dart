@@ -9,6 +9,8 @@ class SuperTask extends Task {
   final Duration globalDurationLeft;
   final int priority;
 
+  final String superTaskId;
+
   SuperTask({
     uuid,
     required title,
@@ -24,6 +26,7 @@ class SuperTask extends Task {
     required this.globalDuration,
     required this.globalDurationLeft,
     required this.priority,
+    required this.superTaskId,
   }) : super(
             uuid: uuid,
             title: title,
@@ -34,7 +37,8 @@ class SuperTask extends Task {
             isDonable: isDonable,
             timeLock: timeLock,
             color: color,
-            iconId: iconId);
+            iconId: iconId,
+            superTaskId: superTaskId);
 
   Map<String, dynamic> toMap() {
     return {
@@ -53,6 +57,7 @@ class SuperTask extends Task {
       'globalDurationLeft': globalDurationLeft.inMilliseconds,
       'priority': priority,
       'isSuperTask': true,
+      'superTaskId': superTaskId,
     };
   }
 
@@ -73,6 +78,7 @@ class SuperTask extends Task {
       'globalDurationLeft': globalDurationLeft.inMilliseconds,
       'priority': priority,
       'isSuperTask': 1,
+      'superTaskId': superTaskId,
     };
   }
 
@@ -92,6 +98,7 @@ class SuperTask extends Task {
       globalDuration: Duration(milliseconds: map['globalDuration']),
       globalDurationLeft: Duration(milliseconds: map['globalDurationLeft']),
       priority: map['priority'],
+      superTaskId: map['superTaskId'],
     );
   }
 
@@ -111,6 +118,7 @@ class SuperTask extends Task {
       globalDuration: Duration(milliseconds: map['globalDuration']),
       globalDurationLeft: Duration(milliseconds: map['globalDurationLeft']),
       priority: map['priority'],
+      superTaskId: map['superTaskId'],
     );
   }
 
@@ -130,6 +138,7 @@ class SuperTask extends Task {
     bool? timeLock,
     Color? color,
     String? iconId,
+    String? superTaskId,
     DateTime? deadline,
     Duration? globalDuration,
     Duration? globalDurationLeft,
@@ -150,12 +159,13 @@ class SuperTask extends Task {
       globalDuration: globalDuration ?? this.globalDuration,
       globalDurationLeft: globalDurationLeft ?? this.globalDurationLeft,
       priority: priority ?? this.priority,
+      superTaskId: superTaskId ?? this.superTaskId,
     );
   }
 
   @override
   String toString() {
-    return 'SuperTask(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, timeLock: $timeLock, color: $color, iconId: $iconId, deadline: $deadline, globalDuration: $globalDuration, globalDurationLeft: $globalDurationLeft, priority: $priority)';
+    return 'SuperTask(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, timeLock: $timeLock, color: $color, iconId: $iconId, deadline: $deadline, globalDuration: $globalDuration, globalDurationLeft: $globalDurationLeft, priority: $priority, superTaskId: $superTaskId)';
   }
 }
 

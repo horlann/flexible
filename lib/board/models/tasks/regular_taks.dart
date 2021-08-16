@@ -16,6 +16,7 @@ class RegularTask extends Task {
     required timeLock,
     required color,
     required iconId,
+    required superTaskId,
     this.forAi = false,
   }) : super(
             uuid: uuid,
@@ -27,7 +28,8 @@ class RegularTask extends Task {
             isDonable: isDonable,
             timeLock: timeLock,
             color: color,
-            iconId: iconId);
+            iconId: iconId,
+            superTaskId: superTaskId);
 
   Map<String, dynamic> toMap() {
     return {
@@ -42,6 +44,7 @@ class RegularTask extends Task {
       'color': color.value,
       'iconId': iconId,
       'forAi': forAi,
+      'superTaskId': superTaskId,
     };
   }
 
@@ -58,6 +61,7 @@ class RegularTask extends Task {
       'color': color.toHex(),
       'iconId': iconId,
       'forAi': forAi ? 1 : 0,
+      'superTaskId': superTaskId,
     };
   }
 
@@ -74,6 +78,7 @@ class RegularTask extends Task {
       color: Color(map['color']),
       iconId: map['iconId'],
       forAi: map['forAi'],
+      superTaskId: map['superTaskId'],
     );
   }
 
@@ -90,6 +95,7 @@ class RegularTask extends Task {
       color: HexColor.fromHex(map['color']),
       iconId: map['iconId'],
       forAi: map['forAi'] == 1 ? true : false,
+      superTaskId: map['superTaskId'],
     );
   }
 
@@ -109,6 +115,7 @@ class RegularTask extends Task {
       bool? timeLock,
       Color? color,
       String? iconId,
+      String? superTaskId,
       bool? forAi}) {
     return RegularTask(
       uuid: uuid ?? this.uuid,
@@ -122,12 +129,13 @@ class RegularTask extends Task {
       color: color ?? this.color,
       iconId: iconId ?? this.iconId,
       forAi: forAi ?? this.forAi,
+      superTaskId: superTaskId ?? this.superTaskId,
     );
   }
 
   @override
   String toString() {
-    return 'RegularTask(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, timeLock: $timeLock, color: $color, iconId: $iconId)';
+    return 'RegularTask(uuid: $uuid, title: $title, subtitle: $subtitle, timeStart: $timeStart, period: $period, isDone: $isDone, isDonable: $isDonable, timeLock: $timeLock, color: $color, iconId: $iconId, superTaskId: $superTaskId))';
   }
 }
 

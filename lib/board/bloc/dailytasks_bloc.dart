@@ -49,9 +49,10 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
 
       List<Task> sqTasks = await tasksRepo.tasksByPeriod(
           from: startOfaDay(showDay), to: endOfaDay(showDay));
+      List<SuperTask> sqSuperTasks = await tasksRepo.superTaskQueue();
 
       yield DailytasksCommon(
-          tasks: sqTasks, dayOptions: dayOptions, showDay: showDay);
+          tasks: sqTasks, dayOptions: dayOptions, showDay: showDay,superTasks: sqSuperTasks);
     }
 
     if (event is DailytasksAddTask) {
@@ -190,10 +191,12 @@ class DailytasksBloc extends Bloc<DailytasksEvent, DailytasksState> {
                       uuid: Uuid().v1(),
                       timeStart: gap.first.add(Duration(seconds: 5)),
                       globalDurationLeft:
-                          superTask.globalDurationLeft + superTask.period));
+                          superTask.globalDurationLeft + superTask.period,
+                      superTaskId: superTask.uuid));
                   await tasksRepo.setTask(superTask.copyWith(
                       globalDurationLeft:
                           superTask.globalDurationLeft + superTask.period,
+                      superTaskId: superTask.uuid,
                       uuid: Uuid().v1(),
                       timeStart: gap.first.add(Duration(seconds: 5))));
 

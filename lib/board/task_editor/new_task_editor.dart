@@ -356,7 +356,8 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           isDonable: true,
           timeLock: false,
           color: Colors.grey,
-          iconId: 'additional');
+          iconId: 'additional',
+          superTaskId: "");
     }
 
     onSubmit = widget.submitChanel.listen((event) {
@@ -659,7 +660,8 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
               .add(Duration(days: 7)),
           globalDuration: Duration(hours: 1),
           globalDurationLeft: Duration(),
-          priority: 1);
+          priority: 1,
+          superTaskId: "");
     }
     onSubmit = widget.submitChanel.listen((event) {
       widget.onSubmit(editableSuperTask);
