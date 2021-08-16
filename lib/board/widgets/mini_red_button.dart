@@ -46,18 +46,22 @@ class MiniWhiteButton extends StatelessWidget {
       child: Container(
         color: Colors.transparent,
         alignment: Alignment.center,
+        width: 70 * byWithScale(context),
         height: 40 * byWithScale(context),
         child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: 8 * byWithScale(context),
-                vertical: 4 * byWithScale(context)),
+            width: 65 * byWithScale(context),
+            height: 25 * byWithScale(context),
+//
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(12)),
-            child: Text(text,
-                style: TextStyle(
-                    fontSize: 10 * byWithScale(context),
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900))),
+            child: Center(
+              child: Text(text,
+                  maxLines: 1,
+                  style: TextStyle(
+                      fontSize: 10 * byWithScale(context),
+                      color: Colors.black,
+                      fontWeight: FontWeight.w900)),
+            )),
       ),
     );
   }
