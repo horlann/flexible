@@ -75,7 +75,7 @@ class _BoardState extends State<Board> {
                       tasks.add(PeriodicTaskTile(task: task));
                     }
                   } else {
-                    tasks.add(SuperTaskTile(task: task as SuperTask));
+                    tasks.add(SuperTaskTile(task: task as SuperTask,listSuperTask: state.superTasks, ));
                   }
                 }
               });

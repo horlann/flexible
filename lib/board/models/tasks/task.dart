@@ -13,6 +13,7 @@ abstract class Task {
   late final bool timeLock;
   final Color color;
   final String iconId;
+  final String superTaskId;
 
   Task({
     this.key,
@@ -26,6 +27,7 @@ abstract class Task {
     required this.timeLock,
     required this.color,
     required this.iconId,
+    required this.superTaskId,
   }) {
     if (uuid == null) {
       this.uuid = Uuid().v1();
@@ -48,6 +50,7 @@ abstract class Task {
     bool? timeLock,
     Color? color,
     String? iconId,
+    String? superTaskId,
   });
   String toString();
 
@@ -65,7 +68,8 @@ abstract class Task {
         other.isDonable == isDonable &&
         other.timeLock == timeLock &&
         other.color == color &&
-        other.iconId == iconId;
+        other.iconId == iconId &&
+        other.superTaskId == superTaskId;
   }
 
   @override
@@ -79,6 +83,7 @@ abstract class Task {
         isDonable.hashCode ^
         timeLock.hashCode ^
         color.hashCode ^
+        superTaskId.hashCode ^
         iconId.hashCode;
   }
 }

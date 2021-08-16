@@ -19,11 +19,13 @@ class DailytasksCommon extends DailytasksState {
   final String message;
   final DayOptions dayOptions;
   final List<Task> tasks;
+  final List<SuperTask> superTasks;
 
   DailytasksCommon(
       {this.askForSuperInsert = false,
       this.message = '',
       required this.tasks,
+      required this.superTasks,
       required this.dayOptions,
       required showDay})
       : super(showDay: showDay);
@@ -38,6 +40,7 @@ class DailytasksCommon extends DailytasksState {
     return DailytasksCommon(
         dayOptions: dayOptions ?? this.dayOptions,
         tasks: tasks ?? this.tasks,
+        superTasks: superTasks ?? this.superTasks,
         askForSuperInsert: askForSuperInsert ?? this.askForSuperInsert,
         showDay: showDay ?? this.showDay,
         message: message ?? this.message);
@@ -50,7 +53,8 @@ class DailytasksCommon extends DailytasksState {
         other.askForSuperInsert == askForSuperInsert &&
         other.message == message &&
         other.dayOptions == dayOptions &&
-        listEquals(other.tasks, tasks);
+        listEquals(other.tasks, tasks) &&
+        listEquals(other.superTasks, superTasks);
   }
 
   @override
@@ -58,7 +62,8 @@ class DailytasksCommon extends DailytasksState {
     return askForSuperInsert.hashCode ^
         message.hashCode ^
         dayOptions.hashCode ^
-        tasks.hashCode;
+        tasks.hashCode ^
+        superTasks.hashCode;
   }
 }
 

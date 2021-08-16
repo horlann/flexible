@@ -18,7 +18,8 @@ import 'package:invert_colors/invert_colors.dart';
 
 class SuperTaskTile extends StatefulWidget {
   final SuperTask task;
-  SuperTaskTile({required this.task});
+  final List<SuperTask> listSuperTask;
+  SuperTaskTile({required this.task,required this.listSuperTask});
   @override
   _SuperTaskTileState createState() => _SuperTaskTileState();
 }
@@ -282,7 +283,16 @@ class _SuperTaskTileState extends State<SuperTaskTile> {
   }
 
   Widget buildTextSection() {
-    String iTime = widget.task.globalDurationLeft.toString().substring(0, 4);
+    String iTime = "";
+    widget.listSuperTask.forEach((superTask) {
+      if (superTask.uuid == widget.task.superTaskId) {
+        iTime = superTask.globalDurationLeft.toString().substring(0, 4);
+      }
+    });
+    if (iTime.isEmpty)
+    {
+      iTime = widget.task.globalDurationLeft.toString().substring(0, 4);
+    }
     String allTime = widget.task.globalDuration.toString().substring(0, 4);
 
     return Column(
