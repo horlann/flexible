@@ -51,8 +51,9 @@ class Text2Icon {
   }
 
   Future _loadLabels() async {
-    final labels = await rootBundle.loadString('assets/$_labelsFile');
+    final String labels = await rootBundle.loadString('assets/$_labelsFile');
     labelList = labels.split('\n');
+    labelList = labelList.map((e) => e.trim()).toList();
     print('Labels loaded successfully');
   }
 
