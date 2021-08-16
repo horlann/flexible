@@ -271,18 +271,13 @@ class _TaskEditorState extends State<TaskEditor> {
                                   fontWeight: FontWeight.w500),
                             ),
                             SizedBox(height: 14 * byWithScale(context)),
-                            Flexible(
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(maxHeight: 80),
-                                child: ColorPickerRow(callback: (color) {
-                                  print(color);
-                                  setState(() {
-                                    editableTask =
-                                        editableTask.copyWith(color: color);
-                                  });
-                                }),
-                              ),
-                            ),
+                            ColorPickerRow(callback: (color) {
+                              print(color);
+                              setState(() {
+                                editableTask =
+                                    editableTask.copyWith(color: color);
+                              });
+                            }),
                           ],
                         ),
                       ),

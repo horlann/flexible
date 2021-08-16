@@ -105,7 +105,7 @@ class _TurboAnimatedScrollViewState extends State<TurboAnimatedScrollView>
         duration: Duration(milliseconds: 300), vsync: this)
       ..addListener(() => setState(() {}));
     animation = Tween(begin: 0.0, end: 550.0).animate(controller);
-    animation2 = Tween(begin: 0.0, end: 550.0).animate(controller);
+    animation2 = Tween(begin: 0.0, end: 550.0).animate(controller2);
   }
 
   @override

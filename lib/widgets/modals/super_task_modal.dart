@@ -5,6 +5,7 @@ import 'package:flexible/utils/triangle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:lottie/lottie.dart';
 
 class SuperTaskModal extends StatefulWidget {
   final Task task;
@@ -20,10 +21,15 @@ class _State extends State<SuperTaskModal> with TickerProviderStateMixin {
     duration: const Duration(milliseconds: 300),
     vsync: this,
   );
+  late final AnimationController _controllerLock = AnimationController(
+    duration: const Duration(milliseconds: 2500),
+    vsync: this,
+  );
   late final Animation<double> _animation = CurvedAnimation(
     parent: _controller,
     curve: Curves.fastOutSlowIn,
   );
+
   late Task task;
   bool editButtonHold = false;
 
@@ -32,12 +38,16 @@ class _State extends State<SuperTaskModal> with TickerProviderStateMixin {
     super.initState();
     task = widget.task;
     _controller.forward();
+    task.timeLock
+        ? _controllerLock.animateTo(0.22, duration: Duration(seconds: 0))
+        : _controllerLock.animateTo(0, duration: Duration(seconds: 0));
   }
 
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
+    _controllerLock.dispose();
   }
 
   @override
@@ -130,25 +140,35 @@ class _State extends State<SuperTaskModal> with TickerProviderStateMixin {
                                             //       //await widget.onEditTap
                                             //       //     .call();
                                             //     }),
+
                                             Container(
                                                 margin: EdgeInsets.symmetric(
                                                     horizontal: 10),
-                                                child: HidableTimeLock(
-                                                    locked: task.timeLock,
-                                                    onTap: () async {
-                                                      setState(() {
-                                                        task = task.copyWith(
-                                                            timeLock:
-                                                                !task.timeLock);
-                                                      });
-                                                      // Navigator.pop(
-                                                      //     context);
-                                                      await widget.onLockTap
-                                                          .call();
-                                                    },
-                                                    showLock: true,
-                                                    color: redMain,
-                                                    size: 25)),
+                                              child: GestureDetector(
+                                                child: Lottie.asset(
+                                                    'src/lottie/padlock.json',
+                                                    controller:
+                                                        _controllerLock),
+                                                onTap: () async {
+                                                  _controllerLock.value == 0.22
+                                                      ? _controllerLock
+                                                          .animateTo(0)
+                                                      : _controllerLock
+                                                          .animateBack(0.22);
+                                                  print(_controllerLock.value
+                                                          .toString() +
+                                                      "   value");
+                                                  setState(() {
+                                                    task = task.copyWith(
+                                                        timeLock:
+                                                            !task.timeLock);
+                                                  });
+                                                  // Navigator.pop(
+                                                  //     context);
+                                                  await widget.onLockTap.call();
+                                                },
+                                              ),
+                                            ),
                                           ]))
                                 ])),
                             Container(width: 1, height: 1)

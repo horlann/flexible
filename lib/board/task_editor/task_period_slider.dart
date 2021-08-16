@@ -3,6 +3,7 @@ import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 class TaskPeriodSlider extends StatelessWidget {
   final Duration period;
@@ -85,8 +86,8 @@ class TaskPeriodSlider extends StatelessWidget {
               // activeColor: Colors.grey,
               // inactiveColor: Colors.grey,
               onChanged: (v) => {
-                print(durations[v.toInt()].toString() + " int"),
                 callback(durations[v.toInt()]),
+                Vibrate.feedback(FeedbackType.light)
               },
               divisions: 9,
             ),

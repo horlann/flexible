@@ -237,53 +237,56 @@ class _SignInPageState extends State<SignInPage> {
       child: Row(
         children: [
           Expanded(
-            child: TextFormField(
-              validator: (value) {
-                return phoneNumberValidator(value!.replaceAll(RegExp('-'), ''));
-              },
-              focusNode: focusNode,
-              controller: controller,
-              keyboardType: TextInputType.phone,
-              style: TextStyle(
-                  fontSize: 10 * byWithScale(context),
-                  color: Color(0xffE24F4F)),
-              decoration: InputDecoration(
-                  prefixIcon: Container(
-                    margin: const EdgeInsets.only(left: 8, bottom: 2),
-                    width: 70 * byWithScale(context),
-
-                    //color: Color(0xffE24F4F),
-                    alignment: Alignment.center,
-                    child: CountryCodePickerWidegt(
-                      onChange: (code) {
-                        countryCode = code;
-                        print(code);
-                      },
-                      focusNode: focusNode,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+              child: TextFormField(
+                validator: (value) {
+                  return phoneNumberValidator(
+                      value!.replaceAll(RegExp('-'), ''));
+                },
+                focusNode: focusNode,
+                controller: controller,
+                keyboardType: TextInputType.phone,
+                style: TextStyle(
+                    fontSize: 10 * byWithScale(context),
+                    color: Color(0xffE24F4F)),
+                decoration: InputDecoration(
+                    prefixIcon: Container(
+                      margin: const EdgeInsets.only(left: 8, bottom: 2),
+                      width: 70 * byWithScale(context),
+                      alignment: Alignment.center,
+                      child: CountryCodePickerWidegt(
+                        onChange: (code) {
+                          countryCode = code;
+                          print(code);
+                        },
+                        focusNode: focusNode,
+                      ),
                     ),
-                  ),
-                  prefixIconConstraints: BoxConstraints(minHeight: 0),
-                  hintText: 'Phone',
-                  labelStyle: TextStyle(color: Color(0xffE24F4F)),
-                  hintStyle: TextStyle(color: Color(0xffE24F4F)),
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(8 * byWithScale(context)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: Color(0xffFA6400))),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: Color(0xffC9C9C9))),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: Color(0xffC9C9C9))),
-                  fillColor: Colors.white,
-                  filled: true),
-              onChanged: (value) {
-                setState(() {
-                  phoneNumber = value.replaceAll(RegExp('-'), '');
-                });
-              },
+                    prefixIconConstraints: BoxConstraints(minHeight: 0),
+                    hintText: 'Phone',
+                    isCollapsed: true,
+                    isDense: true,
+                    hintStyle: TextStyle(color: Color(0xffE24F4F)),
+                    contentPadding: EdgeInsets.only(
+                        left: 8 * byWithScale(context),
+                        top: 8 * byWithScale(context),
+                        bottom: 8 * byWithScale(context),
+                        right: 8 * byWithScale(context)),
+                    border: InputBorder.none,
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    fillColor: Colors.white,
+                    filled: true),
+                onChanged: (value) {
+                  setState(() {
+                    phoneNumber = value.replaceAll(RegExp('-'), '');
+                  });
+                },
+              ),
             ),
           ),
         ],

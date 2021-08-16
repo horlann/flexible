@@ -317,48 +317,73 @@ SnackBar auSure(BuildContext context, {required Function onYes}) {
           decoration: BoxDecoration(
               color: Color(0xffF66868),
               borderRadius: BorderRadius.circular(20)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Stack(
             children: [
-              Text('Are you sure?',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14 * byWithScale(context))),
-              SizedBox(
-                height: 14 * byWithScale(context),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Container(
+                  height: 70,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            onYes();
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          },
+                        ),
+                      ),
+                    ],
+                  )),
+              Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      // BlocProvider.of<DailytasksBloc>(context)
-                      //     .add(DailytasksSuperInsert());
-                      // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      onYes();
-                    },
-                    child: Text('Yes',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14 * byWithScale(context))),
+                  Text('Are you sure?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14 * byWithScale(context))),
+                  SizedBox(
+                    height: 14 * byWithScale(context),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    },
-                    child: Text('No',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14 * byWithScale(context))),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // BlocProvider.of<DailytasksBloc>(context)
+                          //     .add(DailytasksSuperInsert());
+                          // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          onYes();
+                        },
+                        child: Text('Yes',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14 * byWithScale(context))),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        },
+                        child: Text('No',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14 * byWithScale(context))),
+                      )
+                    ],
                   )
                 ],
-              )
+              ),
             ],
           ),
         ),

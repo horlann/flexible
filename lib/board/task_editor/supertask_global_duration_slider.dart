@@ -3,7 +3,7 @@ import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 class SuperTaskGlobasDurationSlider extends StatelessWidget {
   int value = 0;
@@ -52,22 +52,6 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
             ],
           ),
         ),
-//        SfSliderTheme(
-//          child: SfSlider(
-//            showDividers: false,
-//            max: 6,
-//            min: 0,
-//            value: hours.indexOf(duration.inHours).toDouble(),
-//            interval: 20,
-//            showTicks: false,
-//            showLabels: false,
-//            enableTooltip: false,
-//            minorTicksPerInterval: 1,
-//            onChanged: (value) {
-//              onChange(Duration(hours: hours[value.toInt()]),);
-//            },
-//          ),
-//        ),
         SliderTheme(
           data: SliderThemeData(
             // trackHeight: 2,
@@ -96,14 +80,18 @@ class SuperTaskGlobasDurationSlider extends StatelessWidget {
           child: SizedBox(
             height: 30 * byWithScale(context),
             child: Slider(
-              inactiveColor: Colors.white,
-              divisions: 9,
-              max: 9,
-              min: 0,
-              value: durations.indexOf(duration).toDouble(),
-              //value: 1,
-              onChanged: (v) => onChange(durations[v.toInt()]),
-            ),
+                inactiveColor: Colors.white,
+                divisions: 9,
+                max: 9,
+                min: 0,
+                value: durations.indexOf(duration).toDouble(),
+                //value: 1,
+                onChanged: (v) => {
+                      onChange(
+                        durations[v.toInt()],
+                      ),
+                      Vibrate.feedback(FeedbackType.light)
+                    }),
           ),
         ),
         Padding(

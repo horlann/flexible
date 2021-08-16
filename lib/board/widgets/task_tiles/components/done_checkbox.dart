@@ -19,6 +19,8 @@ class DoneCheckbox extends StatefulWidget {
 class _DoneCheckboxState extends State<DoneCheckbox>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
+
+  //late AnimationController _animationControllerFast;
   late Animation<double> _animation;
   bool _animState = false;
   bool _canVibrate = true;
@@ -28,7 +30,12 @@ class _DoneCheckboxState extends State<DoneCheckbox>
     super.initState();
     init();
     _animationController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1200));
+        vsync: this,
+        duration: widget.checked
+            ? Duration(milliseconds: 1)
+            : Duration(milliseconds: 1500));
+//    _animationControllerFast = AnimationController(
+//        vsync: this, duration: Duration(milliseconds: 100));
 
     _animation = new Tween<double>(begin: 0, end: 1).animate(
         new CurvedAnimation(parent: _animationController, curve: Curves.ease));
@@ -59,11 +66,14 @@ class _DoneCheckboxState extends State<DoneCheckbox>
       onTap: () {
         widget.onClick();
         _animState
+            ? _animationController.duration = Duration(milliseconds: 150)
+            : _animationController.duration = Duration(milliseconds: 1500);
+
+        _animState
             ? _animationController.reset()
             : _animationController.forward();
         if (!_animState) vibro();
         _animState = !_animState;
-        print(_animState);
       },
       child: Container(
           margin: EdgeInsets.only(top: 12),

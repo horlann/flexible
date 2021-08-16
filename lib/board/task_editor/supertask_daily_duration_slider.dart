@@ -3,6 +3,7 @@ import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/weather/openweather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 class SuperTaskDailyDurationSlider extends StatelessWidget {
   final Duration duration;
@@ -84,16 +85,20 @@ class SuperTaskDailyDurationSlider extends StatelessWidget {
               max: 9,
               min: 0,
               value: durations.indexOf(duration).toDouble(),
-              onChanged: (v) => onChange(durations[v.toInt()]),
+              onChanged: (v) =>
+              {
+                onChange(durations[v.toInt()]),
+                Vibrate.feedback(FeedbackType.light)
+              },
             ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 22, right: 16),
           child:
-              BlocBuilder<WeatherBloc, WeatherState>(builder: (context, state) {
+          BlocBuilder<WeatherBloc, WeatherState>(builder: (context, state) {
             var _color =
-                state.daylight == DayLight.dark ? Colors.white : Colors.black;
+            state.daylight == DayLight.dark ? Colors.white : Colors.black;
             return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -17,8 +17,7 @@ class TitleInputSection extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           // color: Colors.red,
-          border:
-              Border(bottom: BorderSide(width: 1, color: Color(0xffB1B1B1)))),
+          ),
       padding: EdgeInsets.only(bottom: 2),
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -43,6 +42,7 @@ class TitleInputSection extends StatelessWidget {
                 labelStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 border: InputBorder.none,
+
                 focusedBorder: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 errorBorder: InputBorder.none,
@@ -50,6 +50,7 @@ class TitleInputSection extends StatelessWidget {
                 // contentPadding: EdgeInsets.all(10),
               ),
               initialValue: initValue,
+
               style: TextStyle(
                   // height: 2,
                   color: Color(0xff373535),

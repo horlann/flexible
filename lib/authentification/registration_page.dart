@@ -395,7 +395,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: TextFormField(
-        style: TextStyle(fontSize: 10 * byWithScale(context)),
+        style: TextStyle(
+            fontSize: 10 * byWithScale(context), color: Color(0xffE24F4F)),
         keyboardType: TextInputType.name,
         validator: (value) {
           print(value);
@@ -497,7 +498,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         validator: (value) {
           return emailValidator(value!);
         },
-        style: TextStyle(fontSize: 10 * byWithScale(context)),
+        style: TextStyle(
+            fontSize: 10 * byWithScale(context), color: Color(0xffE24F4F)),
         decoration: InputDecoration(
             hintText: 'Email',
             isDense: true,

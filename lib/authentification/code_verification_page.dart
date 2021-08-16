@@ -373,8 +373,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                             onTap: () {
                               if (_canSendAgain) {
                                 startTimer();
-                                _alwaysShowTimer = true;
-                                print(_canSendAgain);
                                 setState(() {});
                                 !state.isBusy ? onResend(state.number) : {};
                               } else {

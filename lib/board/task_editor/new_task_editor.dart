@@ -46,6 +46,8 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   late Stream submitR;
   StreamController onSubmitCS = StreamController();
   late Stream submitS;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey key = GlobalKey();
 
   final List<Duration> durations = [
     Duration(minutes: 30),
@@ -101,6 +103,7 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+
       backgroundColor: Color(0xffE9E9E9),
       body: SizedBox.expand(
         child: Container(
@@ -319,7 +322,7 @@ class RegularTaskEditorBody extends StatefulWidget {
   final RegularTask? task;
   final Stream submitChanel;
   final Function(Task task) onSubmit;
-  final GlobalKey key = GlobalKey();
+  final GlobalKey keyy = GlobalKey();
 
   RegularTaskEditorBody({
     Key? key,
@@ -371,7 +374,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
   }
 
   openImgPicker() {
-    print(_getOffset(widget.key));
+    print(_getOffset(widget.keyy));
     Navigator.push(
         context,
         RevealRoute(
@@ -380,7 +383,7 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           ),
           maxRadius: 800,
           centerAlignment: Alignment.center,
-          centerOffset: _getOffset(widget.key),
+          centerOffset: _getOffset(widget.keyy),
         )).then((iconId) {
       if (iconId != null) {
         setState(() {
@@ -421,13 +424,11 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
               editableRegularTask = editableRegularTask.copyWith(forAi: true);
               print(editableRegularTask.forAi);
             },
-            child: Hero(
-              tag: Key('newtask'),
-              child: TaskIconInRound(
-                iconId: editableRegularTask.iconId,
-                taskColor: editableRegularTask.color,
-                onTap: () => openImgPicker(),
-              ),
+            child: TaskIconInRound(
+              key: widget.keyy,
+              iconId: editableRegularTask.iconId,
+              taskColor: editableRegularTask.color,
+              onTap: () => openImgPicker(),
             ),
           ),
           SizedBox(
@@ -435,13 +436,14 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
           ),
           Expanded(
             child: Container(
-              // width: byWithScale(context) * 150,
-              // height: byWithScale(context) * 35,
+              //width: byWithScale(context) * 150,
+              //height: byWithScale(context) * 35,
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(25))),
               child: TitleInputSection(
                 initValue: editableRegularTask.title,
+
                 onChange: (String text) {
                   setState(() {
                     editableRegularTask =
