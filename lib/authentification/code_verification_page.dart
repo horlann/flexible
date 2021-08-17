@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:animated_check/animated_check.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
@@ -28,7 +26,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController pincodeController = TextEditingController();
   String pincode = '';
-  String _textContent = "";
   String? appSignature;
   late Timer _timer;
   int _start = 60;
@@ -52,7 +49,17 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
   }
 
   onResend(String number) {
-    BlocProvider.of<AuthBloc>(context).add(ResendCode(number: number));
+    if (_canSendAgain && !BlocProvider.of<AuthBloc>(context).state.isBusy) {
+      startTimer();
+      setState(() => _alwaysShowTimer = true);
+      BlocProvider.of<AuthBloc>(context).add(ResendCode(number: number));
+    } else {
+      if (_flushbar != null) {
+        _flushbar!.dismiss();
+      }
+      _flushbar = showFlush(context, "You can do it per $_start seconds", false)
+        ..show(context);
+    }
   }
 
   String? otpCode;
@@ -70,8 +77,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
         .then((value) => print('signature - $value'));
     controller = OTPTextEditController(
       codeLength: 6,
-
-      //ignore: avoid_print
       onCodeReceive: (code) => print('Your Application receive code - $code'),
     )..startListenUserConsent(
         (code) {
@@ -79,12 +84,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           return exp.stringMatch(code ?? '') ?? '';
         },
       );
-//    _animationController =
-//        AnimationController(duration: Duration(seconds: 1),vsync: this);
-
-//    _animation = new Tween<double>(begin: 0, end: 1).animate(
-//        new CurvedAnimation(
-//            parent: _animationController, curve: Curves.easeInOutCirc));
   }
 
   void startTimer() {
@@ -93,7 +92,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
-          (Timer timer) {
+      (Timer timer) {
         if (_start == 0) {
           setState(() {
             timer.cancel();
@@ -149,7 +148,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
       body: SizedBox.expand(
         child: Container(
           decoration: BoxDecoration(
-            // gradient: mainBackgroundGradient,
+              // gradient: mainBackgroundGradient,
               image: DecorationImage(
                   image: AssetImage('src/helper/backgroundimage.png'),
                   fit: BoxFit.cover,
@@ -177,47 +176,39 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
       listener: (context, state) {
         if (state is Authentificated) {
           if (_flushbar != null) {
+            // TODO fix and use isShowing
+            print('flush showed ${_flushbar!.isShowing()}');
             _flushbar!.dismiss();
+            Navigator.pop(context);
           }
           Navigator.pop(context);
         }
 
         if (state.isBusy) {
-          //    ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
-          //     text: 'Processing',
-          //    ));
-          // ignore: deprecated_member_use
-          Scaffold.of(context).hideCurrentSnackBar();
-
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          _flushbar = showFlush(context, "Processing", true);
+
+          setState(() => _flushbar = _flushbar =
+              showFlush(context, "Processing", true)..show(context));
         }
 
         if (state.error.isNotEmpty) {
-          //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          //   ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
-          //     text: state.error,
-          //   ));
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          _flushbar = showFlush(context, state.error, false);
+
+          setState(() => _flushbar = showFlush(context, state.error, false)
+            ..show(context));
         }
 
         if (state.message.isNotEmpty) {
-          //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          //  ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
-          //    text: state.message,
-          //   ));
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          _flushbar = showFlush(context, state.message, false);
+
+          setState(() => _flushbar = _flushbar =
+              showFlush(context, state.message, false)..show(context));
         }
       },
       child: buildBody(context),
@@ -268,7 +259,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                               pinTheme: PinTheme(
                                 shape: PinCodeFieldShape.box,
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                                 fieldHeight: 33 * byWithScale(context),
                                 fieldWidth: 29 * byWithScale(context),
                                 inactiveColor: Colors.grey[300],
@@ -311,12 +302,12 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                           ),
                           widget.afterError
                               ? Text(
-                            'Invalid code',
-                            style: TextStyle(
-                                color: Color(0xffE24F4F),
-                                fontSize: 12 * byWithScale(context),
-                                fontWeight: FontWeight.w400),
-                          )
+                                  'Invalid code',
+                                  style: TextStyle(
+                                      color: Color(0xffE24F4F),
+                                      fontSize: 12 * byWithScale(context),
+                                      fontWeight: FontWeight.w400),
+                                )
                               : SizedBox(),
                           SizedBox(
                             height: 8 * byWithScale(context),
@@ -372,24 +363,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                       builder: (context, state) {
                         if (state is CodeSended) {
                           return GestureDetector(
-                            onTap: () {
-                              if (_canSendAgain) {
-                                startTimer();
-                                _alwaysShowTimer = true;
-                                print(_canSendAgain);
-                                setState(() {});
-                                !state.isBusy ? onResend(state.number) : {};
-                              } else {
-                                if (_flushbar != null) {
-                                  _flushbar!.dismiss();
-                                }
-                                _flushbar = showFlush(
-                                    context,
-                                    "You can do it per $_start seconds",
-                                    false); //                                showTopSnackBar(
-//
-                              }
-                            },
+                            onTap: () => onResend(state.number),
                             child: Text(
                               'Send again',
                               style: TextStyle(
