@@ -544,7 +544,6 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
             Text(
               '...once ',
               style: TextStyle(
-                  decoration: TextDecoration.underline,
                   color: Color(0xffE24F4F),
                   fontSize: 10 * byWithScale(context),
                   fontWeight: FontWeight.w400),

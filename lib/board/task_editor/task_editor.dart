@@ -211,7 +211,6 @@ class _TaskEditorState extends State<TaskEditor> {
                         Text(
                           '...once ',
                           style: TextStyle(
-                              decoration: TextDecoration.underline,
                               color: Color(0xffE24F4F),
                               fontSize: 10 * byWithScale(context),
                               fontWeight: FontWeight.w400),

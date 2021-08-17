@@ -26,7 +26,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
     with SingleTickerProviderStateMixin {
   final TextEditingController pincodeController = TextEditingController();
   String pincode = '';
-  String _textContent = "";
   String? appSignature;
   late Timer _timer;
   int _start = 60;
@@ -50,7 +49,17 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
   }
 
   onResend(String number) {
-    BlocProvider.of<AuthBloc>(context).add(ResendCode(number: number));
+    if (_canSendAgain && !BlocProvider.of<AuthBloc>(context).state.isBusy) {
+      startTimer();
+      setState(() => _alwaysShowTimer = true);
+      BlocProvider.of<AuthBloc>(context).add(ResendCode(number: number));
+    } else {
+      if (_flushbar != null) {
+        _flushbar!.dismiss();
+      }
+      _flushbar = showFlush(context, "You can do it per $_start seconds", false)
+        ..show(context);
+    }
   }
 
   String? otpCode;
@@ -68,8 +77,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
         .then((value) => print('signature - $value'));
     controller = OTPTextEditController(
       codeLength: 6,
-
-      //ignore: avoid_print
       onCodeReceive: (code) => print('Your Application receive code - $code'),
     )..startListenUserConsent(
         (code) {
@@ -77,14 +84,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           return exp.stringMatch(code ?? '') ?? '';
         },
       );
-    _flushbar = showFlush(context, "Processing", true);
-
-//    _animationController =
-//        AnimationController(duration: Duration(seconds: 1),vsync: this);
-
-//    _animation = new Tween<double>(begin: 0, end: 1).animate(
-//        new CurvedAnimation(
-//            parent: _animationController, curve: Curves.easeInOutCirc));
   }
 
   void startTimer() {
@@ -113,39 +112,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
     super.dispose();
     //cancel();
     _timer.cancel();
-  }
-
-  void showSnackBar(BuildContext buildContext, String text,
-      bool isProgressive) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    Flushbar(
-      message: text,
-      barBlur: 20,
-      mainButton: isProgressive
-          ? Padding(
-        padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
-        child: CircularProgressIndicator(
-          strokeWidth: 5,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        ),
-      )
-          : SizedBox(),
-      duration: Duration(seconds: 2),
-      flushbarPosition: FlushbarPosition.TOP,
-      borderRadius: BorderRadius.all(Radius.circular(16)),
-      backgroundColor: Color(0xffE24F4F),
-      margin: const EdgeInsets.symmetric(horizontal: 11),
-      messageText: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-            ),
-          )),
-    )
-      ..show(context);
   }
 
   @override
@@ -210,48 +176,39 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
       listener: (context, state) {
         if (state is Authentificated) {
           if (_flushbar != null) {
+            // TODO fix and use isShowing
+            print('flush showed ${_flushbar!.isShowing()}');
             _flushbar!.dismiss();
+            Navigator.pop(context);
           }
-          // Navigator.pop(context);
+          Navigator.pop(context);
         }
 
         if (state.isBusy) {
-          //    ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
-          //     text: 'Processing',
-          //    ));
-          // ignore: deprecated_member_use
-          Scaffold.of(context).hideCurrentSnackBar();
-
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          showSnackBar(context, 'Processing', true);
+
+          setState(() => _flushbar = _flushbar =
+              showFlush(context, "Processing", true)..show(context));
         }
 
         if (state.error.isNotEmpty) {
-          //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          //   ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
-          //     text: state.error,
-          //   ));
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          showSnackBar(context, state.error, false);
 
+          setState(() => _flushbar = showFlush(context, state.error, false)
+            ..show(context));
         }
 
         if (state.message.isNotEmpty) {
-          //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          //  ScaffoldMessenger.of(context).showSnackBar(messageSnakbar(
-          //    text: state.message,
-          //   ));
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          //showSnackBar(context, state.message, false);
+
+          setState(() => _flushbar = _flushbar =
+              showFlush(context, state.message, false)..show(context));
         }
       },
       child: buildBody(context),
@@ -406,22 +363,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                       builder: (context, state) {
                         if (state is CodeSended) {
                           return GestureDetector(
-                            onTap: () {
-                              if (_canSendAgain) {
-                                startTimer();
-
-                                setState(() {});
-                                !state.isBusy ? onResend(state.number) : {};
-                              } else {
-                                if (_flushbar != null) {
-                                  _flushbar!.dismiss();
-                                }
-                                showSnackBar(context,
-                                    'You can do it per $_start seconds', false);
-                                //                                showTopSnackBar(
-//
-                              }
-                            },
+                            onTap: () => onResend(state.number),
                             child: Text(
                               'Send again',
                               style: TextStyle(
