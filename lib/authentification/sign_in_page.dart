@@ -120,7 +120,7 @@ class _SignInPageState extends State<SignInPage> {
           //   ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
           //     text: 'Signing in',
           //   ));
-          showSnackBar(context, "Signing in", true);
+          //showSnackBar(context, "Signing in", true);
         }
 
         if (state.error.isNotEmpty) {
@@ -128,7 +128,7 @@ class _SignInPageState extends State<SignInPage> {
           //    ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
           //      text: state.error,
           //   ));
-          showSnackBar(context, state.error, false);
+          // showSnackBar(context, state.error, false);
         }
       },
       child: buildBody(context),

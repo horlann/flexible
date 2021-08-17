@@ -1,4 +1,6 @@
 import 'dart:async';
+
+import 'package:animated_check/animated_check.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
@@ -77,8 +79,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           return exp.stringMatch(code ?? '') ?? '';
         },
       );
-    _flushbar = showFlush(context, "Processing", true);
-
 //    _animationController =
 //        AnimationController(duration: Duration(seconds: 1),vsync: this);
 
@@ -93,7 +93,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
-      (Timer timer) {
+          (Timer timer) {
         if (_start == 0) {
           setState(() {
             timer.cancel();
@@ -113,39 +113,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
     super.dispose();
     //cancel();
     _timer.cancel();
-  }
-
-  void showSnackBar(BuildContext buildContext, String text,
-      bool isProgressive) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    Flushbar(
-      message: text,
-      barBlur: 20,
-      mainButton: isProgressive
-          ? Padding(
-        padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
-        child: CircularProgressIndicator(
-          strokeWidth: 5,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        ),
-      )
-          : SizedBox(),
-      duration: Duration(seconds: 2),
-      flushbarPosition: FlushbarPosition.TOP,
-      borderRadius: BorderRadius.all(Radius.circular(16)),
-      backgroundColor: Color(0xffE24F4F),
-      margin: const EdgeInsets.symmetric(horizontal: 11),
-      messageText: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-            ),
-          )),
-    )
-      ..show(context);
   }
 
   @override
@@ -182,7 +149,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
       body: SizedBox.expand(
         child: Container(
           decoration: BoxDecoration(
-              // gradient: mainBackgroundGradient,
+            // gradient: mainBackgroundGradient,
               image: DecorationImage(
                   image: AssetImage('src/helper/backgroundimage.png'),
                   fit: BoxFit.cover,
@@ -212,7 +179,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          // Navigator.pop(context);
+          Navigator.pop(context);
         }
 
         if (state.isBusy) {
@@ -225,7 +192,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          showSnackBar(context, 'Processing', true);
+          _flushbar = showFlush(context, "Processing", true);
         }
 
         if (state.error.isNotEmpty) {
@@ -237,8 +204,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          showSnackBar(context, state.error, false);
-
+          _flushbar = showFlush(context, state.error, false);
         }
 
         if (state.message.isNotEmpty) {
@@ -251,7 +217,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          //showSnackBar(context, state.message, false);
+          _flushbar = showFlush(context, state.message, false);
         }
       },
       child: buildBody(context),
@@ -302,7 +268,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                               pinTheme: PinTheme(
                                 shape: PinCodeFieldShape.box,
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                BorderRadius.all(Radius.circular(20)),
                                 fieldHeight: 33 * byWithScale(context),
                                 fieldWidth: 29 * byWithScale(context),
                                 inactiveColor: Colors.grey[300],
@@ -345,12 +311,12 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                           ),
                           widget.afterError
                               ? Text(
-                                  'Invalid code',
-                                  style: TextStyle(
-                                      color: Color(0xffE24F4F),
-                                      fontSize: 12 * byWithScale(context),
-                                      fontWeight: FontWeight.w400),
-                                )
+                            'Invalid code',
+                            style: TextStyle(
+                                color: Color(0xffE24F4F),
+                                fontSize: 12 * byWithScale(context),
+                                fontWeight: FontWeight.w400),
+                          )
                               : SizedBox(),
                           SizedBox(
                             height: 8 * byWithScale(context),
@@ -409,16 +375,18 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                             onTap: () {
                               if (_canSendAgain) {
                                 startTimer();
-
+                                _alwaysShowTimer = true;
+                                print(_canSendAgain);
                                 setState(() {});
                                 !state.isBusy ? onResend(state.number) : {};
                               } else {
                                 if (_flushbar != null) {
                                   _flushbar!.dismiss();
                                 }
-                                showSnackBar(context,
-                                    'You can do it per $_start seconds', false);
-                                //                                showTopSnackBar(
+                                _flushbar = showFlush(
+                                    context,
+                                    "You can do it per $_start seconds",
+                                    false); //                                showTopSnackBar(
 //
                               }
                             },
