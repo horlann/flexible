@@ -16,19 +16,19 @@ class SubscribeServiceQon {
     print('Set user to Qonversion > $id');
   }
 
-  // Future<List<QProduct>> products() async {
-  //   try {
-  //     final QOfferings offerings = await Qonversion.offerings();
-  //     final List<QProduct> products = offerings.main!.products;
-  //     if (products.isNotEmpty) {
-  //       return products;
-  //     }
-  //     return [];
-  //   } catch (e) {
-  //     print('Get products > $e');
-  //     return [];
-  //   }
-  // }
+   Future<List<QProduct>> products() async {
+     try {
+       final QOfferings offerings = await Qonversion.offerings();
+       final List<QProduct> products = offerings.main!.products;
+       if (products.isNotEmpty) {
+         return products;
+       }
+       return [];
+     } catch (e) {
+       print('Get products > $e');
+       return [];
+     }
+   }
 
   // Future<QOffering?> getSub() async {
   //   try {

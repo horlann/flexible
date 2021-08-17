@@ -190,8 +190,9 @@ class _SubscribePageState extends State<SubscribePage> {
                                 String add_text = "";
                                 String add_text1 = "";
                                 if (state is AskForSubscribe) {
+
                                     add_text = state.isscConfig.first.lineabovepricetext;
-                                    add_text1 = "${state.isscConfig.first.subscriptionduration} ${state.isscConfig.first.postpricetext}";
+                                    add_text1 = "${state.products.first.prettyPrice} ${state.isscConfig.first.subscriptionduration} ${state.isscConfig.first.postpricetext}";
                                 };
 
                                 return Column(

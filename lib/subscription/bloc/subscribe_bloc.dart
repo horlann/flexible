@@ -9,6 +9,7 @@ import 'package:flexible/authentification/services/users_data_repository.dart';
 import 'package:flexible/subscription/models/inner_sales_screen_config.dart';
 import 'package:flexible/subscription/remoteconf_repository.dart';
 import 'package:flexible/subscription/subscribe_service_qon.dart';
+import 'package:qonversion_flutter/qonversion_flutter.dart';
 
 part 'subscribe_event.dart';
 part 'subscribe_state.dart';
@@ -84,7 +85,8 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
               showInfoPopup: remoteConfigRepository.showInfoPopup,
               showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
               noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF,
-              isscConfig: remoteConfigRepository.innerSalesScreenConfig);
+              isscConfig: remoteConfigRepository.innerSalesScreenConfig,
+              products: await subscribeService.products());
         }
       }
     }
@@ -111,7 +113,8 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
               showInfoPopup: remoteConfigRepository.showInfoPopup,
               showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
               noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF,
-              isscConfig: remoteConfigRepository.innerSalesScreenConfig);
+              isscConfig: remoteConfigRepository.innerSalesScreenConfig,
+              products: await subscribeService.products());
         }
       } else {
         // Start auth and continue then
@@ -164,7 +167,8 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
           showInfoPopup: remoteConfigRepository.showInfoPopup,
           showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
           noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF,
-          isscConfig: remoteConfigRepository.innerSalesScreenConfig);
+          isscConfig: remoteConfigRepository.innerSalesScreenConfig,
+          products: await subscribeService.products());
     }
   }
 }
