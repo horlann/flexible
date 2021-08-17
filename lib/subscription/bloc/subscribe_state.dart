@@ -16,10 +16,12 @@ class AskForSubscribe extends SubscribeState {
   final bool noThanksBtnOFF;
   final bool showAreYouSurePopup;
   final String message;
+  final List<IsscConfig> isscConfig;
   AskForSubscribe({
     required this.showInfoPopup,
     required this.noThanksBtnOFF,
     required this.showAreYouSurePopup,
+    required this.isscConfig,
     this.message = '',
   });
 
@@ -27,6 +29,7 @@ class AskForSubscribe extends SubscribeState {
         showInfoPopup,
         noThanksBtnOFF,
         showAreYouSurePopup,
+        isscConfig,
         message.isNotEmpty ? Random().nextDouble().toString() : ''
       ];
 }
@@ -44,8 +47,3 @@ class Subscribed extends SubscribeState {}
 
 class UnSubscribed extends SubscribeState {}
 
-class InnerSalesScreenConfig extends SubscribeState {
-  final List isscConfig;
-
-  InnerSalesScreenConfig({required this.isscConfig});
-}

@@ -60,5 +60,9 @@ class RemoteConfigRepository {
 
 
   // Inner_Sales_Screen_Config
-  List get innerSalesScreenConfig => jsonDecode(remoteConfig.getString('Inner_Sales_Screen_Config'));
+  List get innerSalesScreenConfigRawList =>
+      jsonDecode(remoteConfig.getString('Inner_Sales_Screen_Config'));
+
+  List<IsscConfig> get innerSalesScreenConfig =>
+      innerSalesScreenConfigRawList.map((e) => IsscConfig.fromMap(e)).toList();
 }

@@ -22,18 +22,20 @@ class IsscConfig {
   });
 
   factory IsscConfig.fromMap(Map<String, dynamic> map) {
+    print("map ${map.toString()}");
     return IsscConfig(
       id: map['id'],
-      lineabovepricetext: map['Line-Above-Price-Text'],
-      subscriptionduration: map['Subscription-Duration'],
-      postpricetext: map['Post-Price-Text'],
-      qonversionID: map['QonversionID'],
-      buttontitle: map['Button-Title'],
+      lineabovepricetext: map['Line-Above-Price-Text"'] ?? "",
+      subscriptionduration: map['Subscription-Duration'] ?? "",
+      postpricetext: map['Post-Price-Text']?? "",
+      qonversionID: map['QonversionID']?? "",
+      buttontitle: map['Button-Title']?? "",
     );
   }
 
-  factory IsscConfig.fromJson(String source) =>
-      IsscConfig.fromMap(json.decode(source));
+  factory IsscConfig.fromJson(String source){
+      return IsscConfig.fromMap(json.decode(source));
+  }
 
   @override
   String toString() {

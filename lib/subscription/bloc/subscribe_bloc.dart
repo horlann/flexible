@@ -67,8 +67,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
           return;
         }
       }
-      // Inner_Sales_Screen_Config
-      yield InnerSalesScreenConfig(isscConfig: remoteConfigRepository.innerSalesScreenConfig);
+
       // Show sub page if oto enabled
       await remoteConfigRepository.syncRemote();
       bool hideInnerSalesScreen = remoteConfigRepository.hideInnerSalesScreen;
@@ -84,7 +83,8 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
           yield AskForSubscribe(
               showInfoPopup: remoteConfigRepository.showInfoPopup,
               showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
-              noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF);
+              noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF,
+              isscConfig: remoteConfigRepository.innerSalesScreenConfig);
         }
       }
     }
@@ -110,7 +110,8 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
               message: 'Billing process failled',
               showInfoPopup: remoteConfigRepository.showInfoPopup,
               showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
-              noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF);
+              noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF,
+              isscConfig: remoteConfigRepository.innerSalesScreenConfig);
         }
       } else {
         // Start auth and continue then
@@ -162,7 +163,8 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
           message: 'You are not subscribed yet',
           showInfoPopup: remoteConfigRepository.showInfoPopup,
           showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
-          noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF);
+          noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF,
+          isscConfig: remoteConfigRepository.innerSalesScreenConfig);
     }
   }
 }

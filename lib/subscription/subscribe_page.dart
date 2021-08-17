@@ -181,18 +181,55 @@ class _SubscribePageState extends State<SubscribePage> {
                     Spacer(
                       flex: 1,
                     ),
+                    Center(
+                      child: BlocBuilder<SubscribeBloc, SubscribeState>(
+                            builder: (context, state) {
+                              String add_text = "";
+                              String add_text1 = "";
+                              if (state is AskForSubscribe) {
+                                  add_text = state.isscConfig.first.lineabovepricetext;
+                                  add_text1 = "${state.isscConfig.first.subscriptionduration} ${state.isscConfig.first.postpricetext}";
+                              };
+
+                              return Column(
+
+                                children: [
+                                  Text(
+                                  add_text,
+                                  style: TextStyle(
+                                      fontSize: 10 * byWithScale(context),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white),
+                                ),
+                                  Text(
+                                    add_text1,
+                                    style: TextStyle(
+                                        fontSize: 10 * byWithScale(context),
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
+                                  ),],
+                              );})
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 30 * byWithScale(context)),
-                      child: WideRoundedButton(
-                        enable: true,
-                        fontSizw: 18 ~/ byWithScale(context),
-                        enableColor: Color(0xffE24F4F),
-                        textColor: Colors.white,
-                        text: 'SUBSCRIBE',
-                        disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                        callback: () => subscribe(),
-                      ),
+                      child: BlocBuilder<SubscribeBloc, SubscribeState>(
+                      builder: (context, state) {
+                        String button_text = "SUBSCRIBE";
+                        if (state is AskForSubscribe) {
+                          print("InnerSalesScreenConfig is ${state.isscConfig}");
+                          button_text = state.isscConfig.first.buttontitle;
+                        }
+                         return WideRoundedButton(
+                            enable: true,
+                            fontSizw: 18 ~/ byWithScale(context),
+                            enableColor: Color(0xffE24F4F),
+                            textColor: Colors.white,
+                            text: button_text,
+                            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                            callback: () => subscribe(),
+                          );}
+                        )
                     ),
                     Spacer(
                       flex: 1,
