@@ -9,6 +9,7 @@ import 'package:flexible/authentification/services/users_data_repository.dart';
 import 'package:flexible/subscription/models/inner_sales_screen_config.dart';
 import 'package:flexible/subscription/remoteconf_repository.dart';
 import 'package:flexible/subscription/subscribe_service_qon.dart';
+import 'package:qonversion_flutter/qonversion_flutter.dart';
 
 part 'subscribe_event.dart';
 part 'subscribe_state.dart';
@@ -52,7 +53,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
           if (userData != null) {
             bool didSubscribedBefore = userData.subscribed;
             if (didSubscribedBefore) {
-              yield Subscribed();
+              yield Subscribed(allFeatures: userData.subscribedAllFeatures,hideAds: userData.subscribedHideAds);
               return;
             } else {
               yield UnSubscribed();
@@ -84,7 +85,8 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
               showInfoPopup: remoteConfigRepository.showInfoPopup,
               showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
               noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF,
-              isscConfig: remoteConfigRepository.innerSalesScreenConfig);
+              isscConfig: remoteConfigRepository.innerSalesScreenConfig,
+              products: await subscribeService.products());
         }
       }
     }
@@ -111,7 +113,8 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
               showInfoPopup: remoteConfigRepository.showInfoPopup,
               showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
               noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF,
-              isscConfig: remoteConfigRepository.innerSalesScreenConfig);
+              isscConfig: remoteConfigRepository.innerSalesScreenConfig,
+              products: await subscribeService.products());
         }
       } else {
         // Start auth and continue then
@@ -133,7 +136,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
     if (event is DebugRestore) {
       bool isAuthed = fireAuthService.isAuthenticated;
       if (isAuthed) {
-        yield Subscribed();
+        yield Subscribed(allFeatures: true,hideAds: true); // for test
       } else {
         // Start auth and continue then
         yield RegisterAndProcess(continueRestore: true);
@@ -145,26 +148,31 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
     bool isActive = await subscribeService
         .checkSubMonth()
         .onError((error, stackTrace) => false);
+    bool isActiveAllFeatures = false; // not need now , used isActive
+    bool isActiveHideAds = await subscribeService
+        .checkSubHideAds()
+        .onError((error, stackTrace) => false);
 
     // save last subscribe state to firebase
     try {
       UserData? userData =
           await usersDataRepo.getUser(fireAuthService.getUser()!.uid);
-      usersDataRepo.setUser(userData!.copyWith(subscribed: isActive));
+      usersDataRepo.setUser(userData!.copyWith(subscribed: isActive,subscribedAllFeatures: isActiveAllFeatures,subscribedHideAds: isActiveHideAds));
       print('Save last sub state succes > $isActive');
     } catch (e) {
       print('Save last sub state error >$e');
     }
 
     if (isActive) {
-      yield Subscribed();
+      yield Subscribed(allFeatures: isActiveAllFeatures,hideAds: isActiveHideAds);
     } else {
       yield AskForSubscribe(
           message: 'You are not subscribed yet',
           showInfoPopup: remoteConfigRepository.showInfoPopup,
           showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
           noThanksBtnOFF: remoteConfigRepository.noThanksBtnOFF,
-          isscConfig: remoteConfigRepository.innerSalesScreenConfig);
+          isscConfig: remoteConfigRepository.innerSalesScreenConfig,
+          products: await subscribeService.products());
     }
   }
 }

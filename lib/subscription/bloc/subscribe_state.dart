@@ -17,11 +17,13 @@ class AskForSubscribe extends SubscribeState {
   final bool showAreYouSurePopup;
   final String message;
   final List<IsscConfig> isscConfig;
+  final List<QProduct> products;
   AskForSubscribe({
     required this.showInfoPopup,
     required this.noThanksBtnOFF,
     required this.showAreYouSurePopup,
     required this.isscConfig,
+    required this.products,
     this.message = '',
   });
 
@@ -30,6 +32,7 @@ class AskForSubscribe extends SubscribeState {
         noThanksBtnOFF,
         showAreYouSurePopup,
         isscConfig,
+        products,
         message.isNotEmpty ? Random().nextDouble().toString() : ''
       ];
 }
@@ -43,7 +46,14 @@ class RegisterAndProcess extends SubscribeState {
   });
 }
 
-class Subscribed extends SubscribeState {}
+class Subscribed extends SubscribeState {
+  final bool allFeatures;
+  final bool hideAds;
+  Subscribed({
+    this.allFeatures = false,
+    this.hideAds = false,
+  });
+}
 
 class UnSubscribed extends SubscribeState {}
 

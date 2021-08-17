@@ -148,33 +148,38 @@ class _SubscribePageState extends State<SubscribePage> {
                       flex: 1,
                     ),
                     Center(
-                      child: BlocBuilder<SubscribeBloc, SubscribeState>(
-                            builder: (context, state) {
-                              String add_text = "";
-                              String add_text1 = "";
-                              if (state is AskForSubscribe) {
-                                  add_text = state.isscConfig.first.lineabovepricetext;
-                                  add_text1 = "${state.isscConfig.first.subscriptionduration} ${state.isscConfig.first.postpricetext}";
-                              };
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 30 * byWithScale(context)),
+                        child: BlocBuilder<SubscribeBloc, SubscribeState>(
+                              builder: (context, state) {
+                                String add_text = "";
+                                String add_text1 = "";
+                                if (state is AskForSubscribe) {
 
-                              return Column(
+                                    add_text = state.isscConfig.first.lineabovepricetext;
+                                    add_text1 = "${state.products.first.prettyPrice} ${state.isscConfig.first.subscriptionduration} ${state.isscConfig.first.postpricetext}";
+                                };
 
-                                children: [
-                                  Text(
-                                  add_text,
-                                  style: TextStyle(
-                                      fontSize: 10 * byWithScale(context),
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
-                                ),
-                                  Text(
-                                    add_text1,
+                                return Column(
+
+                                  children: [
+                                    Text(
+                                    add_text,
                                     style: TextStyle(
                                         fontSize: 10 * byWithScale(context),
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white),
-                                  ),],
-                              );})
+                                  ),
+                                    Text(
+                                      add_text1,
+                                      style: TextStyle(
+                                          fontSize: 10 * byWithScale(context),
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white),
+                                    ),],
+                                );}),
+                      )
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
