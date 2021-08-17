@@ -77,6 +77,8 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           return exp.stringMatch(code ?? '') ?? '';
         },
       );
+    _flushbar = showFlush(context, "Processing", true);
+
 //    _animationController =
 //        AnimationController(duration: Duration(seconds: 1),vsync: this);
 
@@ -111,6 +113,39 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
     super.dispose();
     //cancel();
     _timer.cancel();
+  }
+
+  void showSnackBar(BuildContext buildContext, String text,
+      bool isProgressive) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    Flushbar(
+      message: text,
+      barBlur: 20,
+      mainButton: isProgressive
+          ? Padding(
+        padding: const EdgeInsets.only(right: 15.0, top: 10, bottom: 10),
+        child: CircularProgressIndicator(
+          strokeWidth: 5,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        ),
+      )
+          : SizedBox(),
+      duration: Duration(seconds: 2),
+      flushbarPosition: FlushbarPosition.TOP,
+      borderRadius: BorderRadius.all(Radius.circular(16)),
+      backgroundColor: Color(0xffE24F4F),
+      margin: const EdgeInsets.symmetric(horizontal: 11),
+      messageText: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          )),
+    )
+      ..show(context);
   }
 
   @override
@@ -177,7 +212,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          Navigator.pop(context);
+          // Navigator.pop(context);
         }
 
         if (state.isBusy) {
@@ -190,7 +225,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          _flushbar = showFlush(context, "Processing", true);
+          showSnackBar(context, 'Processing', true);
         }
 
         if (state.error.isNotEmpty) {
@@ -202,7 +237,8 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          _flushbar = showFlush(context, state.error, false);
+          showSnackBar(context, state.error, false);
+
         }
 
         if (state.message.isNotEmpty) {
@@ -215,7 +251,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
           if (_flushbar != null) {
             _flushbar!.dismiss();
           }
-          _flushbar = showFlush(context, state.message, false);
+          //showSnackBar(context, state.message, false);
         }
       },
       child: buildBody(context),
@@ -373,16 +409,16 @@ class _CodeVerificationPageState extends State<CodeVerificationPage>
                             onTap: () {
                               if (_canSendAgain) {
                                 startTimer();
+
                                 setState(() {});
                                 !state.isBusy ? onResend(state.number) : {};
                               } else {
                                 if (_flushbar != null) {
                                   _flushbar!.dismiss();
                                 }
-                                _flushbar = showFlush(
-                                    context,
-                                    "You can do it per $_start seconds",
-                                    false); //                                showTopSnackBar(
+                                showSnackBar(context,
+                                    'You can do it per $_start seconds', false);
+                                //                                showTopSnackBar(
 //
                               }
                             },
