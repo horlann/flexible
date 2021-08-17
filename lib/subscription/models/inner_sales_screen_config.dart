@@ -22,7 +22,7 @@ class IsscConfig {
   });
 
   factory IsscConfig.fromMap(Map<String, dynamic> map) {
-    print("map ${map.toString()}");
+    print("maps ${map.toString()}");
     return IsscConfig(
       id: map['id'],
       lineabovepricetext: map['Line-Above-Price-Text"'] ?? "",
@@ -39,7 +39,7 @@ class IsscConfig {
 
   @override
   String toString() {
-    return 'AysConfig(id: $id, lineabovepricetext: $lineabovepricetext, subscriptionduration: $subscriptionduration, postpricetext: $postpricetext, qonversionID: $qonversionID, buttontitle: $buttontitle)';
+    return 'IsscConfig(id: $id, lineabovepricetext: $lineabovepricetext, subscriptionduration: $subscriptionduration, postpricetext: $postpricetext, qonversionID: $qonversionID, buttontitle: $buttontitle)';
   }
 
   @override
