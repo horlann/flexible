@@ -82,7 +82,7 @@ class _SubscribePageState extends State<SubscribePage> {
           right: 50 / pRatio(context),
           left: 50 / pRatio(context),
           top: 40 / pRatio(context),
-          bottom: 40 / pRatio(context)),
+          bottom: 30 / pRatio(context)),
       child: Column(
         children: [
           Expanded(
@@ -92,40 +92,6 @@ class _SubscribePageState extends State<SubscribePage> {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-//              Padding(
-//                padding:
-//                    EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
-//                child: Row(
-//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                  children: [
-////                    GestureDetector(
-////                      onTap: () {
-////                        BlocProvider.of<SubscribeBloc>(context).add(Decline());
-////                      },
-////                      child: Image.asset(
-////                        'src/icons/return.png',
-////                        width: 20 * byWithScale(context),
-////                      ),
-////                    ),
-//                    BlocBuilder<SubscribeBloc, SubscribeState>(
-//                      builder: (context, state) {
-//                        if (state is AskForSubscribe && state.showInfoPopup) {
-//                          return GestureDetector(
-//                              onTap: () {
-//                                Navigator.push(
-//                                    context,
-//                                    CupertinoPageRoute(
-//                                      builder: (context) => TermsPage(),
-//                                    ));
-//                              },
-//                              child: Icon(Icons.info));
-//                        }
-//                        return SizedBox();
-//                      },
-//                    )
-//                  ],
-//                ),
-//              ),
                     Spacer(
                       flex: 1,
                     ),
@@ -212,8 +178,8 @@ class _SubscribePageState extends State<SubscribePage> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 30 * byWithScale(context)),
-                      child: BlocBuilder<SubscribeBloc, SubscribeState>(
+                            horizontal: 35 * byWithScale(context)),
+                        child: BlocBuilder<SubscribeBloc, SubscribeState>(
                       builder: (context, state) {
                         String button_text = "SUBSCRIBE";
                         if (state is AskForSubscribe) {
@@ -232,11 +198,11 @@ class _SubscribePageState extends State<SubscribePage> {
                         )
                     ),
                     Spacer(
-                      flex: 1,
+                      flex: 5,
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 30 * byWithScale(context)),
+                          horizontal: 35 * byWithScale(context)),
                       child: WideRoundedButton(
                         enable: true,
                         fontSizw: 18 ~/ byWithScale(context),
@@ -250,22 +216,22 @@ class _SubscribePageState extends State<SubscribePage> {
                     SizedBox(
                       height: 8,
                     ),
-                    GestureDetector(
-                        onTap: () {
-                          BlocProvider.of<SubscribeBloc>(context)
-                              .add(DebugRestore());
-                        },
-                        child: Text('Debug restore')),
-                    Spacer(
-                      flex: 2,
-                    ),
+//                    GestureDetector(
+//                        onTap: () {
+//                          BlocProvider.of<SubscribeBloc>(context)
+//                              .add(DebugRestore());
+//                        },
+//                        child: Text('Debug restore')),
+//                    Spacer(
+//                      flex: 2,
+//                    ),
                   ],
                 )
               ],
             ),
           ),
           SizedBox(
-            height: 40 / pRatio(context),
+            height: 20 / pRatio(context),
           ),
           WideRoundedButton(
               enable: true,
@@ -311,7 +277,7 @@ class _SubscribePageState extends State<SubscribePage> {
                     Text(
                       title,
                       style: TextStyle(
-                          fontSize: 11 * byWithScale(context),
+                          fontSize: 11.5 * byWithScale(context),
                           fontWeight: FontWeight.w600,
                           color: Colors.white),
                     ),
@@ -325,7 +291,7 @@ class _SubscribePageState extends State<SubscribePage> {
                         overflow: TextOverflow.fade,
                         softWrap: true,
                         style: TextStyle(
-                            fontSize: 11 * byWithScale(context),
+                            fontSize: 12 * byWithScale(context),
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
                       ),

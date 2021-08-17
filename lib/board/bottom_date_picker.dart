@@ -103,14 +103,20 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                       },
                       child: BlocBuilder<WeatherBloc, WeatherState>(
                         builder: (context, weatherState) {
-                          return Text(
-                            currentDate(state.showDay),
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18 * byWithScale(context),
-                                color: weatherState.daylight == DayLight.dark
-                                    ? Colors.white
-                                    : Color(0xffE24F4F)),
+                          return Container(
+                            height: 50,
+                            child: Center(
+                              child: Text(
+                                currentDate(state.showDay),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18 * byWithScale(context),
+                                    color:
+                                        weatherState.daylight == DayLight.dark
+                                            ? Colors.white
+                                            : Color(0xffE24F4F)),
+                              ),
+                            ),
                           );
                         },
                       ),
