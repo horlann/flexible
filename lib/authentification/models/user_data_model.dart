@@ -11,6 +11,8 @@ class UserData {
   final String phoneNumber;
   final Uint8List? photo;
   final bool subscribed;
+  final bool subscribedAllFeatures;
+  final bool subscribedHideAds;
   UserData({
     String? uid,
     required this.fullName,
@@ -18,6 +20,8 @@ class UserData {
     required this.phoneNumber,
     required this.photo,
     this.subscribed = false,
+    this.subscribedAllFeatures = false,
+    this.subscribedHideAds = false,
   }) : this.uid = uid ?? Uuid().v1();
 
   UserData copyWith({
@@ -27,6 +31,8 @@ class UserData {
     String? phoneNumber,
     Uint8List? photo,
     bool? subscribed,
+    bool? subscribedAllFeatures,
+    bool? subscribedHideAds,
   }) {
     return UserData(
       uid: uid ?? this.uid,
@@ -35,6 +41,8 @@ class UserData {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       photo: photo ?? this.photo,
       subscribed: subscribed ?? this.subscribed,
+      subscribedAllFeatures: subscribedAllFeatures ?? this.subscribedAllFeatures,
+      subscribedHideAds: subscribedHideAds ?? this.subscribedHideAds,
     );
   }
 
@@ -45,6 +53,8 @@ class UserData {
       'email': email,
       'phoneNumber': phoneNumber,
       'subscribed': subscribed,
+      'subscribedAllFeatures': subscribedAllFeatures,
+      'subscribedHideAds': subscribedHideAds,
       'photo': this.photo != null ? Blob(this.photo!) : null,
     };
   }
@@ -56,6 +66,8 @@ class UserData {
       'email': email,
       'phoneNumber': phoneNumber,
       'subscribed': subscribed,
+      'subscribedAllFeatures': subscribedAllFeatures,
+      'subscribedHideAds': subscribedHideAds,
     };
   }
 
@@ -67,6 +79,8 @@ class UserData {
       phoneNumber: map['phoneNumber'],
       photo: map['photo']?.bytes,
       subscribed: map['subscribed'] ?? false,
+      subscribedAllFeatures: map['subscribedAllFeatures'] ?? false,
+      subscribedHideAds: map['subscribedHideAds'] ?? false,
     );
   }
 
@@ -77,7 +91,7 @@ class UserData {
 
   @override
   String toString() {
-    return 'UserData(uid: $uid, fullName: $fullName, email: $email, phoneNumber: $phoneNumber, photo: $photo, subscribed: $subscribed)';
+    return 'UserData(uid: $uid, fullName: $fullName, email: $email, phoneNumber: $phoneNumber, photo: $photo, subscribed: $subscribed, subscribedAllFeatures: $subscribedAllFeatures, subscribedHideAds: $subscribedHideAds)';
   }
 
   @override
@@ -90,7 +104,9 @@ class UserData {
         other.email == email &&
         other.phoneNumber == phoneNumber &&
         other.photo == photo &&
-        other.subscribed == subscribed;
+        other.subscribed == subscribed &&
+        other.subscribedAllFeatures == subscribedAllFeatures &&
+        other.subscribedHideAds == subscribedHideAds;
   }
 
   @override
@@ -100,6 +116,8 @@ class UserData {
         email.hashCode ^
         phoneNumber.hashCode ^
         photo.hashCode ^
-        subscribed.hashCode;
+        subscribed.hashCode ^
+        subscribedAllFeatures.hashCode ^
+        subscribedHideAds.hashCode;
   }
 }

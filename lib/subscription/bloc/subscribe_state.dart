@@ -46,7 +46,14 @@ class RegisterAndProcess extends SubscribeState {
   });
 }
 
-class Subscribed extends SubscribeState {}
+class Subscribed extends SubscribeState {
+  final bool allFeatures;
+  final bool hideAds;
+  Subscribed({
+    this.allFeatures = false,
+    this.hideAds = false,
+  });
+}
 
 class UnSubscribed extends SubscribeState {}
 

@@ -4,6 +4,7 @@ import 'package:qonversion_flutter/qonversion_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SubscribeServiceQon {
+  static Map<String, QPermission>? permissions;
   Future get launchQonverion => Qonversion.launch(
         'AZu-ZUfbWku3nY2f_ISom7XcMf2fMm6g',
         isObserveMode: false,
@@ -76,9 +77,8 @@ class SubscribeServiceQon {
 
   Future<bool> checkSubMonth() async {
     try {
-      final Map<String, QPermission> permissions =
-          await Qonversion.checkPermissions();
-      final monSub = permissions['month_sub_perm'];
+      if (permissions == null) permissions = await Qonversion.checkPermissions();
+      final monSub = permissions?['All Features'];//['month_sub_perm'];
       print(permissions);
       if (monSub != null && monSub.isActive) {
         print(monSub.renewState);
@@ -95,6 +95,71 @@ class SubscribeServiceQon {
           case QProductRenewState.canceled:
             // The user has turned off auto-renewal for the subscription, but the subscription has not expired yet.
             // Prompt the user to resubscribe with a special offer.
+            break;
+          default:
+            break;
+        }
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Qonversion issue $e');
+      return false;
+    }
+  }
+  Future<bool> checkSubAllFeatures() async {
+    try {
+      if (permissions == null) permissions = await Qonversion.checkPermissions();
+      final monSub = permissions?['All Features'];
+      print(monSub);
+      if (monSub != null && monSub.isActive) {
+        print(monSub.renewState);
+        switch (monSub.renewState) {
+          case QProductRenewState.willRenew:
+          case QProductRenewState.nonRenewable:
+          // .willRenew is the state of an auto-renewable subscription
+          // .nonRenewable is the state of consumable/non-consumable IAPs that could unlock lifetime access
+            break;
+          case QProductRenewState.billingIssue:
+          // Grace period: permission is active, but there was some billing issue.
+          // Prompt the user to update the payment method.
+            break;
+          case QProductRenewState.canceled:
+          // The user has turned off auto-renewal for the subscription, but the subscription has not expired yet.
+          // Prompt the user to resubscribe with a special offer.
+            break;
+          default:
+            break;
+        }
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Qonversion issue $e');
+      return false;
+    }
+  }
+
+  Future<bool> checkSubHideAds() async {
+    try {
+      if (permissions == null) permissions = await Qonversion.checkPermissions();
+      final monSub = permissions?['Hide Ads'];
+      print(permissions);
+      if (monSub != null && monSub.isActive) {
+        print(monSub.renewState);
+        switch (monSub.renewState) {
+          case QProductRenewState.willRenew:
+          case QProductRenewState.nonRenewable:
+          // .willRenew is the state of an auto-renewable subscription
+          // .nonRenewable is the state of consumable/non-consumable IAPs that could unlock lifetime access
+            break;
+          case QProductRenewState.billingIssue:
+          // Grace period: permission is active, but there was some billing issue.
+          // Prompt the user to update the payment method.
+            break;
+          case QProductRenewState.canceled:
+          // The user has turned off auto-renewal for the subscription, but the subscription has not expired yet.
+          // Prompt the user to resubscribe with a special offer.
             break;
           default:
             break;
