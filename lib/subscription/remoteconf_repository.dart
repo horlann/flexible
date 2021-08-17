@@ -4,6 +4,8 @@ import 'package:flexible/subscription/models/are_you_sure_popup_config.dart';
 import 'package:flexible/subscription/models/oto_types_config.dart';
 import 'package:flexible/subscription/remoteconf_defaults.dart';
 
+import 'models/inner_sales_screen_config.dart';
+
 class RemoteConfigRepository {
   // init and set defaults from file
   RemoteConfig remoteConfig = RemoteConfig.instance
@@ -27,7 +29,8 @@ class RemoteConfigRepository {
 
   // Bools
   //
-  get hideOTO => remoteConfig.getBool('HideOTO');
+  get hideInnerSalesScreen => remoteConfig.getBool('Hide_Inner_Sales_Screen');
+  get showInnerSalesScreenBeforeRegistration => remoteConfig.getBool('Show_Inner_Sales_Screen_Before_Registration');
   get showInfoPopup => remoteConfig.getBool('show_Info_popup');
   get showAreYouSurePopup => remoteConfig.getBool('showAreYouSurePopup');
   get showOTOOnAppStart => remoteConfig.getBool('showOTOOnAppStart');
@@ -54,4 +57,8 @@ class RemoteConfigRepository {
 
   List<AysConfig> get areYouSurePopupConfigs =>
       areYouSurePopupConfigsRawList.map((e) => AysConfig.fromMap(e)).toList();
+
+
+  // Inner_Sales_Screen_Config
+  List get innerSalesScreenConfig => jsonDecode(remoteConfig.getString('Inner_Sales_Screen_Config'));
 }

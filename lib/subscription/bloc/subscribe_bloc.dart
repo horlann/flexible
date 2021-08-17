@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flexible/authentification/models/user_data_model.dart';
 import 'package:flexible/authentification/services/firebase_auth.dart';
 import 'package:flexible/authentification/services/users_data_repository.dart';
+import 'package:flexible/subscription/models/inner_sales_screen_config.dart';
 import 'package:flexible/subscription/remoteconf_repository.dart';
 import 'package:flexible/subscription/subscribe_service_qon.dart';
 
@@ -66,12 +67,13 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
           return;
         }
       }
-
+      // Inner_Sales_Screen_Config
+      yield InnerSalesScreenConfig(isscConfig: remoteConfigRepository.innerSalesScreenConfig);
       // Show sub page if oto enabled
       await remoteConfigRepository.syncRemote();
-      bool hideOTO = remoteConfigRepository.hideOTO;
-      print('Oto disabled > $hideOTO');
-      if (hideOTO) {
+      bool hideInnerSalesScreen = remoteConfigRepository.hideInnerSalesScreen;
+      print('Oto disabled > $hideInnerSalesScreen');
+      if (hideInnerSalesScreen) {
         yield SubscribtionDeactivated();
       } else {
         bool isAuthed = fireAuthService.isAuthenticated;

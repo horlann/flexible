@@ -43,3 +43,9 @@ class RegisterAndProcess extends SubscribeState {
 class Subscribed extends SubscribeState {}
 
 class UnSubscribed extends SubscribeState {}
+
+class InnerSalesScreenConfig extends SubscribeState {
+  final List isscConfig;
+
+  InnerSalesScreenConfig({required this.isscConfig});
+}
