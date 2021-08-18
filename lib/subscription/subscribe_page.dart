@@ -82,7 +82,7 @@ class _SubscribePageState extends State<SubscribePage> {
           right: 50 / pRatio(context),
           left: 50 / pRatio(context),
           top: 40 / pRatio(context),
-          bottom: 30 / pRatio(context)),
+          bottom: 40 / pRatio(context)),
       child: Column(
         children: [
           Expanded(
@@ -92,6 +92,40 @@ class _SubscribePageState extends State<SubscribePage> {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+//              Padding(
+//                padding:
+//                    EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
+//                child: Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  children: [
+////                    GestureDetector(
+////                      onTap: () {
+////                        BlocProvider.of<SubscribeBloc>(context).add(Decline());
+////                      },
+////                      child: Image.asset(
+////                        'src/icons/return.png',
+////                        width: 20 * byWithScale(context),
+////                      ),
+////                    ),
+//                    BlocBuilder<SubscribeBloc, SubscribeState>(
+//                      builder: (context, state) {
+//                        if (state is AskForSubscribe && state.showInfoPopup) {
+//                          return GestureDetector(
+//                              onTap: () {
+//                                Navigator.push(
+//                                    context,
+//                                    CupertinoPageRoute(
+//                                      builder: (context) => TermsPage(),
+//                                    ));
+//                              },
+//                              child: Icon(Icons.info));
+//                        }
+//                        return SizedBox();
+//                      },
+//                    )
+//                  ],
+//                ),
+//              ),
                     Spacer(
                       flex: 1,
                     ),
@@ -148,66 +182,75 @@ class _SubscribePageState extends State<SubscribePage> {
                       flex: 1,
                     ),
                     Center(
-                      child: Padding(
+                        child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 30 * byWithScale(context)),
+                      child: FutureBuilder(
+                        builder: (context, snapshot) {
+                          return BlocBuilder<SubscribeBloc, SubscribeState>(
+                              builder: (context, state) {
+                            String add_text = "";
+                            String add_text1 = "";
+                            if (state is AskForSubscribe) {
+                              add_text =
+                                  state.isscConfig.first.lineabovepricetext;
+                              add_text1 =
+                                  "${state.products.first.prettyPrice} ${state.isscConfig.first.subscriptionduration} ${state.isscConfig.first.postpricetext}";
+                            }
+                            ;
+
+                            return Column(
+                              children: [
+                                Text(
+                                  add_text,
+                                  style: TextStyle(
+                                      fontSize: 10 * byWithScale(context),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white),
+                                ),
+                                Text(
+                                  add_text1,
+                                  style: TextStyle(
+                                      fontSize: 10 * byWithScale(context),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white),
+                                ),
+                              ],
+                            );
+                          });
+                        },
+                      ),
+                    )),
+                    Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: 30 * byWithScale(context)),
-                        child: BlocBuilder<SubscribeBloc, SubscribeState>(
-                              builder: (context, state) {
-                                String add_text = "";
-                                String add_text1 = "";
-                                if (state is AskForSubscribe) {
-
-                                    add_text = state.isscConfig.first.lineabovepricetext;
-                                    add_text1 = "${state.products.first.prettyPrice} ${state.isscConfig.first.subscriptionduration} ${state.isscConfig.first.postpricetext}";
-                                };
-
-                                return Column(
-
-                                  children: [
-                                    Text(
-                                    add_text,
-                                    style: TextStyle(
-                                        fontSize: 10 * byWithScale(context),
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white),
-                                  ),
-                                    Text(
-                                      add_text1,
-                                      style: TextStyle(
-                                          fontSize: 10 * byWithScale(context),
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white),
-                                    ),],
-                                );}),
-                      )
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                            horizontal: 35 * byWithScale(context)),
-                        child: BlocBuilder<SubscribeBloc, SubscribeState>(
-                      builder: (context, state) {
-                        String button_text = "SUBSCRIBE";
-                        if (state is AskForSubscribe) {
-                          print("InnerSalesScreenConfig is ${state.isscConfig}");
-                          button_text = state.isscConfig.first.buttontitle;
-                        }
-                         return WideRoundedButton(
-                            enable: true,
-                            fontSizw: 18 ~/ byWithScale(context),
-                            enableColor: Color(0xffE24F4F),
-                            textColor: Colors.white,
-                            text: button_text,
-                            disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                            callback: () => subscribe(),
-                          );}
-                        )
-                    ),
+                        child: FutureBuilder(
+                            builder: (context, snapshot) {
+                              return BlocBuilder<SubscribeBloc, SubscribeState>(
+                                  builder: (context, state) {
+                                    String button_text = "SUBSCRIBE";
+                                    if (state is AskForSubscribe) {
+                                      print(
+                                          "InnerSalesScreenConfig is ${state.isscConfig}");
+                                      button_text = state.isscConfig.first.buttontitle;
+                                    }
+                                    return WideRoundedButton(
+                                      enable: true,
+                                      fontSizw: 18 ~/ byWithScale(context),
+                                      enableColor: Color(0xffE24F4F),
+                                      textColor: Colors.white,
+                                      text: button_text,
+                                      disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                                      callback: () => subscribe(),
+                                    );
+                              });
+                        })),
                     Spacer(
-                      flex: 5,
+                      flex: 1,
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 35 * byWithScale(context)),
+                          horizontal: 30 * byWithScale(context)),
                       child: WideRoundedButton(
                         enable: true,
                         fontSizw: 18 ~/ byWithScale(context),
@@ -221,22 +264,22 @@ class _SubscribePageState extends State<SubscribePage> {
                     SizedBox(
                       height: 8,
                     ),
-//                    GestureDetector(
-//                        onTap: () {
-//                          BlocProvider.of<SubscribeBloc>(context)
-//                              .add(DebugRestore());
-//                        },
-//                        child: Text('Debug restore')),
-//                    Spacer(
-//                      flex: 2,
-//                    ),
+                    GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<SubscribeBloc>(context)
+                              .add(DebugRestore());
+                        },
+                        child: Text('Debug restore')),
+                    Spacer(
+                      flex: 2,
+                    ),
                   ],
                 )
               ],
             ),
           ),
           SizedBox(
-            height: 20 / pRatio(context),
+            height: 40 / pRatio(context),
           ),
           WideRoundedButton(
               enable: true,
@@ -282,7 +325,7 @@ class _SubscribePageState extends State<SubscribePage> {
                     Text(
                       title,
                       style: TextStyle(
-                          fontSize: 11.5 * byWithScale(context),
+                          fontSize: 11 * byWithScale(context),
                           fontWeight: FontWeight.w600,
                           color: Colors.white),
                     ),
@@ -296,7 +339,7 @@ class _SubscribePageState extends State<SubscribePage> {
                         overflow: TextOverflow.fade,
                         softWrap: true,
                         style: TextStyle(
-                            fontSize: 12 * byWithScale(context),
+                            fontSize: 11 * byWithScale(context),
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
                       ),
