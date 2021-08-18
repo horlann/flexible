@@ -192,10 +192,15 @@ class _SubscribePageState extends State<SubscribePage> {
                             String add_text = "";
                             String add_text1 = "";
                             if (state is AskForSubscribe) {
-                              add_text =
-                                  state.isscConfig.first.lineabovepricetext;
-                              add_text1 =
-                                  "${state.products.first.prettyPrice} ${state.isscConfig.first.subscriptionduration} ${state.isscConfig.first.postpricetext}";
+                              if(state.isscConfig.isNotEmpty &&state.products.isNotEmpty) {
+                                add_text =
+                                    state.isscConfig.first.lineabovepricetext;
+                                add_text1 =
+                                "${state.products.first.prettyPrice} ${state
+                                    .isscConfig.first
+                                    .subscriptionduration} ${state.isscConfig
+                                    .first.postpricetext}";
+                              }
                             }
                             ;
 
@@ -230,9 +235,13 @@ class _SubscribePageState extends State<SubscribePage> {
                                   builder: (context, state) {
                                     String button_text = "SUBSCRIBE";
                                     if (state is AskForSubscribe) {
-                                      print(
-                                          "InnerSalesScreenConfig is ${state.isscConfig}");
-                                      button_text = state.isscConfig.first.buttontitle;
+                                      if(state.isscConfig.isNotEmpty) {
+                                        print(
+                                            "InnerSalesScreenConfig is ${state
+                                                .isscConfig}");
+                                        button_text =
+                                            state.isscConfig.first.buttontitle;
+                                      }
                                     }
                                     return WideRoundedButton(
                                       enable: true,
