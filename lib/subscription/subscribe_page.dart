@@ -202,10 +202,13 @@ class _SubscribePageState extends State<SubscribePage> {
                             }
                             print(add_text.toString() + add_text1.toString() +
                                 " text");
-                            if (add_text.isEmpty || add_text1.isEmpty) {
-                              add_text = "Connection error";
+                              if (add_text.isEmpty) {
+                                add_text = "Connection error";
+                            }
+                            if (add_text1.isEmpty) {
                               add_text1 = "Connection error";
                             }
+
                             return Column(
                               children: [
                                 Text(

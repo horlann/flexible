@@ -16,6 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:invert_colors/invert_colors.dart';
+import 'package:rect_getter/rect_getter.dart';
 
 class RegularTaskTile extends StatefulWidget {
   final RegularTask task;
@@ -92,20 +93,61 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
     }
   }
 
-  Color? testColor(var key) {
-    print(key.toString() + " key");
+  Widget testColor(var key) {
+    var color;
+    print(key.toString() + "NJNJNJN");
     if (isUnSubscribed()) {
-      print("d");
       if (BlocProvider.of<WeatherBloc>(context).state.wCode == 800) {
-        return key < 250 ? Colors.black : Colors.white;
+        color = key < 250 ? Colors.black : Colors.white;
       } else {
-        return Colors.white;
+        color = Colors.white;
       }
     } else {
-      return Colors.white;
+      color = Colors.white;
     }
-  }
+    // color= key < 250 ? Colors.black : Colors.white;
 
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0),
+      child: GestureDetector(
+        onTap: () {},
+        child: Row(
+          children: [
+            Text(
+              '${geTimeString(widget.task.timeStart)}',
+              style: TextStyle(
+                  color: color,
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w600,
+                  decoration: widget.task.isDone
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              widget.task.title,
+              style: TextStyle(
+                  color: color,
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w600,
+                  decoration: widget.task.isDone
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none),
+            ),
+            Text(
+              widget.task.subtitle,
+              style: TextStyle(
+                  color: color,
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w400),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
@@ -114,17 +156,14 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          print(
-            _getOffset(widget.task.key)?.top ?? 0,
-          );
           showModal(
               context,
               RegularTaskModal(
                   widget.task,
                   _getOffset(widget.task.key)?.top ?? 0,
-                      () => onEditClicked(context),
-                      () => onLockClicked(context),
-                      () => showCopyDialog()));
+                  () => onEditClicked(context),
+                  () => onLockClicked(context),
+                  () => showCopyDialog()));
         },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 16),
@@ -163,7 +202,9 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(child: buildTextSection()),
+                            Expanded(
+                                child: testColor(
+                                    _getOffset(widget.task.key)?.top ?? 0)),
                             Row(
                               children: [
                                 isUnSubscribed()
@@ -239,44 +280,48 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
     );
   }
 
-  Widget buildTextSection() {
+  Widget buildTextSection(BuildContext context) {
+    //print(globalKey.toString()+" test");
+    // print(RectGetter.getRectFromKey(globalKey)!.topCenter??'d');
+    //_getSizes();
     return Padding(
       padding: const EdgeInsets.only(top: 15.0),
-      child: Row(
-        children: [
-          Text(
-            '${geTimeString(widget.task.timeStart)}',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 12 * byWithScale(context),
-                fontWeight: FontWeight.w600,
-                decoration: widget.task.isDone
-                    ? TextDecoration.lineThrough
-                    : TextDecoration.none),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Text(
-            widget.task.title,
-            style: TextStyle(
-                color: testColor(
-                  _getOffset(widget.task.key)?.top ?? 10,
-                ),
-                fontSize: 12 * byWithScale(context),
-                fontWeight: FontWeight.w600,
-                decoration: widget.task.isDone
-                    ? TextDecoration.lineThrough
-                    : TextDecoration.none),
-          ),
-          Text(
-            widget.task.subtitle,
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 12 * byWithScale(context),
-                fontWeight: FontWeight.w400),
-          ),
-        ],
+      child: GestureDetector(
+        onTap: () {},
+        child: Row(
+          children: [
+            Text(
+              '${geTimeString(widget.task.timeStart)}',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w600,
+                  decoration: widget.task.isDone
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              widget.task.title,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w600,
+                  decoration: widget.task.isDone
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none),
+            ),
+            Text(
+              widget.task.subtitle,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12 * byWithScale(context),
+                  fontWeight: FontWeight.w400),
+            ),
+          ],
+        ),
       ),
     );
   }
