@@ -802,6 +802,8 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
                     fontSize: 12 * byWithScale(context),
                     fontWeight: FontWeight.w500),
               ),
+              SizedBox(height: 14 * byWithScale(context)),
+
               ColorPickerRow(callback: (color) {
                 setState(() {
                   editableSuperTask = editableSuperTask.copyWith(color: color);

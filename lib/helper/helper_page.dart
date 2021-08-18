@@ -1,4 +1,5 @@
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:flexible/board/task_editor/ogtimepicker.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/board/widgets/weather_bg.dart';
@@ -7,6 +8,7 @@ import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:io' show Platform;
 
 class HelperPage extends StatefulWidget {
   HelperPage({required this.callback});
@@ -129,26 +131,25 @@ class _HelperPageState extends State<HelperPage> {
                 ),
               ),
             ),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: 60),
-            //   child: WideRoundedButton(
-            //     text: 'Continue',
-            //     enable: true,
-            //     textColor: Colors.white,
-            //     enableColor: Color(0xffE24F4F),
-            //     disableColor: Color(0xffE24F4F).withOpacity(0.25),
-            //     callback: () => onContinue(),
-            //   ),
-            // ),
             SizedBox(
               height: 16 * byWithScale(context),
             ),
-            DotsIndicator(
-                decorator: DotsDecorator(
-                    activeColor: Color(0xffE24F4F),
-                    color: Color(0xffE24F4F).withOpacity(0.4)),
-                dotsCount: subPages.length,
-                position: currentPage)
+            Padding(
+              padding: Platform.isIOS
+                  ? const EdgeInsets.only(bottom: 8.0)
+                  : const EdgeInsets.only(bottom: 0),
+              child: DotsIndicator(
+                  decorator: DotsDecorator(
+                      activeColor: Color(0xffE24F4F),
+                      color: Color(0xffE24F4F).withOpacity(0.4)),
+                  dotsCount: subPages.length,
+                  position: currentPage),
+            ),
+            SizedBox(
+              height: 15 * byWithScale(context),
+
+            )
+
           ],
         );
       },
@@ -390,10 +391,11 @@ class Helper4 extends StatelessWidget {
 //          height: 500 / hpRatio(context),
 //        ),
         Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           height: 350 / hpRatio(context),
           child: Image.asset(
             'src/helper/helper_morning.png',
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
           ),
         ),
 

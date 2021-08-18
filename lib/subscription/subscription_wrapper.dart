@@ -85,10 +85,10 @@ class SubAndAuthChooser extends StatelessWidget {
         return Scaffold(
           body: Container(
             width: double.infinity,
-            height: double.infinity,
+            height: double.maxFinite,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('src/helper/backgroundimage.png'),
+                image: AssetImage('src/background.png'),
                 fit: BoxFit.cover,
               ),
             ),

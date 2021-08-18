@@ -75,7 +75,7 @@ class _TaskEditorState extends State<DayOptionsEditor> {
                           flex: 2,
                         ),
                         Text(
-                          'When do you want to do wake up?',
+                          'When do you usually wake up?',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 48 / pRatio(context),
@@ -89,7 +89,7 @@ class _TaskEditorState extends State<DayOptionsEditor> {
                           flex: 2,
                         ),
                         Text(
-                          'When do you want to go bed?',
+                          'When do you usually go to bed?',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 48 / pRatio(context),

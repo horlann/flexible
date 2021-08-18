@@ -16,6 +16,14 @@ import 'package:table_calendar/table_calendar.dart';
 class BottomDatePicker extends StatefulWidget {
   @override
   _BottomDatePickerState createState() => _BottomDatePickerState();
+
+  BottomDatePicker({
+    Key? key,
+    required this.callback,
+    required this.currentPos,
+  }) : super(key: key);
+  final Function(DateTime date) callback;
+  int currentPos;
 }
 
 class _BottomDatePickerState extends State<BottomDatePicker> {
@@ -49,11 +57,14 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
         void onTapRight() {
           BlocProvider.of<DailytasksBloc>(context)
               .add(DailytasksSetDay(day: state.showDay.add(Duration(days: 1))));
+          widget.callback(state.showDay.add(Duration(days: 1)));
         }
 
         void onTapLeft() {
           BlocProvider.of<DailytasksBloc>(context).add(
               DailytasksSetDay(day: state.showDay.subtract(Duration(days: 1))));
+          widget.callback(state.showDay.subtract(Duration(days: 1)));
+
         }
 
         void onTapToday() {
@@ -90,7 +101,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                         onTap: () => onTapLeft(),
                         child: Image.asset(
                           'src/icons/arrow_left.png',
-                          width: 18 * byWithScale(context),
+                          width: 22 * byWithScale(context),
                           fit: BoxFit.fitWidth,
                         ),
                       ),
@@ -110,7 +121,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                                 currentDate(state.showDay),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 18 * byWithScale(context),
+                                    fontSize: 17 * byWithScale(context),
                                     color:
                                         weatherState.daylight == DayLight.dark
                                             ? Colors.white
@@ -134,7 +145,7 @@ class _BottomDatePickerState extends State<BottomDatePicker> {
                         onTap: () => onTapRight(),
                         child: Image.asset(
                           'src/icons/arrow_right.png',
-                          width: 18 * byWithScale(context),
+                          width: 22 * byWithScale(context),
                           fit: BoxFit.fitWidth,
                         ),
                       ),

@@ -63,6 +63,7 @@ dependencies:
   qonversion_flutter: ^4.0.0
 
 
+
   tflite_flutter: ^0.8.0
   permission_handler: ^8.1.4+2
   csv: ^5.0.0
@@ -90,6 +91,7 @@ flutter_native_splash:
   android: true
   ios: true
   web: false
+
   image: src/splash.png
   background_image: src/background.png
   background_image_dark: src/background.png
@@ -101,7 +103,7 @@ flutter_native_splash:
 flutter_icons:
   android: false
   ios: true
-  image_path: "src/launcher2.png"
+  image_path: "src/logo.png"
   remove_alpha_ios: true
 
 

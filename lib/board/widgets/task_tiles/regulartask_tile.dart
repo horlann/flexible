@@ -1,18 +1,16 @@
-import 'dart:typed_data';
-
 import 'package:flexible/board/bloc/dailytasks_bloc.dart';
 import 'package:flexible/board/copy_task_dialog.dart';
 import 'package:flexible/board/models/tasks/regular_taks.dart';
-import 'package:flexible/board/repository/image_repo_mock.dart';
 import 'package:flexible/board/task_editor/task_editor.dart';
 import 'package:flexible/board/widgets/task_tiles/components/cached_icon.dart';
+import 'package:flexible/board/widgets/task_tiles/components/done_checkbox.dart';
 import 'package:flexible/board/widgets/task_tiles/components/hidable_btns_wrapper.dart';
 import 'package:flexible/board/widgets/task_tiles/components/hidable_lock.dart';
 import 'package:flexible/board/widgets/task_tiles/components/mini_buttons_with_icon.dart';
-import 'package:flexible/board/widgets/task_tiles/components/done_checkbox.dart';
 import 'package:flexible/subscription/bloc/subscribe_bloc.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/modal.dart';
+import 'package:flexible/weather/bloc/weather_bloc.dart';
 import 'package:flexible/widgets/modals/regular_task_modal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +19,9 @@ import 'package:invert_colors/invert_colors.dart';
 
 class RegularTaskTile extends StatefulWidget {
   final RegularTask task;
+
   RegularTaskTile({required this.task});
+
   @override
   _RegularTaskTileState createState() => _RegularTaskTileState();
 }
@@ -92,6 +92,20 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
     }
   }
 
+  Color? testColor(var key) {
+    print(key.toString() + " key");
+    if (isUnSubscribed()) {
+      print("d");
+      if (BlocProvider.of<WeatherBloc>(context).state.wCode == 800) {
+        return key < 250 ? Colors.black : Colors.white;
+      } else {
+        return Colors.white;
+      }
+    } else {
+      return Colors.white;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isLessThen350() => MediaQuery.of(context).size.width < 350;
@@ -100,14 +114,17 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
+          print(
+            _getOffset(widget.task.key)?.top ?? 0,
+          );
           showModal(
               context,
               RegularTaskModal(
                   widget.task,
                   _getOffset(widget.task.key)?.top ?? 0,
-                  () => onEditClicked(context),
-                  () => onLockClicked(context),
-                  () => showCopyDialog()));
+                      () => onEditClicked(context),
+                      () => onLockClicked(context),
+                      () => showCopyDialog()));
         },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 16),
@@ -243,7 +260,9 @@ class _RegularTaskTileState extends State<RegularTaskTile> {
           Text(
             widget.task.title,
             style: TextStyle(
-                color: Colors.white,
+                color: testColor(
+                  _getOffset(widget.task.key)?.top ?? 10,
+                ),
                 fontSize: 12 * byWithScale(context),
                 fontWeight: FontWeight.w600,
                 decoration: widget.task.isDone

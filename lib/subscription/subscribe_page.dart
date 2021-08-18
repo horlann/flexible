@@ -185,10 +185,8 @@ class _SubscribePageState extends State<SubscribePage> {
                         child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 30 * byWithScale(context)),
-                      child: FutureBuilder(
-                        builder: (context, snapshot) {
-                          return BlocBuilder<SubscribeBloc, SubscribeState>(
-                              builder: (context, state) {
+                            child: BlocBuilder<SubscribeBloc, SubscribeState>(
+                                builder: (context, state) {
                             String add_text = "";
                             String add_text1 = "";
                             if (state is AskForSubscribe) {
@@ -202,8 +200,12 @@ class _SubscribePageState extends State<SubscribePage> {
                                     .first.postpricetext}";
                               }
                             }
-                            ;
-
+                            print(add_text.toString() + add_text1.toString() +
+                                " text");
+                            if (add_text.isEmpty || add_text1.isEmpty) {
+                              add_text = "Connection error";
+                              add_text1 = "Connection error";
+                            }
                             return Column(
                               children: [
                                 Text(
@@ -222,9 +224,8 @@ class _SubscribePageState extends State<SubscribePage> {
                                 ),
                               ],
                             );
-                          });
-                        },
-                      ),
+                              })
+
                     )),
                     Padding(
                         padding: EdgeInsets.symmetric(
@@ -265,7 +266,7 @@ class _SubscribePageState extends State<SubscribePage> {
                         fontSizw: 18 ~/ byWithScale(context),
                         enableColor: Color(0xffE24F4F),
                         textColor: Colors.white,
-                        text: 'RESTORE PURCHASHES',
+                        text: 'RESTORE PURCHASES ',
                         disableColor: Color(0xffE24F4F).withOpacity(0.25),
                         callback: () => restoreSub(),
                       ),
@@ -273,12 +274,12 @@ class _SubscribePageState extends State<SubscribePage> {
                     SizedBox(
                       height: 8,
                     ),
-                    GestureDetector(
-                        onTap: () {
-                          BlocProvider.of<SubscribeBloc>(context)
-                              .add(DebugRestore());
-                        },
-                        child: Text('Debug restore')),
+//                    GestureDetector(
+//                        onTap: () {
+//                          BlocProvider.of<SubscribeBloc>(context)
+//                              .add(DebugRestore());
+//                        },
+//                        child: Text('Debug restore')),
                     Spacer(
                       flex: 2,
                     ),

@@ -128,4 +128,17 @@ class _TaskTileState extends State<SystemTile> {
       ),
     );
   }
+
+  Rect? _getOffset(GlobalKey? key) {
+    if (key == null) return null;
+    final renderObject = key.currentContext?.findRenderObject();
+    var translation = renderObject?.getTransformTo(null).getTranslation();
+    if (translation != null && renderObject?.paintBounds != null) {
+      return renderObject?.paintBounds
+          .shift(Offset(translation.x, translation.y));
+    } else {
+      return null;
+    }
+  }
 }
+

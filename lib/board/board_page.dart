@@ -5,6 +5,7 @@ import 'package:flexible/board/repository/sqFliteRepository/sqflite_day_options.
 import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/notifications/tasks_notifications_service.dart';
 import 'package:flexible/weather/openweather_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,9 @@ class BoardPage extends StatefulWidget {
 }
 
 class _BoardPageState extends State<BoardPage> {
+  var controller = PageController();
+  int? currentPageValue;
+
   bool showCalendar = false;
   late TaskNotificationService taskNotificationService;
 
@@ -27,6 +31,13 @@ class _BoardPageState extends State<BoardPage> {
         dayOptionsRepo: RepositoryProvider.of<SqfliteDayOptionsRepo>(context));
     // Schedule task notifications
     taskNotificationService.startService();
+    currentPageValue = 0;
+    controller.addListener(() {
+      setState(() {
+        currentPageValue = controller.page!.toInt();
+        print((currentPageValue).toString());
+      });
+    });
   }
 
   @override
@@ -47,32 +58,43 @@ class _BoardPageState extends State<BoardPage> {
       backgroundColor: Colors.white,
       body: SizedBox.expand(
           child: Stack(
-        children: [
-          Container(
-              width: double.maxFinite,
-              height: double.maxFinite,
-              child: WeatherBg()),
-          SafeArea(
-            child: Column(
-              children: [
+            children: [
+              Container(
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                  child: WeatherBg()),
+              SafeArea(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Expanded(
+                    child: PageView.builder(
+                  itemBuilder: (context, pos) {
+                    return Board();
+                  },
+                  controller: controller,
+                  physics: NeverScrollableScrollPhysics(),
+                  onPageChanged: (pos) {},
+                )),
                 SizedBox(
-                  height: 16,
+                      height: 16,
+                    ),
+                    BottomDatePicker(
+                      callback: (date) {
+                        print(date);
+                      },
+                      currentPos: currentPageValue ?? 1,
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: Board(),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                BottomDatePicker(),
-                SizedBox(
-                  height: 8,
-                ),
-              ],
-            ),
-          ),
-        ],
-      )),
+              ),
+            ],
+          )),
     );
   }
 }
