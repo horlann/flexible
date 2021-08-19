@@ -157,9 +157,9 @@ class _SubscribePageState extends State<SubscribePage> {
                             String add_text = "";
                             String add_text1 = "";
                             if (state is AskForSubscribe) {
-                                print(state.products.first.prettyPrice
-                                        .toString() +
-                                    " k");
+//                                print(state.products.first.prettyPrice
+//                                        .toString() +
+//                                    " k");
 
                                 if (state.isscConfig.isNotEmpty &&
                                     state.products.isNotEmpty) {
