@@ -157,7 +157,7 @@ class _SubscribePageState extends State<SubscribePage> {
                             String add_text = "";
                             String add_text1 = "";
                             if (state is AskForSubscribe) {
-                                print(state.isscConfig.first.lineabovepricetext
+                                print(state.products.first.prettyPrice
                                         .toString() +
                                     " k");
 
@@ -172,12 +172,12 @@ class _SubscribePageState extends State<SubscribePage> {
                                     .first.postpricetext}";
                               }
                             }
-//                              if (add_text.isEmpty) {
-//                                add_text = "Connection error";
-//                            }
-//                            if (add_text1.isEmpty) {
-//                              add_text1 = "Connection error";
-//                            }
+                            if (add_text.isEmpty) {
+                              add_text = "Connection error";
+                            }
+                            if (add_text1.isEmpty) {
+                              add_text1 = "Connection error";
+                            }
 
                             return Column(
                               children: [
