@@ -52,10 +52,11 @@ class _SubscribePageState extends State<SubscribePage> {
       resizeToAvoidBottomInset: true,
       body: SizedBox.expand(
         child: Container(
+          //color: Colors.lightBlueAccent,
           decoration: BoxDecoration(
               // gradient: mainBackgroundGradient,
               image: DecorationImage(
-                  image: AssetImage('src/helper/backgroundimage.png'),
+                  image: AssetImage('src/background.png'),
                   fit: BoxFit.cover,
                   alignment: Alignment.topCenter)),
           child: SafeArea(
@@ -92,40 +93,6 @@ class _SubscribePageState extends State<SubscribePage> {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-//              Padding(
-//                padding:
-//                    EdgeInsets.symmetric(horizontal: 12 * byWithScale(context)),
-//                child: Row(
-//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                  children: [
-////                    GestureDetector(
-////                      onTap: () {
-////                        BlocProvider.of<SubscribeBloc>(context).add(Decline());
-////                      },
-////                      child: Image.asset(
-////                        'src/icons/return.png',
-////                        width: 20 * byWithScale(context),
-////                      ),
-////                    ),
-//                    BlocBuilder<SubscribeBloc, SubscribeState>(
-//                      builder: (context, state) {
-//                        if (state is AskForSubscribe && state.showInfoPopup) {
-//                          return GestureDetector(
-//                              onTap: () {
-//                                Navigator.push(
-//                                    context,
-//                                    CupertinoPageRoute(
-//                                      builder: (context) => TermsPage(),
-//                                    ));
-//                              },
-//                              child: Icon(Icons.info));
-//                        }
-//                        return SizedBox();
-//                      },
-//                    )
-//                  ],
-//                ),
-//              ),
                     Spacer(
                       flex: 1,
                     ),
@@ -190,8 +157,13 @@ class _SubscribePageState extends State<SubscribePage> {
                             String add_text = "";
                             String add_text1 = "";
                             if (state is AskForSubscribe) {
-                              if(state.isscConfig.isNotEmpty &&state.products.isNotEmpty) {
-                                add_text =
+                                print(state.isscConfig.first.lineabovepricetext
+                                        .toString() +
+                                    " k");
+
+                                if (state.isscConfig.isNotEmpty &&
+                                    state.products.isNotEmpty) {
+                                  add_text =
                                     state.isscConfig.first.lineabovepricetext;
                                 add_text1 =
                                 "${state.products.first.prettyPrice} ${state
@@ -200,14 +172,12 @@ class _SubscribePageState extends State<SubscribePage> {
                                     .first.postpricetext}";
                               }
                             }
-                            print(add_text.toString() + add_text1.toString() +
-                                " text");
-                              if (add_text.isEmpty) {
-                                add_text = "Connection error";
-                            }
-                            if (add_text1.isEmpty) {
-                              add_text1 = "Connection error";
-                            }
+//                              if (add_text.isEmpty) {
+//                                add_text = "Connection error";
+//                            }
+//                            if (add_text1.isEmpty) {
+//                              add_text1 = "Connection error";
+//                            }
 
                             return Column(
                               children: [
@@ -233,9 +203,7 @@ class _SubscribePageState extends State<SubscribePage> {
                     Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: 30 * byWithScale(context)),
-                        child: FutureBuilder(
-                            builder: (context, snapshot) {
-                              return BlocBuilder<SubscribeBloc, SubscribeState>(
+                        child: BlocBuilder<SubscribeBloc, SubscribeState>(
                                   builder: (context, state) {
                                     String button_text = "SUBSCRIBE";
                                     if (state is AskForSubscribe) {
@@ -256,8 +224,8 @@ class _SubscribePageState extends State<SubscribePage> {
                                       disableColor: Color(0xffE24F4F).withOpacity(0.25),
                                       callback: () => subscribe(),
                                     );
-                              });
-                        })),
+                                  })
+                    ),
                     Spacer(
                       flex: 1,
                     ),
@@ -277,12 +245,12 @@ class _SubscribePageState extends State<SubscribePage> {
                     SizedBox(
                       height: 8,
                     ),
-//                    GestureDetector(
-//                        onTap: () {
-//                          BlocProvider.of<SubscribeBloc>(context)
-//                              .add(DebugRestore());
-//                        },
-//                        child: Text('Debug restore')),
+                    GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<SubscribeBloc>(context)
+                              .add(DebugRestore());
+                        },
+                        child: Text('Debug restore')),
                     Spacer(
                       flex: 2,
                     ),
