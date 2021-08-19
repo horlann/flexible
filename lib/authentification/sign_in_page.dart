@@ -3,18 +3,13 @@ import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
-import 'package:flexible/board/widgets/weather_bg.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
-import 'package:flexible/utils/main_backgroung_gradient.dart';
 import 'package:flexible/utils/validators.dart';
-import 'package:flexible/widgets/circular_snakbar.dart';
-import 'package:flexible/widgets/error_snakbar.dart';
+import 'package:flexible/widgets/flush.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -30,6 +25,8 @@ class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   String phoneNumber = '';
   String countryCode = '';
+  Flushbar? _flushbar;
+
 
   bool get submitActive => phoneNumber.isNotEmpty;
 
@@ -117,18 +114,21 @@ class _SignInPageState extends State<SignInPage> {
       listener: (context, state) {
         print(state);
         if (state.isBusy) {
-          //   ScaffoldMessenger.of(context).showSnackBar(circularSnakbar(
-          //     text: 'Signing in',
-          //   ));
-          //showSnackBar(context, "Signing in", true);
+          if (_flushbar != null) {
+            _flushbar!.dismiss();
+          }
+
+          setState(() => _flushbar = _flushbar =
+          showFlush(context, "Sign in", true)..show(context));
         }
 
         if (state.error.isNotEmpty) {
-          //    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          //    ScaffoldMessenger.of(context).showSnackBar(errorSnakbar(
-          //      text: state.error,
-          //   ));
-          // showSnackBar(context, state.error, false);
+          if (_flushbar != null) {
+            _flushbar!.dismiss();
+          }
+
+          setState(() => _flushbar = showFlush(context, state.error, false)
+            ..show(context));
         }
       },
       child: buildBody(context),
