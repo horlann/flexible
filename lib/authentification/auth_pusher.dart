@@ -50,7 +50,7 @@ class AuthBlocPusher extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('src/background.png'),
+                image: AssetImage('src/helper/backgroundimage.png'),
                 fit: BoxFit.cover,
               ),
             ),

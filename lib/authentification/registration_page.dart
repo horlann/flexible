@@ -115,14 +115,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
     // + bonus calc safe area
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: SizedBox.expand(
-        child: Container(
-          decoration: BoxDecoration(
-              // gradient: mainBackgroundGradient,
-              image: DecorationImage(
-                  image: AssetImage('src/helper/backgroundimage.png'),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.topCenter)),
+      body: Container(
+        decoration: BoxDecoration(
+            // gradient: mainBackgroundGradient,
+            color: Colors.black,
+            image: DecorationImage(
+                image: AssetImage('src/helper/backgroundimage.png'),
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter)),
+        child: SizedBox.expand(
           child: SafeArea(
             child: SingleChildScrollView(
               child: ConstrainedBox(

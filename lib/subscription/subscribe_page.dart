@@ -56,7 +56,7 @@ class _SubscribePageState extends State<SubscribePage> {
           decoration: BoxDecoration(
               // gradient: mainBackgroundGradient,
               image: DecorationImage(
-                  image: AssetImage('src/background.png'),
+                  image: AssetImage('src/helper/backgroundimage.png'),
                   fit: BoxFit.cover,
                   alignment: Alignment.topCenter)),
           child: SafeArea(
@@ -144,19 +144,18 @@ class _SubscribePageState extends State<SubscribePage> {
                     Spacer(
                       flex: 1,
                     ),
-
                     Spacer(
                       flex: 1,
                     ),
                     Center(
                         child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 30 * byWithScale(context)),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30 * byWithScale(context)),
                             child: BlocBuilder<SubscribeBloc, SubscribeState>(
                                 builder: (context, state) {
-                            String add_text = "";
-                            String add_text1 = "";
-                            if (state is AskForSubscribe) {
+                              String add_text = "";
+                              String add_text1 = "";
+                              if (state is AskForSubscribe) {
 //                                print(state.products.first.prettyPrice
 //                                        .toString() +
 //                                    " k");
@@ -164,68 +163,60 @@ class _SubscribePageState extends State<SubscribePage> {
                                 if (state.isscConfig.isNotEmpty &&
                                     state.products.isNotEmpty) {
                                   add_text =
-                                    state.isscConfig.first.lineabovepricetext;
-                                add_text1 =
-                                "${state.products.first.prettyPrice} ${state
-                                    .isscConfig.first
-                                    .subscriptionduration} ${state.isscConfig
-                                    .first.postpricetext}";
+                                      state.isscConfig.first.lineabovepricetext;
+                                  add_text1 =
+                                      "${state.products.first.prettyPrice} ${state.isscConfig.first.subscriptionduration} ${state.isscConfig.first.postpricetext}";
+                                }
                               }
-                            }
-                            if (add_text.isEmpty) {
-                              add_text = "Connection error";
-                            }
-                            if (add_text1.isEmpty) {
-                              add_text1 = "Connection error";
-                            }
+                              if (add_text.isEmpty) {
+                                add_text = "Connection error";
+                              }
+                              if (add_text1.isEmpty) {
+                                add_text1 = "Connection error";
+                              }
 
-                            return Column(
-                              children: [
-                                Text(
-                                  add_text,
-                                  style: TextStyle(
-                                      fontSize: 10 * byWithScale(context),
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
-                                ),
-                                Text(
-                                  add_text1,
-                                  style: TextStyle(
-                                      fontSize: 10 * byWithScale(context),
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
-                                ),
-                              ],
-                            );
-                              })
-
-                    )),
+                              return Column(
+                                children: [
+                                  Text(
+                                    add_text,
+                                    style: TextStyle(
+                                        fontSize: 10 * byWithScale(context),
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
+                                  ),
+                                  Text(
+                                    add_text1,
+                                    style: TextStyle(
+                                        fontSize: 10 * byWithScale(context),
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
+                                  ),
+                                ],
+                              );
+                            }))),
                     Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: 30 * byWithScale(context)),
                         child: BlocBuilder<SubscribeBloc, SubscribeState>(
-                                  builder: (context, state) {
-                                    String button_text = "SUBSCRIBE";
-                                    if (state is AskForSubscribe) {
-                                      if(state.isscConfig.isNotEmpty) {
-                                        print(
-                                            "InnerSalesScreenConfig is ${state
-                                                .isscConfig}");
-                                        button_text =
-                                            state.isscConfig.first.buttontitle;
-                                      }
-                                    }
-                                    return WideRoundedButton(
-                                      enable: true,
-                                      fontSizw: 18 ~/ byWithScale(context),
-                                      enableColor: Color(0xffE24F4F),
-                                      textColor: Colors.white,
-                                      text: button_text,
-                                      disableColor: Color(0xffE24F4F).withOpacity(0.25),
-                                      callback: () => subscribe(),
-                                    );
-                                  })
-                    ),
+                            builder: (context, state) {
+                          String button_text = "SUBSCRIBE";
+                          if (state is AskForSubscribe) {
+                            if (state.isscConfig.isNotEmpty) {
+                              print(
+                                  "InnerSalesScreenConfig is ${state.isscConfig}");
+                              button_text = state.isscConfig.first.buttontitle;
+                            }
+                          }
+                          return WideRoundedButton(
+                            enable: true,
+                            fontSizw: 18 ~/ byWithScale(context),
+                            enableColor: Color(0xffE24F4F),
+                            textColor: Colors.white,
+                            text: button_text,
+                            disableColor: Color(0xffE24F4F).withOpacity(0.25),
+                            callback: () => subscribe(),
+                          );
+                        })),
                     Spacer(
                       flex: 1,
                     ),
