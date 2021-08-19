@@ -25,7 +25,7 @@ class IsscConfig {
     print("maps ${map.toString()}");
     return IsscConfig(
       id: map['id'],
-      lineabovepricetext: map['Line-Above-Price-Text"'] ?? "",
+      lineabovepricetext: map['Line-Above-Price-Text'] ?? "",
       subscriptionduration: map['Subscription-Duration'] ?? "",
       postpricetext: map['Post-Price-Text']?? "",
       qonversionID: map['QonversionID']?? "",
