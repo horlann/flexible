@@ -103,12 +103,14 @@ class _NewTaskEditorState extends State<NewTaskEditor> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-
       backgroundColor: Color(0xffE9E9E9),
       body: SizedBox.expand(
         child: Container(
           decoration: BoxDecoration(
-            gradient: mainBackgroundGradient,
+            image: DecorationImage(
+              image: AssetImage('src/background.png'),
+              fit: BoxFit.cover,
+            ),
           ),
           child: CustomScrollView(
             shrinkWrap: true,
@@ -441,7 +443,6 @@ class _RegularTaskEditorBodyState extends State<RegularTaskEditorBody> {
                   borderRadius: BorderRadius.all(Radius.circular(25))),
               child: TitleInputSection(
                 initValue: editableRegularTask.title,
-
                 onChange: (String text) {
                   setState(() {
                     editableRegularTask =
@@ -696,14 +697,11 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         SizedBox(height: 5 * byWithScale(context)),
-
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 32 / pRatio(context)),
-
           child: typeTaskWidget(),
         ),
         SizedBox(height: 5 * byWithScale(context)),
-
         Text(
           'Choose deadline of your Supertask',
           style: TextStyle(
@@ -712,7 +710,6 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
               color: Colors.white),
         ),
         SizedBox(height: 5 * byWithScale(context)),
-
         DeadLineChooser(
           initialDeadline: editableSuperTask.deadline,
           timeStart: editableSuperTask.timeStart,
@@ -723,7 +720,6 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
           },
         ),
         SizedBox(height: 5 * byWithScale(context)),
-
         Text(
           'What is your task Duration?',
           style: TextStyle(
@@ -756,11 +752,8 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
           },
         ),
         SizedBox(height: 3 * byWithScale(context)),
-
         Wrap(
-
           children: [
-
             Padding(
               padding: const EdgeInsets.only(top: 5.0),
               child: Text(
@@ -771,7 +764,6 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
                     color: Colors.white),
               ),
             ),
-
             PriorityChooser(
               initialPriority: editableSuperTask.priority,
               onChange: (priority) {
@@ -784,7 +776,6 @@ class _SuperTaskEditorBodyState extends State<SuperTaskEditorBody> {
           ],
         ),
         SizedBox(height: 5 * byWithScale(context)),
-
         Container(
           margin: EdgeInsets.symmetric(horizontal: 16 * byWithScale(context)),
           decoration: BoxDecoration(

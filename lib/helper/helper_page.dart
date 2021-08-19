@@ -80,7 +80,10 @@ class _HelperPageState extends State<HelperPage> {
     return Scaffold(
         body: Container(
       decoration: BoxDecoration(
-        gradient: mainBackgroundGradient,
+        image: DecorationImage(
+          image: AssetImage('src/background.png'),
+          fit: BoxFit.cover,
+        ),
       ),
       child: CustomScrollView(
         physics: BouncingScrollPhysics(),
@@ -147,9 +150,7 @@ class _HelperPageState extends State<HelperPage> {
             ),
             SizedBox(
               height: 15 * byWithScale(context),
-
             )
-
           ],
         );
       },
@@ -566,7 +567,6 @@ class Helper5 extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-
             'You can change this later in the settings',
             textAlign: TextAlign.center, // overflow: TextOverflow.visible,
 

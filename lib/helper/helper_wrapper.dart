@@ -39,7 +39,10 @@ class HelperWrapper extends StatelessWidget {
         return SizedBox.expand(
           child: Container(
             decoration: BoxDecoration(
-              gradient: mainBackgroundGradient,
+              image: DecorationImage(
+                image: AssetImage('src/background.png'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         );
