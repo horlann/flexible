@@ -113,7 +113,7 @@ class _WeatherBgState extends State<WeatherBg> {
                 width: MediaQuery.of(context).size.width,
                 child: Image.asset(
                   'src/helper/backgroundimage.png',
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.cover,
                   alignment: Alignment.topCenter,
                 ),
               ),

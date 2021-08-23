@@ -3,11 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CloseButtonn extends StatelessWidget {
+  final VoidCallback callback;
+
+  const CloseButtonn({
+    Key? key,
+    required this.callback,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context);
+       callback();
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

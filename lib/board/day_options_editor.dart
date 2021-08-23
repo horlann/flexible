@@ -56,7 +56,7 @@ class _TaskEditorState extends State<DayOptionsEditor> {
                     // the glass layer
                     // fill uses for adopt is size
                     Positioned.fill(child: GlassmorphLayer()),
-                    CloseButtonn(),
+                    CloseButtonn(callback: (){Navigator.pop(context);},),
 
                     Column(
                       children: [

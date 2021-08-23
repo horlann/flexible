@@ -81,6 +81,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
           await subscribeService.setUserId(fireAuthService.getUser()!.uid);
           yield* mapCheckForSub();
         } else {
+          print("ruruurr");
           yield AskForSubscribe(
               showInfoPopup: remoteConfigRepository.showInfoPopup,
               showAreYouSurePopup: remoteConfigRepository.showAreYouSurePopup,
@@ -103,7 +104,7 @@ class SubscribeBloc extends Bloc<SubscribeEvent, SubscribeState> {
         bool isActive = await subscribeService
             .makeSubMonth()
             .onError((error, stackTrace) => false);
-        print(isActive);
+        print(isActive.toString()+" sibs");
         // Show result
         if (isActive) {
           yield Subscribed();

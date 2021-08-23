@@ -5,6 +5,8 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/country_code_picker.dart';
 import 'package:flexible/authentification/terms_of_use.dart';
+import 'package:flexible/board/board_page.dart';
+import 'package:flexible/board/widgets/close_button.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/validators.dart';
@@ -184,6 +186,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: Stack(
               children: [
                 Positioned.fill(child: GlassmorphLayer()),
+                CloseButtonn(
+                  callback: () {
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) => BoardPage()));
+                  },
+                ),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -202,15 +210,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       )),
                       Center(
                           child: Text(
-                        "Registration",
+                        "Create Your Account",
                         style: TextStyle(
-                            fontSize: 16 * byWithScale(context),
+                            fontSize: 18 * byWithScale(context),
                             fontWeight: FontWeight.w900,
                             color: Colors.white),
                       )),
-                      Spacer(
-                        flex: 1,
-                      ),
+
+                      Center(
+                          child: Text(
+                            "And backup your tasks automatically",
+                            style: TextStyle(
+                                fontSize: 10 * byWithScale(context),
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white),
+                          )),
+                      Spacer(flex: 1,),
                       ClipRRect(
                         borderRadius:
                             BorderRadius.circular(30 * byWithScale(context)),

@@ -180,14 +180,14 @@ class _SubscribePageState extends State<SubscribePage> {
                                   Text(
                                     add_text,
                                     style: TextStyle(
-                                        fontSize: 10 * byWithScale(context),
+                                        fontSize: 9* byWithScale(context),
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white),
                                   ),
                                   Text(
                                     add_text1,
                                     style: TextStyle(
-                                        fontSize: 10 * byWithScale(context),
+                                        fontSize: 9 * byWithScale(context),
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white),
                                   ),
@@ -260,7 +260,7 @@ class _SubscribePageState extends State<SubscribePage> {
               textColor: Color(0xffE24F4F),
               text: 'NO,THANKS',
               disableColor: Color(0xffE24F4F).withOpacity(0.25),
-              callback: () => noThx()),
+              callback: () =>  noThx()),
         ],
       ),
     );

@@ -1,12 +1,15 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flexible/authentification/bloc/auth_bloc.dart';
 import 'package:flexible/authentification/country_code_picker.dart';
+import 'package:flexible/board/board_page.dart';
+import 'package:flexible/board/widgets/close_button.dart';
 import 'package:flexible/board/widgets/flexible_text.dart';
 import 'package:flexible/board/widgets/glassmorph_layer.dart';
 import 'package:flexible/utils/adaptive_utils.dart';
 import 'package:flexible/utils/validators.dart';
 import 'package:flexible/widgets/flush.dart';
 import 'package:flexible/widgets/wide_rounded_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
@@ -147,6 +150,12 @@ class _SignInPageState extends State<SignInPage> {
             child: Stack(
               children: [
                 Positioned.fill(child: GlassmorphLayer()),
+                CloseButtonn(
+                  callback: () {
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) => BoardPage()));
+                  },
+                ),
                 Column(
                   children: [
                     SizedBox(
@@ -207,7 +216,7 @@ class _SignInPageState extends State<SignInPage> {
         ),
         Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: 60 * byWithScale(context), vertical: 20),
+                horizontal: 50 * byWithScale(context), vertical: 20),
             child: Wrap(
               children: [
                 Text(
